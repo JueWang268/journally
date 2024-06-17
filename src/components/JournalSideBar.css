@@ -1,0 +1,56 @@
+.journal-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+}
+
+.journal-item:hover {
+  background-color: #e0e0e0;
+}
+
+.journal-item:active {
+  background-color: #c0d0c0;
+}
+
+.edit-button {
+  display: none;
+  background: none;
+  border: none;
+  font-family: 'Courier New', Courier, monospace;
+  cursor: pointer;
+  padding: 1px 4px;
+  margin-left: 10px;
+}
+
+.edit-button:hover {
+  border: dashed gray;
+  background-color: #f4f4f4;
+}
+
+.journal-item:hover .edit-button {
+  display: block;
+}
+
+.action-buttons{
+    display: flex;
+}
+
+/* .resizer{
+    display: block;
+    align-content: center;
+    height: 100%;
+    width: 0.2em;
+    padding: 1px;
+    background-color: #f0f0f0;
+    border: black solid 1px;
+}
+
+.resize-button{
+    display: flex;
+    position: absolute;
+    padding: 1px;
+    margin: 0;
+} */

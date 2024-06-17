@@ -1,19 +1,51 @@
 import React, { useState } from 'react';
+// import NewButton from './components/NewJournalButton';
+import JournalSidebar from './components/JournalSidebar';
 import './App.css';
+import Journal from './Journal';
+import Entry from './Entry';
 
-const journals = [
-  { id: 1, title: "Journal 1", entries: [{ id: 1, title: "Entry 1", date: "2024-01-01" }, { id: 2, title: "Entry 2", date: "2024-01-02" }] },
-  { id: 2, title: "Journal 2", entries: [{ id: 3, title: "Entry 3", date: "2024-01-03" }] }
-];
 
 const App = () => {
+
   const [selectedJournal, setSelectedJournal] = useState(null);
   const [view, setView] = useState("writingPad");
+  const [showJournalBar, setShowJournalBar] = useState(true);
 
-
+  const [journals, setJournals] = useState([      
+    new Journal(1, "Personal Journal", new Date(), []),
+    new Journal(2, "OOP Journal 2", new Date(), [
+      new Entry(1, "Dear Diary", (new Date()).toString(), "Today is a great day!")
+    ], true)
+  ]);
+  
   const handleJournalClick = (journal) => {
     setSelectedJournal(journal);
   };
+
+  const toggleJournalBar = () => setShowJournalBar(!showJournalBar);
+
+  const createNewJournal = (journals, setJournals) => {
+    if (! journals[journals.length - 1].id) {
+        return
+    }
+    const newId = journals[journals.length - 1].id + 1
+    setJournals([...journals, 
+        new Journal(newId, `New Journal ${newId}`, new Date(), [])
+    ])
+  };
+
+  const askForConfirmaation = () => {
+    // should make the user retype 
+    // journal name to confirm deletion
+  }
+
+  const deleteJournal = (journalID) => {
+    askForConfirmaation();
+    setJournals(journals.filter(
+      j => j.id !== journalID
+    ))
+  }
 
   return (
     <div className="app">
@@ -21,25 +53,26 @@ const App = () => {
         <div>
           <img className="icon" src={require(".//icon.png")} alt="journal logo"/>
         </div>
-        <div className="nav-item">New</div>
+        <div className="nav-item" onClick={toggleJournalBar}>Journals</div>
         <div className="nav-item">Calendar</div>
         <div className="nav-item">Graph</div>
         <div className="nav-item">Insert Media</div>
-        <div className="user-icon" onClick={() => alert('User options')}>User</div>
+        <div className="nav-item">🌏</div>
+        <div className="user-icon" onClick={() => alert('User options')}>👤</div>
       </div>
-      <div className="sidebar">
-        <h3>Journals</h3>
-        <ul>
-          {journals.map(journal => (
-            <li key={journal.id} onClick={() => handleJournalClick(journal)}>
-              {journal.title}
-            </li>
-          ))}
-        </ul>
-      </div>
-      <div className="entries-sidebar">
+
+      <div className="main-layout">
+        
+        {showJournalBar &&
+          <JournalSidebar journals={journals}
+          handleNewJournal = {() => createNewJournal(journals, setJournals)}
+          handleDeleteJournal = {deleteJournal}
+          handleJournalClick={handleJournalClick} handleBackButton={toggleJournalBar}/>}
+        
+        <div className="entries-sidebar">
         <h3>Entries</h3>
         {selectedJournal ? (
+          selectedJournal.entries.length > 0 ? (
           <ul>
             {selectedJournal.entries.map(entry => (
               <li key={entry.id}>
@@ -49,21 +82,26 @@ const App = () => {
                 </div>
               </li>
             ))}
-          </ul>
+          </ul>) :
+          (
+            <div> No entries in this journal </div>
+          )
         ) : (
           <div>Select a journal to view entries</div>
         )}
       </div>
-      <div className="main-content">
-        <div className="view-switch">
-          <button onClick={() => setView("writingPad")}>Writing Pad</button>
-          <button onClick={() => setView("dailyStats")}>Daily Stats</button>
+    
+        <div className="main-content">
+          <div className="view-switch">
+            <button onClick={() => setView("writingPad")}>Writing Pad</button>
+            <button onClick={() => setView("dailyStats")}>Daily Stats</button>
+          </div>
+          {view === "writingPad" ? (
+            <textarea className="rich-textarea" placeholder="RICHTEXT AREA"></textarea>
+          ) : (
+            <div>Daily Stats will be shown here</div>
+          )}
         </div>
-        {view === "writingPad" ? (
-          <textarea className="rich-textarea" placeholder="RICHTEXT AREA"></textarea>
-        ) : (
-          <div>Daily Stats will be shown here</div>
-        )}
       </div>
     </div>
   );
