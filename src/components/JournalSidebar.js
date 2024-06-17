@@ -3,7 +3,13 @@ import "./JournalSideBar.css"
 import NewJournalButton from './NewJournalButton'
 
 
-export default function JournalSidebar( {journals, handleNewJournal,handleDeleteJournal, handleJournalClick, handleBackButton} ) {
+export default function JournalSidebar( {
+  journals, 
+  handleNewJournal, 
+  handleDeleteJournal, 
+  handleRenameJournal,
+  handleJournalClick, 
+  handleBackButton} ) {
   return (
     <>
       <div className="sidebar">
@@ -18,7 +24,7 @@ export default function JournalSidebar( {journals, handleNewJournal,handleDelete
           <li className='journal-item' key={journal.id} onClick={() => handleJournalClick(journal)}>
           <span className='journal-title'>{journal.title}</span>
           <div className="action-buttons">
-              <button className="edit-button">
+              <button className="edit-button" onClick={() => handleRenameJournal(journal.id, "{UserInput}")}>
               🖊️
               </button>
               <button className="edit-button" onClick={() => handleDeleteJournal(journal.id)}>

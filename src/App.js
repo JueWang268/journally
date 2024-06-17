@@ -35,16 +35,29 @@ const App = () => {
     ])
   };
 
-  const askForConfirmaation = () => {
+  const askForConfirmation = () => {
     // should make the user retype 
     // journal name to confirm deletion
   }
 
   const deleteJournal = (journalID) => {
-    askForConfirmaation();
+    askForConfirmation();
     setJournals(journals.filter(
       j => j.id !== journalID
     ))
+  }
+  
+  const renameJournal = (journalID, newName) => {
+    // todo: make new name a user input
+    setJournals(journals.map(
+      j => {
+        if (j.id === journalID){
+          return {...j, title: newName}
+        }
+        return j
+      }
+    ))
+    
   }
 
   return (
@@ -67,6 +80,7 @@ const App = () => {
           <JournalSidebar journals={journals}
           handleNewJournal = {() => createNewJournal(journals, setJournals)}
           handleDeleteJournal = {deleteJournal}
+          handleRenameJournal = {renameJournal}
           handleJournalClick={handleJournalClick} handleBackButton={toggleJournalBar}/>}
         
         <div className="entries-sidebar">
