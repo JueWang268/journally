@@ -7,9 +7,7 @@ export default function NewJournalButton ({ handleNewJ }) {
         className='new-journal-button'
         onClick={handleNewJ}
         >
-
         +
-
         </button>
     );
 }

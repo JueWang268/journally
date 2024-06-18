@@ -1,29 +1,43 @@
-import React, { useState } from 'react';
-// import NewButton from './components/NewJournalButton';
-import JournalSidebar from './components/JournalSidebar';
-import './App.css';
-import Journal from './Journal';
-import Entry from './Entry';
+import React, { useState } from 'react'
+// import NewButton from './components/NewJournalButton'
+import JournalSidebar from './components/JournalSidebar'
+import './App.css'
+import Journal from './Journal'
+import Entry from './Entry'
 
 
 const App = () => {
-
-  const [selectedJournal, setSelectedJournal] = useState(null);
-  const [view, setView] = useState("writingPad");
-  const [showJournalBar, setShowJournalBar] = useState(true);
-
   const [journals, setJournals] = useState([      
-    new Journal(1, "Personal Journal", new Date(), []),
-    new Journal(2, "OOP Journal 2", new Date(), [
-      new Entry(1, "Dear Diary", (new Date()).toString(), "Today is a great day!")
+    new Journal(1, "Personal Journal", Date(), []),
+    new Journal(2, "OOP Journal 2", Date(), [
+      new Entry(1, "Dear Diary", Date(), "Today is a great day!")
     ], true)
-  ]);
+  ])
+  // force journal selection
+  const [selectedJournal, setSelectedJournal] = useState(journals[journals.length - 1])
+  const [selectedEntries, setSelectedEntries] = useState(selectedJournal.entries)
+
+  const [view, setView] = useState("writingPad")
+  const [showJournalBar, setShowJournalBar] = useState(true)
+  // const [renamingJournal, setRenamingJournal] = useState(false)
+
+  const findJournal = (ID) => {
+    const target = journals.filter(j => j.id === ID)
+    if (target.length === 1) {
+      return journals.filter(j => j.id === ID)[0]
+    }
+    else {
+      // throw error
+      return null
+    }
+  }
   
   const handleJournalClick = (journal) => {
-    setSelectedJournal(journal);
-  };
+    setSelectedJournal(journal)
+    setSelectedEntries(journal.entries)
+  }
 
-  const toggleJournalBar = () => setShowJournalBar(!showJournalBar);
+  const toggleJournalBar = () => setShowJournalBar(!showJournalBar)
 
   const createNewJournal = (journals, setJournals) => {
     if (! journals[journals.length - 1].id) {
@@ -33,7 +47,27 @@ const App = () => {
     setJournals([...journals, 
         new Journal(newId, `New Journal ${newId}`, new Date(), [])
     ])
-  };
+  }
+  
+  const createNewEntry = (jid) => {
+    // creates a new entry in a journal with id jid
+    const targetJournal = findJournal(jid)
+    const newEntryID = selectedEntries.length > 0? selectedEntries[selectedEntries.length - 1].id + 1: 1
+    const newEntry = new Entry(
+      newEntryID,
+      `Entry ${newEntryID}`, Date(), "{User Content}"
+    )
+
+    const otherJournals = journals.filter(
+      j => j.id !== jid
+    )
+    // sorting everytime is not the fastest implementation
+    setSelectedEntries([...selectedEntries, newEntry])
+    
+    setJournals([...otherJournals, 
+        {...targetJournal, entries: [...selectedEntries, newEntry]}
+    ].sort((a,b) => (a.id - b.id)))
+  }
 
   const askForConfirmation = () => {
     // should make the user retype 
@@ -41,14 +75,14 @@ const App = () => {
   }
 
   const deleteJournal = (journalID) => {
-    askForConfirmation();
+    askForConfirmation()
     setJournals(journals.filter(
       j => j.id !== journalID
     ))
   }
   
   const renameJournal = (journalID, newName) => {
-    // todo: make new name a user input
+
     setJournals(journals.map(
       j => {
         if (j.id === journalID){
@@ -57,7 +91,6 @@ const App = () => {
         return j
       }
     ))
-    
   }
 
   return (
@@ -78,17 +111,24 @@ const App = () => {
         
         {showJournalBar &&
           <JournalSidebar journals={journals}
+          selectedID={selectedJournal.id}
           handleNewJournal = {() => createNewJournal(journals, setJournals)}
           handleDeleteJournal = {deleteJournal}
           handleRenameJournal = {renameJournal}
           handleJournalClick={handleJournalClick} handleBackButton={toggleJournalBar}/>}
         
         <div className="entries-sidebar">
-        <h3>Entries</h3>
-        {selectedJournal ? (
-          selectedJournal.entries.length > 0 ? (
+          <div className="flex-container">
+            <h3>Entries</h3>
+            <button className="new-entry-button" onClick={() => {createNewEntry(selectedJournal.id)}}>
+            +
+            </button>
+          
+          </div>
+        {
+          selectedEntries.length > 0 ? (
           <ul>
-            {selectedJournal.entries.map(entry => (
+            {selectedEntries.map(entry => (
               <li key={entry.id}>
                 <div className="entry-card">
                   <div className="entry-title">{entry.title}</div>
@@ -98,11 +138,13 @@ const App = () => {
             ))}
           </ul>) :
           (
-            <div> No entries in this journal </div>
+            <div> No entries in this journal. 
+            <button className="start-writing-button" 
+            onClick={() => {createNewEntry(selectedJournal.id)}}>
+            Start Writing
+            </button> </div>
           )
-        ) : (
-          <div>Select a journal to view entries</div>
-        )}
+        }
       </div>
     
         <div className="main-content">
@@ -118,7 +160,7 @@ const App = () => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default App;
+export default App

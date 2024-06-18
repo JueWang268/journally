@@ -5,6 +5,7 @@ import NewJournalButton from './NewJournalButton'
 
 export default function JournalSidebar( {
   journals, 
+  selectedID,
   handleNewJournal, 
   handleDeleteJournal, 
   handleRenameJournal,
@@ -20,19 +21,28 @@ export default function JournalSidebar( {
         </div>
         <ul>
         {
-          journals.map(journal => (
-          <li className='journal-item' key={journal.id} onClick={() => handleJournalClick(journal)}>
-          <span className='journal-title'>{journal.title}</span>
-          <div className="action-buttons">
-              <button className="edit-button" onClick={() => handleRenameJournal(journal.id, "{UserInput}")}>
-              🖊️
-              </button>
-              <button className="edit-button" onClick={() => handleDeleteJournal(journal.id)}>
-              🗑️
-              </button>
-          </div>
-          </li>
-        ))}
+          journals.map(journal => {
+            const journalNameSpan = <span className='journal-title'>{journal.title}</span>
+            return (
+            <li className= {selectedID === journal.id? 'journal-item selected' : 'journal-item'}
+            key={journal.id} onClick={() => handleJournalClick(journal)}>
+            {journalNameSpan}
+            <div className="action-buttons">
+                <button className="edit-button" onClick={
+                  () => {
+                    // todo: make new name a user input
+                    
+                    handleRenameJournal(journal.id, "{UserInput}")
+                  }
+                }>
+                🖊️
+                </button>
+                <button className="edit-button" onClick={() => handleDeleteJournal(journal.id)}>
+                🗑️
+                </button>
+            </div>
+            </li>
+          )})}
         </ul>
       </div>
 
