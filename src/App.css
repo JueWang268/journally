@@ -79,6 +79,10 @@
   margin-bottom: 10px;
 }
 
+.entry-card:hover {
+  background-color: #f9fffe;
+}
+
 .entry-title {
   font-weight: bold;
 }
