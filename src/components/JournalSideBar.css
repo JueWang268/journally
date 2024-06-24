@@ -2,26 +2,32 @@
 .journal-item {
   display: flex;
   justify-content: space-between;
-  padding: 10px;
-  border: 1px solid transparent;
-  border-radius: 4px;
-  transition: background-color 0.2s;
+  padding: 5px;
+  border: 1px solid green  transparent;
+  border-radius: 3px;
+  transition: background-color 0.3s;
+}
+
+.journal-title{
+  display: flex;
+  padding: 0 0;
 }
 
 .journal-item input{
-  font-size: 100%;
+  font-size: 95%;
+  font-family: 'Courier New', Courier, monospace;
   outline: none;
   border: none;
   background-color: transparent;
 }
 
-.selected{ 
+.selected{
     font-weight: 700;
     font-size: large;
 }
 
 .journal-item:hover {
-    cursor: pointer;
+  cursor: pointer;
   background-color: #e0e0e0;
 }
 
@@ -35,7 +41,7 @@
   border: none;
   cursor: pointer;
   padding: 1px 4px;
-  margin-left: 10px;
+  margin: 0 10px;
 }
 
 .edit-button:hover {
@@ -48,7 +54,7 @@
 }
 
 .action-button-container{
-    display: flex;
-
-    padding-right: 0px;
+  display: flex;
+    margin-left: auto;
+    margin-right: 0px;
 }

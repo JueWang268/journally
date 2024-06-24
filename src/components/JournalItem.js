@@ -9,7 +9,7 @@ export default function JournalItem(
     const [isBeingRenamed, setIsBeingRenamed] = useState(false)
 
     return (
-      <li key={key} style={{display: "flex"}}>
+      <li key={key} style={{display: "flex", width: "100%"}}>
         {isBeingRenamed ? 
           <input type="text" defaultValue={journal.title} className="journal-title" 
           autoFocus={true} onFocus={e=>e.target.select()} onKeyDown={
