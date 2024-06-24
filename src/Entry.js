@@ -7,5 +7,8 @@ export default class Entry{
         this.date = date;
         this.content = content;
     }
-    
+
+    getDate() {
+      return this.date.toDateString()
+    }
 }

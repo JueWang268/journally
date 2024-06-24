@@ -8,16 +8,16 @@ import DeleteDialogue from './components/DeleteDialogue'
 
 
 const App = () => {
-  const [journals, setJournals] = useState([      
+  const [journals, setJournals] = useState([
     new Journal(1, "Personal Journal", Date(), []),
     new Journal(2, "OOP Journal 2", Date(), [
-      new Entry(1, "Dear Diary", Date(), "Today is a great day!")
+      new Entry(1, "Dear Diary", new Date(), "Today is a great day!")
     ], true)
   ])
   // force journal selection
-  const [selectedJournal, setSelectedJournal] = useState(journals[journals.length - 1])
+  const [selectedJournal, setSelectedJournal] = useState(journals[journals.length-1])
   const [selectedEntries, setSelectedEntries] = useState(selectedJournal.entries)
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [retypeProps, setRetypeProps] = useState(null)
   const [view, setView] = useState("writingPad")
   const [showJournalBar, setShowJournalBar] = useState(true)
@@ -57,7 +57,7 @@ const App = () => {
     const newEntryID = selectedEntries.length > 0? selectedEntries[selectedEntries.length - 1].id + 1: 1
     const newEntry = new Entry(
       newEntryID,
-      `Entry ${newEntryID}`, Date(), "{User Content}"
+      `${new Date().toDateString()}`, new Date(), "{User Content}"
     )
 
     const otherJournals = journals.filter(
@@ -71,26 +71,26 @@ const App = () => {
   }
 
   const askForInput = (journalName) => {
-    setIsDialogOpen(true);
+    setIsDialogOpen(true)
     return new Promise((resolve) => {
       setRetypeProps({
         journalName,
         onConfirm: (result) => {
           // result is true when user types title right
-          setIsDialogOpen(!result);
-          resolve(result);
+          setIsDialogOpen(!result)
+          resolve(result)
         },
         onCancel: () => {
-          setIsDialogOpen(false);
-          resolve(false); 
+          setIsDialogOpen(false)
+          resolve(false) 
         },
-      });
-
-    });
-  };
+      })
+    })
+  }
 
   const deleteJournal = async (journalID) => {
-    const confirmed = await askForInput(findJournal(journalID).title)
+    // const confirmed = await askForInput(findJournal(journalID).title)
+    const confirmed = true
     if (confirmed) {
       setJournals(journals.filter(
         j => j.id !== journalID
@@ -142,24 +142,27 @@ const App = () => {
           
           </div>
         {
-          selectedEntries.length > 0 ? (
-          <ul>
-            {selectedEntries.map(entry => (
-              <li key={entry.id}>
-                <div className="entry-card">
-                  <div className="entry-title">{entry.title}</div>
-                  <div className="entry-date">{entry.date}</div>
-                </div>
-              </li>
-            ))}
-          </ul>) :
-          (
-            <div> No entries in this journal. 
-            <button className="start-writing-button" 
-            onClick={() => {createNewEntry(selectedJournal.id)}}>
-            Start Writing
-            </button> </div>
-          )
+          selectedJournal ? 
+            (selectedEntries.length > 0 ? (
+            <ul>
+              {
+                selectedEntries.map(entry => (
+                <li key={entry.id}>
+                  <div className="entry-card">
+                    <div className="entry-title">{entry.title}</div>
+                    <div className="entry-date">{entry.getDate()}</div>
+                  </div>
+                </li>
+              ))}
+            </ul>) :
+            (
+              <div> No entries in this journal. 
+              <button className="start-writing-button" 
+              onClick={() => {createNewEntry(selectedJournal.id)}}>
+              Start Writing
+              </button> </div>
+            )
+          ) : <div className="no-journal-message"> No journal selected </div>
         }
       </div>
     
