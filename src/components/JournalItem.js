@@ -11,7 +11,8 @@ export default function JournalItem(
     return (
       <li key={key} style={{display: "flex"}}>
         {isBeingRenamed ? 
-          <input type="text" className="journal-title" autoFocus={true} onKeyDown={
+          <input type="text" defaultValue={journal.title} className="journal-title" 
+          autoFocus={true} onFocus={e=>e.target.select()} onKeyDown={
             (e) => {
               if (e.key === "Enter") {
                 setIsBeingRenamed(false)

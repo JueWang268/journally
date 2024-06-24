@@ -8,6 +8,13 @@
   transition: background-color 0.2s;
 }
 
+.journal-item input{
+  font-size: 100%;
+  outline: none;
+  border: none;
+  background-color: transparent;
+}
+
 .selected{ 
     font-weight: 700;
     font-size: large;
