@@ -4,6 +4,7 @@ import JournalSidebar from './components/JournalSidebar'
 import './App.css'
 import Journal from './Journal'
 import Entry from './Entry'
+import DeleteDialogue from './components/DeleteDialogue'
 
 
 const App = () => {
@@ -16,7 +17,8 @@ const App = () => {
   // force journal selection
   const [selectedJournal, setSelectedJournal] = useState(journals[journals.length - 1])
   const [selectedEntries, setSelectedEntries] = useState(selectedJournal.entries)
-
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [retypeProps, setRetypeProps] = useState(null)
   const [view, setView] = useState("writingPad")
   const [showJournalBar, setShowJournalBar] = useState(true)
   // const [renamingJournal, setRenamingJournal] = useState(false)
@@ -63,26 +65,40 @@ const App = () => {
     )
     // sorting everytime is not the fastest implementation
     setSelectedEntries([...selectedEntries, newEntry])
-    
     setJournals([...otherJournals, 
         {...targetJournal, entries: [...selectedEntries, newEntry]}
     ].sort((a,b) => (a.id - b.id)))
   }
 
-  const askForConfirmation = () => {
-    // should make the user retype 
-    // journal name to confirm deletion
-  }
+  const askForInput = (journalName) => {
+    setIsDialogOpen(true);
+    return new Promise((resolve) => {
+      setRetypeProps({
+        journalName,
+        onConfirm: (result) => {
+          // result is true when user types title right
+          setIsDialogOpen(!result);
+          resolve(result);
+        },
+        onCancel: () => {
+          setIsDialogOpen(false);
+          resolve(false); 
+        },
+      });
 
-  const deleteJournal = (journalID) => {
-    askForConfirmation()
-    setJournals(journals.filter(
-      j => j.id !== journalID
-    ))
+    });
+  };
+
+  const deleteJournal = async (journalID) => {
+    const confirmed = await askForInput(findJournal(journalID).title)
+    if (confirmed) {
+      setJournals(journals.filter(
+        j => j.id !== journalID
+      ))
+    }
   }
   
   const renameJournal = (journalID, newName) => {
-
     setJournals(journals.map(
       j => {
         if (j.id === journalID){
@@ -156,6 +172,13 @@ const App = () => {
             <textarea className="rich-textarea" placeholder="RICHTEXT AREA"></textarea>
           ) : (
             <div>Daily Stats will be shown here</div>
+          )}
+          {isDialogOpen && (
+            <DeleteDialogue
+              journalName={retypeProps.journalName}
+              onConfirm={retypeProps.onConfirm}
+              onCancel={retypeProps.onCancel}
+            />
           )}
         </div>
       </div>
