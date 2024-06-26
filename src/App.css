@@ -72,24 +72,6 @@
   border-radius: 4px;
 }
 
-.entry-card {
-  border: 1px solid #999;
-  padding: 10px;
-  border-radius: 4px;
-  margin-bottom: 10px;
-}
-
-.entry-card:hover {
-  background-color: #f9fffe;
-}
-
-.entry-title {
-  font-weight: bold;
-}
-
-.entry-date {
-  color: #888;
-}
 
 h3 {
   margin-top: 0;

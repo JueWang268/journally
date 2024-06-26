@@ -53,8 +53,35 @@
   display: flex;
 }
 
+/* shared btw entries and journals */
+
 .action-button-container{
   display: flex;
-    margin-left: auto;
-    margin-right: 0px;
+  margin-left: auto;
+  margin-right: 0px;
+}
+
+/* entries */
+
+.entry-card {
+  border: 1px solid #999;
+  padding: 10px;
+  border-radius: 4px;
+  margin-bottom: 10px;
+}
+
+.entry-card:hover {
+  background-color: #f9fffe;
+}
+
+.entry-card:hover .edit-button{
+  display: flex;
+}
+
+.entry-title {
+  font-weight: bold;
+}
+
+.entry-date {
+  color: #888;
 }

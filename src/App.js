@@ -5,6 +5,7 @@ import './App.css'
 import Journal from './Journal'
 import Entry from './Entry'
 import DeleteDialogue from './components/DeleteDialogue'
+import EntryItem from './components/EntryItem'
 
 
 const App = () => {
@@ -21,7 +22,6 @@ const App = () => {
   const [retypeProps, setRetypeProps] = useState(null)
   const [view, setView] = useState("writingPad")
   const [showJournalBar, setShowJournalBar] = useState(true)
-  // const [renamingJournal, setRenamingJournal] = useState(false)
 
   const findJournal = (ID) => {
     const target = journals.filter(j => j.id === ID)
@@ -34,9 +34,11 @@ const App = () => {
     }
   }
   
-  const handleJournalClick = (journal) => {
-    setSelectedJournal(journal)
-    setSelectedEntries(journal.entries)
+  const handleJournalClick = (jid) => {
+    const j = findJournal(jid)
+    console.log(j)
+    setSelectedJournal(j)
+    setSelectedEntries(j.entries)
   }
 
   const toggleJournalBar = () => setShowJournalBar(!showJournalBar)
@@ -51,23 +53,25 @@ const App = () => {
     ])
   }
   
-  const createNewEntry = (jid) => {
-    // creates a new entry in a journal with id jid
-    const targetJournal = findJournal(jid)
+  const createNewEntry = () => {
     const newEntryID = selectedEntries.length > 0? selectedEntries[selectedEntries.length - 1].id + 1: 1
     const newEntry = new Entry(
       newEntryID,
-      `${new Date().toDateString()}`, new Date(), "{User Content}"
+      `${new Date().toDateString()}`, 
+      new Date(), 
+      "{User Content}"
     )
 
     const otherJournals = journals.filter(
-      j => j.id !== jid
+      j => j.id !== selectedJournal.id
     )
-    // sorting everytime is not the fastest implementation
+    // BUG: setting a state DOES NOT AFFECT OTHER STATES!!!
     setSelectedEntries([...selectedEntries, newEntry])
-    setJournals([...otherJournals, 
-        {...targetJournal, entries: [...selectedEntries, newEntry]}
-    ].sort((a,b) => (a.id - b.id)))
+    console.log(JSON.stringify(selectedEntries));
+    setSelectedJournal({...selectedJournal, entries: selectedEntries})
+    console.log(JSON.stringify(selectedJournal));
+    // sorting everytime is not the fastest implementation
+    setJournals([...otherJournals, selectedJournal].sort((a,b) => (a.id - b.id)))
   }
 
   const askForInput = (journalName) => {
@@ -109,6 +113,28 @@ const App = () => {
     ))
   }
 
+  const renameEntry = (entryID, newName) => {
+    setJournals(journals.map(
+      j => {
+        if (j.id === selectedJournal.id){
+          setSelectedEntries(j.entries.map(
+            n => {
+              if (n.id === entryID){
+                console.log(`renamed ${j.id} journal's ${n.id} entry to ${newName}`)
+                return {...n, title: newName}
+              }
+              return n
+            }
+          ))
+          setSelectedJournal({...j, entries: selectedEntries})
+          console.log(`now: ${ JSON.stringify({...j, entries: selectedEntries}.entries) }`);
+          return {...j, entries: selectedEntries}
+        }
+        return j
+      }
+    ))
+  }
+
   return (
     <div className="app">
       <div className="navbar">
@@ -136,7 +162,7 @@ const App = () => {
         <div className="entries-sidebar">
           <div className="flex-container">
             <h3>Entries</h3>
-            <button className="new-entry-button" onClick={() => {createNewEntry(selectedJournal.id)}}>
+            <button className="new-entry-button" onClick={createNewEntry}>
             +
             </button>
           
@@ -147,12 +173,15 @@ const App = () => {
             <ul>
               {
                 selectedEntries.map(entry => (
-                <li key={entry.id}>
-                  <div className="entry-card">
-                    <div className="entry-title">{entry.title}</div>
-                    <div className="entry-date">{entry.getDate()}</div>
-                  </div>
-                </li>
+                <EntryItem entry={entry}
+                handleRenameEntry={renameEntry}
+                handleDeleteEntry={() => {}}  />
+                // <li key={entry.id}>
+                //   <div className="entry-card">
+                //     <div className="entry-title">{entry.title}</div>
+                //     <div className="entry-date">{entry.getDate()}</div>
+                //   </div>
+                // </li>
               ))}
             </ul>) :
             (
