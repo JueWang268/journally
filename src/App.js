@@ -59,7 +59,7 @@ const App = () => {
     const newEntryID = selectedEntries.length > 0? selectedEntries[selectedEntries.length - 1].id + 1: 1
     const newEntry = new Entry(
       newEntryID,
-      `${new Date().toDateString()}`, new Date(), "{User Content}"
+      `${new Date().toDateString()}`, new Date(), "{User Content}", null, true
     )
 
     const otherJournals = journals.filter(
@@ -71,7 +71,7 @@ const App = () => {
         {...targetJournal, entries: [...selectedEntries, newEntry]}
     ].sort((a,b) => (a.id - b.id)))
 
-    
+
   }
 
   const askForInput = (journalName) => {
@@ -120,13 +120,34 @@ const App = () => {
           const newEntries = j.entries.map(
             n => {
               if (n.id === entryID){
-                return {...n, title: newName}
+                return {...n, title: newName, renamingItem: false}
               }
               return n
             }
           )
           setSelectedEntries(newEntries)
           console.log(`now: ${ JSON.stringify({...j, entries: newEntries}.entries) }`)
+          return {...j, entries: newEntries}
+        }
+        return j
+      }
+    ))
+  }
+
+  const turnOffRenamingItem = (nid) => {
+    setJournals(journals.map(
+      j => {
+        if (j.id === selectedJournal.id){
+          const newEntries = j.entries.map(
+            n => {
+              if (n.id === nid){
+                console.log(`turned off renaming item for object ${JSON.stringify({...n, renamingItem: false})}`);
+                return {...n, renamingItem: false}
+              }
+              return n
+            }
+          )
+          setSelectedEntries(newEntries)
           return {...j, entries: newEntries}
         }
         return j
@@ -170,17 +191,12 @@ const App = () => {
           selectedJournal ? 
             (selectedEntries.length > 0 ? (
             <ul>
-              {
-                selectedEntries.map(entry => (
+              {selectedEntries.map(entry => (
                 <EntryItem entry={entry}
                 handleRenameEntry={renameEntry}
-                handleDeleteEntry={() => {}}  />
-                // <li key={entry.id}>
-                //   <div className="entry-card">
-                //     <div className="entry-title">{entry.title}</div>
-                //     <div className="entry-date">{entry.getDate()}</div>
-                //   </div>
-                // </li>
+                handleDeleteEntry={() => {}}
+                turnOffRenamingItem={turnOffRenamingItem}
+                renamed={entry.renamingItem}  />
               ))}
             </ul>) :
             (

@@ -4,11 +4,17 @@ import './JournalSideBar.css'
 export default function EntryItem(
     {entry, 
     handleRenameEntry, 
-    handleDeleteEntry }
+    handleDeleteEntry, 
+    turnOffRenamingItem,
+    renamed }
     ) {
-    const [isBeingRenamed, setIsBeingRenamed] = useState(true)
-    // const [entryTitle, setEntryTitle] = useState(entry.title)
-    // console.log(entry.date)
+    const [isBeingRenamed, setIsBeingRenamed] = useState(renamed)
+
+    const doneRenaming = (nid) => {
+        setIsBeingRenamed(false)
+        turnOffRenamingItem(nid)
+    }
+
     return (
       <li key={entry.id} className='entry-card'>
         {isBeingRenamed ? 
@@ -21,10 +27,10 @@ export default function EntryItem(
                 // setEntryTitle(e.target.value)
               }
               else if (e.key === "Escape"){
-                setIsBeingRenamed(false)
+                doneRenaming(entry.id)
               }
             }
-          } onBlur={()=>setIsBeingRenamed(false)}/> :
+          } onBlur={()=>doneRenaming(entry.id)}/> :
           <div className='entry-title'> {entry.title} </div>
         }
         {/*<div className="entry-date">{entry.getDate()}</div>*/}
