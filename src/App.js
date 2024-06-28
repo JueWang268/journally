@@ -53,25 +53,25 @@ const App = () => {
     ])
   }
   
-  const createNewEntry = () => {
+  const createNewEntry = (jid) => {
+    // creates a new entry in a journal with id jid
+    const targetJournal = findJournal(jid)
     const newEntryID = selectedEntries.length > 0? selectedEntries[selectedEntries.length - 1].id + 1: 1
     const newEntry = new Entry(
       newEntryID,
-      `${new Date().toDateString()}`, 
-      new Date(), 
-      "{User Content}"
+      `${new Date().toDateString()}`, new Date(), "{User Content}"
     )
 
     const otherJournals = journals.filter(
-      j => j.id !== selectedJournal.id
+      j => j.id !== jid
     )
-    // BUG: setting a state DOES NOT AFFECT OTHER STATES!!!
-    setSelectedEntries([...selectedEntries, newEntry])
-    console.log(JSON.stringify(selectedEntries));
-    setSelectedJournal({...selectedJournal, entries: selectedEntries})
-    console.log(JSON.stringify(selectedJournal));
     // sorting everytime is not the fastest implementation
-    setJournals([...otherJournals, selectedJournal].sort((a,b) => (a.id - b.id)))
+    setSelectedEntries([...selectedEntries, newEntry])
+    setJournals([...otherJournals, 
+        {...targetJournal, entries: [...selectedEntries, newEntry]}
+    ].sort((a,b) => (a.id - b.id)))
+
+    
   }
 
   const askForInput = (journalName) => {
@@ -117,18 +117,17 @@ const App = () => {
     setJournals(journals.map(
       j => {
         if (j.id === selectedJournal.id){
-          setSelectedEntries(j.entries.map(
+          const newEntries = j.entries.map(
             n => {
               if (n.id === entryID){
-                console.log(`renamed ${j.id} journal's ${n.id} entry to ${newName}`)
                 return {...n, title: newName}
               }
               return n
             }
-          ))
-          setSelectedJournal({...j, entries: selectedEntries})
-          console.log(`now: ${ JSON.stringify({...j, entries: selectedEntries}.entries) }`);
-          return {...j, entries: selectedEntries}
+          )
+          setSelectedEntries(newEntries)
+          console.log(`now: ${ JSON.stringify({...j, entries: newEntries}.entries) }`)
+          return {...j, entries: newEntries}
         }
         return j
       }
@@ -162,7 +161,7 @@ const App = () => {
         <div className="entries-sidebar">
           <div className="flex-container">
             <h3>Entries</h3>
-            <button className="new-entry-button" onClick={createNewEntry}>
+            <button className="new-entry-button" onClick={() => {createNewEntry(selectedJournal.id)}}>
             +
             </button>
           

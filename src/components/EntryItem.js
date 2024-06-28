@@ -6,7 +6,7 @@ export default function EntryItem(
     handleRenameEntry, 
     handleDeleteEntry }
     ) {
-    const [isBeingRenamed, setIsBeingRenamed] = useState(false)
+    const [isBeingRenamed, setIsBeingRenamed] = useState(true)
     // const [entryTitle, setEntryTitle] = useState(entry.title)
     // console.log(entry.date)
     return (
