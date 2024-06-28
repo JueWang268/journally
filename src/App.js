@@ -97,12 +97,15 @@ const App = () => {
   const deleteJournal = async (journalID) => {
     // const confirmed = await askForInput(findJournal(journalID).title)
     const confirmed = true
-    let nextJ = jids[0]
+    let nextJ = selectedJournal.id
     if (journalID === selectedJournal.id && journals.length > 1){
       console.log("should change selectd j");
       if (jids.indexOf(journalID) + 1 < journals.length){
         console.log("should go to next");
         nextJ = jids[jids.indexOf(journalID) + 1]
+      }
+      else{
+        nextJ = jids[0]
       }
     }
     if (confirmed) {
