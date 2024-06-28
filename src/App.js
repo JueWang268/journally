@@ -99,9 +99,7 @@ const App = () => {
     const confirmed = true
     let nextJ = selectedJournal.id
     if (journalID === selectedJournal.id && journals.length > 1){
-      console.log("should change selectd j");
       if (jids.indexOf(journalID) + 1 < journals.length){
-        console.log("should go to next");
         nextJ = jids[jids.indexOf(journalID) + 1]
       }
       else{
