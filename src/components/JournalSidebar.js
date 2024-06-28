@@ -27,7 +27,9 @@ export default function JournalSidebar( {
             // const journalNameSpan = <span className='journal-title'>{journal.title}</span>
             return (
               <div className={"journal-item" + (selectedID === journal.id? ' selected' : '')}
-              onClick={() => handleJournalClick(journal.id)}>
+              onClick={() => {
+                handleJournalClick(journal.id)}}
+              >
 
                 <JournalItem  key={journal.id}  journal={journal}
                 handleRenameJournal={handleRenameJournal}

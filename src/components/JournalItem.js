@@ -28,11 +28,17 @@ export default function JournalItem(
 
         <div className="action-button-container">
             <button className="edit-button" onClick={
-                () => {setIsBeingRenamed(true)}
+                e => {
+                  e.stopPropagation()
+                  setIsBeingRenamed(true)}
             } >
             🖊️
             </button>
-            <button className="edit-button" onClick={() => handleDeleteJournal(journal.id)}>
+            <button className="edit-button" onClick={(e) => {
+              e.stopPropagation()
+              handleDeleteJournal(journal.id)
+            }
+            }>
             🗑️
             </button>
         </div>

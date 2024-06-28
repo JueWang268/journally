@@ -33,10 +33,12 @@ const App = () => {
       return null
     }
   }
+
+  const jids = journals.map(j => j.id)
   
   const handleJournalClick = (jid) => {
     const j = findJournal(jid)
-    console.log(j)
+    console.log(`journal reselected to: ${JSON.stringify(j)}`)
     setSelectedJournal(j)
     setSelectedEntries(j.entries)
   }
@@ -95,10 +97,20 @@ const App = () => {
   const deleteJournal = async (journalID) => {
     // const confirmed = await askForInput(findJournal(journalID).title)
     const confirmed = true
+    let nextJ = jids[0]
+    if (journalID === selectedJournal.id && journals.length > 1){
+      console.log("should change selectd j");
+      if (jids.indexOf(journalID) + 1 < journals.length){
+        console.log("should go to next");
+        nextJ = jids[jids.indexOf(journalID) + 1]
+      }
+    }
     if (confirmed) {
       setJournals(journals.filter(
         j => j.id !== journalID
       ))
+      // action buttons must stop event propagation
+      handleJournalClick(nextJ)
     }
   }
   
