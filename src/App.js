@@ -168,6 +168,8 @@ const App = () => {
     ))
   }
 
+  const saveEntryContent = () => {}
+
   return (
     <div className="app">
       <div className="navbar">
