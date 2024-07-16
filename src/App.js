@@ -18,6 +18,7 @@ const App = () => {
   // force journal selection
   const [selectedJournal, setSelectedJournal] = useState(journals[journals.length-1])
   const [selectedEntries, setSelectedEntries] = useState(selectedJournal.entries)
+  const [selectedEntry, setSelectedEntry] = useState(null)
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [retypeProps, setRetypeProps] = useState(null)
   const [view, setView] = useState("writingPad")
@@ -133,12 +134,14 @@ const App = () => {
           const newEntries = j.entries.map(
             n => {
               if (n.id === entryID){
+                setSelectedEntry({...n, title: newName, renamingItem: false})
                 return {...n, title: newName, renamingItem: false}
               }
               return n
             }
           )
           setSelectedEntries(newEntries)
+
           console.log(`now: ${ JSON.stringify({...j, entries: newEntries}.entries) }`)
           return {...j, entries: newEntries}
         }
@@ -154,7 +157,6 @@ const App = () => {
           const newEntries = j.entries.map(
             n => {
               if (n.id === nid){
-                console.log(`turned off renaming item for object ${JSON.stringify({...n, renamingItem: false})}`);
                 return {...n, renamingItem: false}
               }
               return n
@@ -167,8 +169,28 @@ const App = () => {
       }
     ))
   }
-
-  const saveEntryContent = () => {}
+  
+  const saveEntryContent = (nid, content) => {
+    console.log(`entry ${nid} has content changed to ${content}`);
+    setJournals(journals.map(
+      j => {
+        if (j.id === selectedJournal.id){
+          const newEntries = j.entries.map(
+            n => {
+              if (n.id === nid){
+                setSelectedEntry({...n, content: content})
+                return {...n, content: content}
+              }
+              return n
+            }
+          )
+          setSelectedEntries(newEntries)
+          return {...j, entries: newEntries}
+        }
+        return j
+      }
+    ))
+  }
 
   return (
     <div className="app">
@@ -210,6 +232,7 @@ const App = () => {
                 <EntryItem entry={entry}
                 handleRenameEntry={renameEntry}
                 handleDeleteEntry={() => {}}
+                handleEntryClick={()=> {setSelectedEntry(entry)}}
                 turnOffRenamingItem={turnOffRenamingItem}
                 renamed={entry.renamingItem}  />
               ))}
@@ -225,13 +248,20 @@ const App = () => {
         }
       </div>
     
-        <div className="main-content">
+        {
+          selectedEntry &&
+          <div className="main-content">
           <div className="view-switch">
             <button onClick={() => setView("writingPad")}>Writing Pad</button>
             <button onClick={() => setView("dailyStats")}>Daily Stats</button>
           </div>
+          <div className="entry-title">
+            {selectedEntry.title}
+          </div>
           {view === "writingPad" ? (
-            <textarea className="rich-textarea" placeholder="RICHTEXT AREA"></textarea>
+            <textarea className="rich-textarea" placeholder="RICHTEXT AREA" onChange={(e) => {saveEntryContent(selectedEntry.id, e.target.value)}}> 
+              {selectedEntry.content}
+            </textarea>
           ) : (
             <div>Daily Stats will be shown here</div>
           )}
@@ -240,9 +270,10 @@ const App = () => {
               journalName={retypeProps.journalName}
               onConfirm={retypeProps.onConfirm}
               onCancel={retypeProps.onCancel}
-            />
-          )}
-        </div>
+              />
+            )}
+          </div>
+        }
       </div>
     </div>
   )

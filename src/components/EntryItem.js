@@ -5,6 +5,7 @@ export default function EntryItem(
     {entry, 
     handleRenameEntry, 
     handleDeleteEntry, 
+    handleEntryClick,
     turnOffRenamingItem,
     renamed }
     ) {
@@ -16,7 +17,7 @@ export default function EntryItem(
     }
 
     return (
-      <li key={entry.id} className='entry-card'>
+      <li key={entry.id} className='entry-card' onClick={handleEntryClick}>
         {isBeingRenamed ? 
           <input type="text" defaultValue={entry.title} className="entry-title" 
           autoFocus={true} onFocus={e=>e.target.select()} onKeyDown={
