@@ -96,8 +96,8 @@ const App = () => {
   }
 
   const deleteJournal = async (journalID) => {
-    // const confirmed = await askForInput(findJournal(journalID).title)
-    const confirmed = true
+    const confirmed = await askForInput(findJournal(journalID).title)
+    // const confirmed = true
     let nextJ = selectedJournal.id
     if (journalID === selectedJournal.id && journals.length > 1){
       if (jids.indexOf(journalID) + 1 < journals.length){
@@ -259,7 +259,11 @@ const App = () => {
             {selectedEntry.title}
           </div>
           {view === "writingPad" ? (
-            <textarea className="rich-textarea" placeholder="RICHTEXT AREA" onChange={(e) => {saveEntryContent(selectedEntry.id, e.target.value)}}> 
+            <textarea 
+              className="rich-textarea" 
+              value={selectedEntry.content}
+              onChange={(e) => {saveEntryContent(selectedEntry.id, e.target.value)}}
+            > 
               {selectedEntry.content}
             </textarea>
           ) : (
