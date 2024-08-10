@@ -42,6 +42,9 @@ const App = () => {
     console.log(`journal reselected to: ${JSON.stringify(j)}`)
     setSelectedJournal(j)
     setSelectedEntries(j.entries)
+    if (j.entries.length === 0)
+      setSelectedEntry(null)
+    else {setSelectedEntry(j.entries[j.entries.length - 1])}
   }
 
   const toggleJournalBar = () => setShowJournalBar(!showJournalBar)
@@ -96,8 +99,8 @@ const App = () => {
   }
 
   const deleteJournal = async (journalID) => {
-    const confirmed = await askForInput(findJournal(journalID).title)
-    // const confirmed = true
+    // const confirmed = await askForInput(findJournal(journalID).title)
+    const confirmed = true
     let nextJ = selectedJournal.id
     if (journalID === selectedJournal.id && journals.length > 1){
       if (jids.indexOf(journalID) + 1 < journals.length){
@@ -107,6 +110,8 @@ const App = () => {
         nextJ = jids[0]
       }
     }
+
+    // dialogue wont show up journal without entries
     if (confirmed) {
       setJournals(journals.filter(
         j => j.id !== journalID
@@ -218,15 +223,28 @@ const App = () => {
         
         <div className="entries-sidebar">
           <div className="flex-container">
-            <h3>Entries</h3>
+            <h3>  
+              {view === "writingPad"? "Entries": "Stats"}
+            </h3>
+
             <button className="new-entry-button" onClick={() => {createNewEntry(selectedJournal.id)}}>
             +
+            </button>
+
+            <button className="toggle-button" onClick={() => {
+              view === "writingPad" ?
+              setView("dailyStats") :
+              setView("writingPad")
+            }}>
+              <h3>Change to {view === "writingPad" ? "Daily Stats": "Written Entries"}</h3>
             </button>
           
           </div>
         {
           selectedJournal ? 
-            (selectedEntries.length > 0 ? (
+            (
+              view === "writingPad" ?
+              (selectedEntries.length > 0 ? (
             <ul>
               {selectedEntries.map(entry => (
                 <EntryItem entry={entry}
@@ -243,7 +261,7 @@ const App = () => {
               onClick={() => {createNewEntry(selectedJournal.id)}}>
               Start Writing
               </button> </div>
-            )
+            )): <div className="stats-bar">List of datapoints?</div>
           ) : <div className="no-journal-message"> No journal selected </div>
         }
       </div>
@@ -255,17 +273,19 @@ const App = () => {
             <button onClick={() => setView("writingPad")}>Writing Pad</button>
             <button onClick={() => setView("dailyStats")}>Daily Stats</button>
           </div>
-          <div className="entry-title">
-            {selectedEntry.title}
-          </div>
           {view === "writingPad" ? (
-            <textarea 
-              className="rich-textarea" 
-              value={selectedEntry.content}
-              onChange={(e) => {saveEntryContent(selectedEntry.id, e.target.value)}}
-            > 
-              {selectedEntry.content}
-            </textarea>
+            <>
+              <div className="entry-title">
+                {selectedJournal.title}  {selectedEntry.title}
+              </div>
+              <textarea 
+                className="rich-textarea" 
+                value={selectedEntry.content}
+                onChange={(e) => {saveEntryContent(selectedEntry.id, e.target.value)}}
+              > 
+                {selectedEntry.content}
+              </textarea>
+            </>
           ) : (
             <div>Daily Stats will be shown here</div>
           )}
