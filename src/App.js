@@ -275,8 +275,8 @@ const App = () => {
           </div>
           {view === "writingPad" ? (
             <>
-              <div className="entry-title">
-                {selectedJournal.title}  {selectedEntry.title}
+              <div className="entry-path">
+                {selectedJournal.title} &gt; {selectedEntry.title}
               </div>
               <textarea 
                 className="rich-textarea" 
