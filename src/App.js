@@ -1,3 +1,9 @@
+/*
+
+I'm so tired
+
+*/
+
 import React, { useState } from 'react'
 // import NewButton from './components/NewJournalButton'
 import JournalSidebar from './components/JournalSidebar'
