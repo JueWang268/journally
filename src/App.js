@@ -1,9 +1,3 @@
-/*
-
-I'm so tired
-
-*/
-
 import React, { useState } from 'react'
 // import NewButton from './components/NewJournalButton'
 import JournalSidebar from './components/JournalSidebar'
@@ -29,6 +23,16 @@ const App = () => {
   const [retypeProps, setRetypeProps] = useState(null)
   const [view, setView] = useState("writingPad")
   const [showJournalBar, setShowJournalBar] = useState(true)
+
+  const dateTimeFormat = new Intl.DateTimeFormat('en-US', {
+    year: "numeric",
+    month: "numeric",
+    day: "numeric",
+    hour: "numeric",
+    minute: "numeric",
+    second: "numeric",
+    hour12: false
+  })
 
   const findJournal = (ID) => {
     const target = journals.filter(j => j.id === ID)
@@ -71,7 +75,7 @@ const App = () => {
     const newEntryID = selectedEntries.length > 0? selectedEntries[selectedEntries.length - 1].id + 1: 1
     const newEntry = new Entry(
       newEntryID,
-      `${new Date().toDateString()}`, new Date(), "{User Content}", null, true
+      `${dateTimeFormat.format(new Date())}`, new Date(), "{User Content}", null, true
     )
 
     const otherJournals = journals.filter(
@@ -180,6 +184,37 @@ const App = () => {
       }
     ))
   }
+
+  const delEntry = (nid) => {
+
+    const prevEntry = 0
+    let nextN = null // case for an empty journal after deletion
+    let nids = selectedJournal.entries.map(n => n.id)
+
+    if (nids.length > 1){
+      if (nids.indexOf(nid) + 1 < journals.length){
+        nextN = selectedEntries[nids.indexOf(nid) + 1]
+      }
+      else {
+        nextN = selectedEntries[0]
+      }
+    }
+
+    setSelectedEntry(nextN)
+    setJournals(journals.map(
+      j => {
+        if (j.id === selectedJournal.id){
+          const newEntries = j.entries.filter(
+            n => n.id !== nid
+          )
+          setSelectedEntries(newEntries)
+          console.log(`now: ${ JSON.stringify({...j, entries: newEntries}.entries) }`)
+          return {...j, entries: newEntries}
+        }
+        return j
+      }
+    ))
+  }
   
   const saveEntryContent = (nid, content) => {
     console.log(`entry ${nid} has content changed to ${content}`);
@@ -255,7 +290,7 @@ const App = () => {
               {selectedEntries.map(entry => (
                 <EntryItem entry={entry}
                 handleRenameEntry={renameEntry}
-                handleDeleteEntry={() => {}}
+                handleDeleteEntry={delEntry}
                 handleEntryClick={()=> {setSelectedEntry(entry)}}
                 turnOffRenamingItem={turnOffRenamingItem}
                 renamed={entry.renamingItem}  />
