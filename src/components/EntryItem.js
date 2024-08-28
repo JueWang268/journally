@@ -7,7 +7,8 @@ export default function EntryItem(
     handleDeleteEntry, 
     handleEntryClick,
     turnOffRenamingItem,
-    renamed }
+    renamed,
+    selected }
     ) {
     const [isBeingRenamed, setIsBeingRenamed] = useState(renamed)
 
@@ -17,7 +18,7 @@ export default function EntryItem(
     }
 
     return (
-      <li key={entry.id} className='entry-card' onClick={handleEntryClick}>
+      <li key={entry.id} className={'entry-card' + (selected? " selected": "")} onClick={handleEntryClick}>
         {isBeingRenamed ? 
           <input type="text" defaultValue={entry.title} className="entry-title" 
           autoFocus={true} onFocus={e=>e.target.select()} onKeyDown={

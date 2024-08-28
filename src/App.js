@@ -187,7 +187,6 @@ const App = () => {
 
   const delEntry = (nid) => {
 
-    const prevEntry = 0
     let nextN = null // case for an empty journal after deletion
     let nids = selectedJournal.entries.map(n => n.id)
 
@@ -282,18 +281,23 @@ const App = () => {
           
           </div>
         {
+          // TODO the css for entryitem is in JournalSideBar.css
           selectedJournal ? 
             (
               view === "writingPad" ?
               (selectedEntries.length > 0 ? (
             <ul>
               {selectedEntries.map(entry => (
-                <EntryItem entry={entry}
+                <EntryItem 
+                entry={entry}
                 handleRenameEntry={renameEntry}
                 handleDeleteEntry={delEntry}
-                handleEntryClick={()=> {setSelectedEntry(entry)}}
+                handleEntryClick={()=> {
+                  setSelectedEntry(entry)
+                }}
                 turnOffRenamingItem={turnOffRenamingItem}
-                renamed={entry.renamingItem}  />
+                renamed={entry.renamingItem}
+                selected={entry.id === selectedEntry?.id}  />
               ))}
             </ul>) :
             (
