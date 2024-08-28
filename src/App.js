@@ -190,6 +190,9 @@ const App = () => {
     let nextN = null // case for an empty journal after deletion
     let nids = selectedJournal.entries.map(n => n.id)
 
+    // set isbeingdeleted to true to make confirm delete button appear
+    // TODO wait for user to click confirm delete button
+
     if (nids.length > 1){
       if (nids.indexOf(nid) + 1 < journals.length){
         nextN = selectedEntries[nids.indexOf(nid) + 1]
@@ -216,7 +219,7 @@ const App = () => {
   }
   
   const saveEntryContent = (nid, content) => {
-    console.log(`entry ${nid} has content changed to ${content}`);
+    console.log(`entry ${nid} has content changed to ${content}`)
     setJournals(journals.map(
       j => {
         if (j.id === selectedJournal.id){
@@ -281,7 +284,6 @@ const App = () => {
           
           </div>
         {
-          // TODO the css for entryitem is in JournalSideBar.css
           selectedJournal ? 
             (
               view === "writingPad" ?
@@ -289,15 +291,17 @@ const App = () => {
             <ul>
               {selectedEntries.map(entry => (
                 <EntryItem 
-                entry={entry}
-                handleRenameEntry={renameEntry}
-                handleDeleteEntry={delEntry}
-                handleEntryClick={()=> {
-                  setSelectedEntry(entry)
-                }}
-                turnOffRenamingItem={turnOffRenamingItem}
-                renamed={entry.renamingItem}
-                selected={entry.id === selectedEntry?.id}  />
+                  entry={entry}
+                  handleRenameEntry={renameEntry}
+                  handleDeleteEntry={delEntry}
+                  handleEntryClick={()=> {
+                    setSelectedEntry(entry)
+                  }}
+                  turnOffRenamingItem={turnOffRenamingItem}
+                  renamed={entry.renamingItem}
+                  deleted={entry.deletingItem}
+                  selected={entry.id === selectedEntry?.id}  
+                />
               ))}
             </ul>) :
             (

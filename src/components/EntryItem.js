@@ -8,9 +8,11 @@ export default function EntryItem(
     handleEntryClick,
     turnOffRenamingItem,
     renamed,
+    deleted,
     selected }
     ) {
     const [isBeingRenamed, setIsBeingRenamed] = useState(renamed)
+    const [isBeingDeleted, setIsBeingDeleted] = useState(deleted)
 
     const doneRenaming = (nid) => {
         setIsBeingRenamed(false)
@@ -26,7 +28,6 @@ export default function EntryItem(
               if (e.key === "Enter") {
                 setIsBeingRenamed(false)
                 handleRenameEntry(entry.id, e.target.value)
-                // setEntryTitle(e.target.value)
               }
               else if (e.key === "Escape"){
                 doneRenaming(entry.id)
@@ -39,13 +40,24 @@ export default function EntryItem(
         
         <div className="action-button-container">
             <button className="edit-button" onClick={
-                () => {setIsBeingRenamed(true)}
+                (e) => {
+                  e.stopPropagation()
+                  setIsBeingRenamed(true)}
             } >
             🖊️
             </button>
-            <button className="edit-button" onClick={() => handleDeleteEntry(entry.id)}>
+            <button className="edit-button" onClick={(e) =>{
+              e.stopPropagation()
+              handleDeleteEntry(entry.id)}}>
             🗑️
             </button>
+
+            {
+              isBeingDeleted && <button className="confirm-delete-button">
+              √
+              </button>
+            }
+            
         </div>
     </li>
   )
