@@ -8,11 +8,10 @@ export default function EntryItem(
     handleEntryClick,
     turnOffRenamingItem,
     renamed,
-    deleted,
     selected }
     ) {
     const [isBeingRenamed, setIsBeingRenamed] = useState(renamed)
-    const [isBeingDeleted, setIsBeingDeleted] = useState(deleted)
+    const [isBeingDeleted, setIsBeingDeleted] = useState(false)
 
     const doneRenaming = (nid) => {
         setIsBeingRenamed(false)
@@ -46,16 +45,38 @@ export default function EntryItem(
             } >
             🖊️
             </button>
-            <button className="edit-button" onClick={(e) =>{
-              e.stopPropagation()
-              handleDeleteEntry(entry.id)}}>
+            <button className="edit-button" onClick={
+              (e) =>{
+                  e.stopPropagation()
+                  setIsBeingDeleted(true)
+                }
+              }
+            >
             🗑️
             </button>
 
             {
-              isBeingDeleted && <button className="confirm-delete-button">
-              √
-              </button>
+              isBeingDeleted && 
+              <div className="confirm-dialogue">
+                <button className="confirm-delete-button"
+                onClick={ (e) => {
+                e.stopPropagation()
+                handleDeleteEntry(entry.id)} 
+                }
+                >
+                ✅
+                </button>
+                
+                <button className="cancel-delete-button"
+                onClick={ (e) => {
+                  e.stopPropagation()
+                  setIsBeingDeleted(false)}
+                }
+                >
+                ❎ 
+                </button>
+              </div>
+              
             }
             
         </div>

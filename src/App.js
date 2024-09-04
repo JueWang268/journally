@@ -185,13 +185,12 @@ const App = () => {
     ))
   }
 
-  const delEntry = (nid) => {
+  const delEntry = (entry) => {
 
     let nextN = null // case for an empty journal after deletion
+    let nid = entry.id
     let nids = selectedJournal.entries.map(n => n.id)
 
-    // set isbeingdeleted to true to make confirm delete button appear
-    // TODO wait for user to click confirm delete button
 
     if (nids.length > 1){
       if (nids.indexOf(nid) + 1 < journals.length){
@@ -209,6 +208,8 @@ const App = () => {
           const newEntries = j.entries.filter(
             n => n.id !== nid
           )
+          // safe switch V
+          // const newEntries = j.entries
           setSelectedEntries(newEntries)
           console.log(`now: ${ JSON.stringify({...j, entries: newEntries}.entries) }`)
           return {...j, entries: newEntries}
@@ -249,7 +250,6 @@ const App = () => {
         <div className="nav-item" onClick={toggleJournalBar}>Journals</div>
         <div className="nav-item">Calendar</div>
         <div className="nav-item">Graph</div>
-        <div className="nav-item">Insert Media</div>
         <div className="nav-item">🌏</div>
         <div className="user-icon" onClick={() => alert('User options')}>👤</div>
       </div>
@@ -293,7 +293,7 @@ const App = () => {
                 <EntryItem 
                   entry={entry}
                   handleRenameEntry={renameEntry}
-                  handleDeleteEntry={delEntry}
+                  handleDeleteEntry={() => {delEntry(entry)}}
                   handleEntryClick={()=> {
                     setSelectedEntry(entry)
                   }}
