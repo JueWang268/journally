@@ -157,7 +157,7 @@ const App = () => {
           )
           setSelectedEntries(newEntries)
 
-          console.log(`now: ${ JSON.stringify({...j, entries: newEntries}.entries) }`)
+          // console.log(`now: ${ JSON.stringify({...j, entries: newEntries}.entries) }`)
           return {...j, entries: newEntries}
         }
         return j
@@ -187,31 +187,35 @@ const App = () => {
 
   const delEntry = (entry) => {
 
-    let nextN = null // case for an empty journal after deletion
+    let nextN = entry // case for an empty journal after deletion
     let nid = entry.id
-    let nids = selectedJournal.entries.map(n => n.id)
+    let nids = selectedEntries.map(n => n.id)
 
-
-    if (nids.length > 1){
-      if (nids.indexOf(nid) + 1 < journals.length){
-        nextN = selectedEntries[nids.indexOf(nid) + 1]
+    if (selectedEntry === entry){
+      if (nids.length > 1){
+        if (nids.indexOf(nid) + 1 < selectedEntries.length){
+          nextN = selectedEntries[nids.indexOf(nid) + 1]
+        }
+        else {
+          nextN = selectedEntries[0]
+        }
+      } else{
+        nextN = null
       }
-      else {
-        nextN = selectedEntries[0]
-      }
+    } else{
+      nextN = selectedEntry
     }
-
+    console.log(`${JSON.stringify(nids)} ${JSON.stringify(nextN)}`)
+    
     setSelectedEntry(nextN)
     setJournals(journals.map(
       j => {
         if (j.id === selectedJournal.id){
           const newEntries = j.entries.filter(
-            n => n.id !== nid
+            n => n !== entry
           )
-          // safe switch V
-          // const newEntries = j.entries
           setSelectedEntries(newEntries)
-          console.log(`now: ${ JSON.stringify({...j, entries: newEntries}.entries) }`)
+          // console.log(`now: ${ JSON.stringify({...j, entries: newEntries}.entries) }`)
           return {...j, entries: newEntries}
         }
         return j

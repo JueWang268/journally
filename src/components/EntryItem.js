@@ -61,7 +61,9 @@ export default function EntryItem(
                 <button className="confirm-delete-button"
                 onClick={ (e) => {
                 e.stopPropagation()
-                handleDeleteEntry(entry.id)} 
+                handleDeleteEntry(entry.id)
+                setIsBeingDeleted(false)
+              } 
                 }
                 >
                 ✅
