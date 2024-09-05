@@ -6,12 +6,12 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 ### Immediate Goals
 
-- [ ] Implement Journal Entry selection, content in writing pad
+- [X] Implement Journal Entry selection, content in writing pad
     - [ ] Implement fancier editor
+- [ ] *Calendar* view: able to see streaks and activities
 
 ### Long-term Idea List
 
-- [ ] *Calendar* view: able to see streaks and activities
 - [ ] User sign-in, cloud storage
     - [ ] Streak count
 - [ ] Rich text *formatting*: cf. Dayone

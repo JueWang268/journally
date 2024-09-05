@@ -6,6 +6,7 @@ import Journal from './Journal'
 import Entry from './Entry'
 import DeleteDialogue from './components/DeleteDialogue'
 import EntryItem from './components/EntryItem'
+// import dateTimeFormat from './config/dateTimeFormat.json'
 
 
 const App = () => {
@@ -33,6 +34,8 @@ const App = () => {
     second: "numeric",
     hour12: false
   })
+
+  const TODAY = new Date()
 
   const findJournal = (ID) => {
     const target = journals.filter(j => j.id === ID)
@@ -75,7 +78,9 @@ const App = () => {
     const newEntryID = selectedEntries.length > 0? selectedEntries[selectedEntries.length - 1].id + 1: 1
     const newEntry = new Entry(
       newEntryID,
-      `${dateTimeFormat.format(new Date())}`, new Date(), "{User Content}", null, true
+      `${dateTimeFormat.format(new Date())}`, 
+      new Date(TODAY.getFullYear(), TODAY.getMonth(), TODAY.getDate()), 
+      "{User Content}", null, true
     )
 
     const otherJournals = journals.filter(
@@ -86,8 +91,6 @@ const App = () => {
     setJournals([...otherJournals, 
         {...targetJournal, entries: [...selectedEntries, newEntry]}
     ].sort((a,b) => (a.id - b.id)))
-
-
   }
 
   const askForInput = (journalName) => {
@@ -224,7 +227,8 @@ const App = () => {
   }
   
   const saveEntryContent = (nid, content) => {
-    console.log(`entry ${nid} has content changed to ${content}`)
+    // console.log(`entry ${nid} has content changed to ${content}`)
+                
     setJournals(journals.map(
       j => {
         if (j.id === selectedJournal.id){
@@ -293,7 +297,8 @@ const App = () => {
               view === "writingPad" ?
               (selectedEntries.length > 0 ? (
             <ul>
-              {selectedEntries.map(entry => (
+              {
+                selectedEntries.map(entry => (
                 <EntryItem 
                   entry={entry}
                   handleRenameEntry={renameEntry}
@@ -303,8 +308,7 @@ const App = () => {
                   }}
                   turnOffRenamingItem={turnOffRenamingItem}
                   renamed={entry.renamingItem}
-                  deleted={entry.deletingItem}
-                  selected={entry.id === selectedEntry?.id}  
+                  selected={entry.id === selectedEntry?.id}
                 />
               ))}
             </ul>) :
