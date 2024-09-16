@@ -333,7 +333,10 @@ const App = () => {
           {view === "writingPad" ? (
             <>
               <div className="entry-path">
-                {selectedJournal.title} &gt; {selectedEntry.title}
+                {selectedJournal.title} &gt; {selectedEntry.title} : 
+                Created {JSON.stringify(selectedEntry.dateCreated)}
+                <br></br>
+                Modified {JSON.stringify(selectedEntry.dateModified)}
               </div>
               <textarea 
                 className="rich-textarea" 
