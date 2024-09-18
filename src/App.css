@@ -91,4 +91,58 @@ li {
   margin: 5px 0;
 }
 
+.view-switch {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 20px;
+}
 
+.slider {
+  position: relative;
+  width: 10em;
+  height: 2.5em;
+  background-color: grey;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.slider-button {
+  position: absolute;
+  top: 4px;
+  width: 2em;
+  height: 2em;
+  background-color: white;
+  border-radius: 50%;
+  transition: transform 0.2s ease;
+}
+
+.left .slider-button {
+  transform: translateX(0.1em);
+}
+
+.right .slider-button {
+  transform: translateX(8em); /* Adjust to fit slider width */
+}
+
+.slider.left {
+  background-color: lightgrey;
+}
+
+.slider.right {
+  background-color: lightblue;
+}
+
+.slider-text {
+  position: absolute;
+  display: flex; /* Flexbox ensures vertical centering */
+  align-items: center; /* Vertically center text */
+  justify-content: center; /* Horizontally center text */
+  height: 2.5em; /* Match the button's height */
+  width: 100%; /* Make the text span the full width of the slider */
+  font-weight: bold;
+  color: white;
+  pointer-events: none;
+  z-index: 1;
+}

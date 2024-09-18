@@ -62,6 +62,11 @@ const App = () => {
 
   const toggleJournalBar = () => setShowJournalBar(!showJournalBar)
 
+  const toggleView = () => {
+    setView(prevView => (prevView === "writingPad" ? "dailyStats" : "writingPad"))
+  }
+  
+
   const createNewJournal = (journals, setJournals) => {
     if (! journals[journals.length - 1].id) {
         return
@@ -318,7 +323,12 @@ const App = () => {
               onClick={() => {createNewEntry(selectedJournal.id)}}>
               Start Writing
               </button> </div>
-            )): <div className="stats-bar">List of datapoints?</div>
+            )): 
+            <div className="stats-bar">
+              {/* demo purposes */}
+                
+
+            </div>
           ) : <div className="no-journal-message"> No journal selected </div>
         }
       </div>
@@ -327,8 +337,13 @@ const App = () => {
           selectedEntry &&
           <div className="main-content">
           <div className="view-switch">
-            <button onClick={() => setView("writingPad")}>Writing Pad</button>
-            <button onClick={() => setView("dailyStats")}>Daily Stats</button>
+            <div className={`slider ${view === 'writingPad' ? 'left' : 'right'}`} onClick={toggleView}>
+              <span className="slider-text">{view === 'writingPad' ? 'Writing Pad' : 'Daily Data'}</span>
+              <div className="slider-button"></div>
+            </div>
+
+            {/* <button onClick={() => setView("writingPad")}>Writing Pad</button>
+            <button onClick={() => setView("dailyStats")}>Daily data</button> */}
           </div>
           {view === "writingPad" ? (
             <>
