@@ -6,6 +6,8 @@ import Journal from './Journal'
 import Entry from './Entry'
 import DeleteDialogue from './components/DeleteDialogue'
 import EntryItem from './components/EntryItem'
+import DataPointItem from './DataPointItem'
+import DataPointGraph from './DataPointGraph'
 // import dateTimeFormat from './config/dateTimeFormat.json'
 
 
@@ -326,8 +328,11 @@ const App = () => {
             )): 
             <div className="stats-bar">
               {/* demo purposes */}
-                
+              <DataPointItem name="Work productivity" color="red"/>
+              <DataPointItem name="Coffee consumed" color="turquoise"/>
+              <DataPointItem name="Miles run in morning" color="green"/>
 
+              {/* demo ends */}
             </div>
           ) : <div className="no-journal-message"> No journal selected </div>
         }
@@ -362,7 +367,11 @@ const App = () => {
               </textarea>
             </>
           ) : (
-            <div>Daily Stats will be shown here</div>
+            <div>
+            {/* demo purposes */}
+            <DataPointGraph />
+            {/* demo purposes */}
+            </div>
           )}
           {isDialogOpen && (
             <DeleteDialogue
