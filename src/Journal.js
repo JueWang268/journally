@@ -14,4 +14,4 @@ class Journal {
     }
 }
   
-export default Journal;
+export default Journal

@@ -1,6 +1,7 @@
 import React, {useState} from 'react'
 import './JournalSideBar.css'
 import dateFormat from '../config/dateFormat'
+import DatePicker from 'react-datepicker'
 
 export default function EntryItem(
     {entry, 
@@ -13,6 +14,7 @@ export default function EntryItem(
     ) {
     const [isBeingRenamed, setIsBeingRenamed] = useState(renamed)
     const [isBeingDeleted, setIsBeingDeleted] = useState(false)
+    const [isSettingDate, setIsSettingDate] = useState(false)
 
     const doneRenaming = (nid) => {
         setIsBeingRenamed(false)
@@ -27,7 +29,7 @@ export default function EntryItem(
       >
         {
           isBeingRenamed ? 
-          <input type="text" defaultValue={entry.title} className="entry-title" 
+          <input type="text" defaultValue={entry.title}className="entry-title" 
           autoFocus={true} onFocus={e=>e.target.select()} onKeyDown={
             (e) => {
               if (e.key === "Enter") {
@@ -41,15 +43,12 @@ export default function EntryItem(
           } onBlur={()=>doneRenaming(entry.id)}/> :
           <div className='entry-title'> {entry.title} </div>
         }
-        
 
           
         <div className="entry-date">
-          {dateFormat.format( entry.dateModified )}
+          {dateFormat.format( entry.dateHistory[0] )}
         </div>
         
-
-
         <div className="action-button-container">
             <button className="edit-button" onClick={
                 (e) => {
@@ -75,8 +74,7 @@ export default function EntryItem(
                 e.stopPropagation()
                 handleDeleteEntry(entry.id)
                 setIsBeingDeleted(false)
-              } 
-                }
+                }}
                 >
                 ✅
                 </button>
@@ -92,6 +90,25 @@ export default function EntryItem(
               </div>
               
             }
+            <button className="edit-button date-pick-button"
+              onClick={ (e) => {
+                e.stopPropagation()
+                setIsSettingDate(true)
+                }}
+            >
+            
+            📅
+            
+            </button>
+
+            {
+              isSettingDate &&
+              <DatePicker className="date-picker" />
+            }
+            
+
+
+          
             
         </div>
     </li>

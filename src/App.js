@@ -8,10 +8,12 @@ import DeleteDialogue from './components/DeleteDialogue'
 import EntryItem from './components/EntryItem'
 import DataPointItem from './DataPointItem'
 import DataPointGraph from './DataPointGraph'
-// import dateTimeFormat from './config/dateTimeFormat.json'
+import dateFormat from './config/dateFormat.js'
 
 
 const App = () => {
+  const TODAY = new Date()
+
   const [journals, setJournals] = useState([
     new Journal(1, "Personal Journal", Date(), []),
     new Journal(2, "OOP Journal 2", Date(), [
@@ -37,7 +39,6 @@ const App = () => {
     hour12: false
   })
 
-  const TODAY = new Date()
 
   const findJournal = (ID) => {
     const target = journals.filter(j => j.id === ID)
@@ -85,7 +86,7 @@ const App = () => {
     const newEntryID = selectedEntries.length > 0? selectedEntries[selectedEntries.length - 1].id + 1: 1
     const newEntry = new Entry(
       newEntryID,
-      `${dateTimeFormat.format(new Date())}`, 
+      `${dateTimeFormat.format(new Date())}`, // title date
       new Date(TODAY.getFullYear(), TODAY.getMonth(), TODAY.getDate()), 
       "{User Content}", null, true
     )
@@ -119,8 +120,8 @@ const App = () => {
   }
 
   const deleteJournal = async (journalID) => {
-    // const confirmed = await askForInput(findJournal(journalID).title)
-    const confirmed = true
+    const confirmed = await askForInput(findJournal(journalID).title)
+    // const confirmed = true
     let nextJ = selectedJournal.id
     if (journalID === selectedJournal.id && journals.length > 1){
       if (jids.indexOf(journalID) + 1 < journals.length){
@@ -235,25 +236,56 @@ const App = () => {
   
   const saveEntryContent = (nid, content) => {
     // console.log(`entry ${nid} has content changed to ${content}`)
-                
-    setJournals(journals.map(
-      j => {
-        if (j.id === selectedJournal.id){
-          const newEntries = j.entries.map(
-            n => {
-              if (n.id === nid){
-                setSelectedEntry({...n, content: content})
-                return {...n, content: content}
-              }
-              return n
+
+      const updatedJournals = journals.map(j => {
+        if (j.id === selectedJournal.id) {
+          const updatedEntries = j.entries.map(n => {
+            if (n.id === nid) {
+              return { ...n, content: content } // Update the entry content here
             }
-          )
-          setSelectedEntries(newEntries)
-          return {...j, entries: newEntries}
+            return n
+          })
+          return { ...j, entries: updatedEntries } // Return the updated journal
         }
         return j
+      })
+    
+      setJournals(updatedJournals)
+    
+      const updatedSelectedEntry = updatedJournals
+        .find(j => j.id === selectedJournal.id)
+        ?.entries.find(n => n.id === nid)
+    
+      setSelectedEntry(updatedSelectedEntry)
+      
+      setSelectedEntries(updatedJournals.find(j => j.id === selectedJournal.id)?.entries || [])
+      
+  }
+
+  const updateDate = (nid) => {
+    const updatedJournals = journals.map(j => {
+      if (j.id === selectedJournal.id) {
+        const updatedEntries = j.entries.map(n => {
+          if (n.id === nid) {
+            return { ...n, dateHistory: n.dateHistory.concat([TODAY])} 
+            // Update the entry content here
+          }
+          return n
+        })
+        return { ...j, entries: updatedEntries } // Return the updated journal
       }
-    ))
+      return j
+    })
+  
+    setJournals(updatedJournals)
+  
+    const updatedSelectedEntry = updatedJournals
+      .find(j => j.id === selectedJournal.id)
+      ?.entries.find(n => n.id === nid)
+  
+    setSelectedEntry(updatedSelectedEntry)
+    
+    setSelectedEntries(updatedJournals.find(j => j.id === selectedJournal.id)?.entries || [])
   }
 
   return (
@@ -311,6 +343,7 @@ const App = () => {
                   handleRenameEntry={renameEntry}
                   handleDeleteEntry={() => {delEntry(entry)}}
                   handleEntryClick={()=> {
+                    console.log(`${JSON.stringify(entry.dateHistory)}`);
                     setSelectedEntry(entry)
                   }}
                   turnOffRenamingItem={turnOffRenamingItem}
@@ -347,21 +380,29 @@ const App = () => {
               <div className="slider-button"></div>
             </div>
 
-            {/* <button onClick={() => setView("writingPad")}>Writing Pad</button>
-            <button onClick={() => setView("dailyStats")}>Daily data</button> */}
           </div>
+
           {view === "writingPad" ? (
             <>
               <div className="entry-path">
-                {selectedJournal.title} &gt; {selectedEntry.title} : 
-                Created {JSON.stringify(selectedEntry.dateCreated)}
-                <br></br>
-                Modified {JSON.stringify(selectedEntry.dateModified)}
+
+                {
+                /* it looks like no methods in the entry class work.
+                Probably a "this" binding issue. 
+                Avoid instance methods
+                */
+                selectedJournal.title} &gt; {selectedEntry.title} : 
+                Created {dateFormat.format(selectedEntry.dateHistory[0])} : 
+                Modified {dateFormat.format(selectedEntry.dateHistory[selectedEntry.dateHistory.length - 1])}
               </div>
               <textarea 
                 className="rich-textarea" 
                 value={selectedEntry.content}
-                onChange={(e) => {saveEntryContent(selectedEntry.id, e.target.value)}}
+                onChange={
+                  (e) => {
+                    saveEntryContent(selectedEntry.id, e.target.value)
+                  }
+                }
               > 
                 {selectedEntry.content}
               </textarea>
