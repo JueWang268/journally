@@ -262,13 +262,12 @@ const App = () => {
       
   }
 
-  const updateDate = (nid) => {
+  const updateDate = (nid, newDate) => {
     const updatedJournals = journals.map(j => {
       if (j.id === selectedJournal.id) {
         const updatedEntries = j.entries.map(n => {
           if (n.id === nid) {
-            return { ...n, dateHistory: n.dateHistory.concat([TODAY])} 
-            // Update the entry content here
+            return { ...n, dateHistory: [newDate]}
           }
           return n
         })
@@ -287,6 +286,7 @@ const App = () => {
     
     setSelectedEntries(updatedJournals.find(j => j.id === selectedJournal.id)?.entries || [])
   }
+
 
   return (
     <div className="app">
@@ -346,6 +346,7 @@ const App = () => {
                     console.log(`${JSON.stringify(entry.dateHistory)}`);
                     setSelectedEntry(entry)
                   }}
+                  handleDateChange={(newDate) => {updateDate(entry.id, newDate)}}
                   turnOffRenamingItem={turnOffRenamingItem}
                   renamed={entry.renamingItem}
                   selected={entry.id === selectedEntry?.id}

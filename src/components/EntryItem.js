@@ -2,12 +2,14 @@ import React, {useState} from 'react'
 import './JournalSideBar.css'
 import dateFormat from '../config/dateFormat'
 import DatePicker from 'react-datepicker'
+import "react-datepicker/dist/react-datepicker.css"
 
 export default function EntryItem(
     {entry, 
     handleRenameEntry, 
     handleDeleteEntry, 
     handleEntryClick,
+    handleDateChange,
     turnOffRenamingItem,
     renamed,
     selected }
@@ -66,6 +68,32 @@ export default function EntryItem(
             🗑️
             </button>
 
+            <button className="edit-button date-pick-button"
+            onClick={ (e) => {
+              e.stopPropagation()
+              setIsSettingDate(true)
+            }}
+            >
+            
+            📅
+            
+            </button>
+            
+            {
+              isSettingDate &&
+              <DatePicker className="date-picker" selected={entry.dateHistory[0]}
+              onChange={
+                (date) => {
+                  handleDateChange(date)
+                  setIsSettingDate(false)
+                }
+              }
+              
+              />
+              
+            }
+            
+            
             {
               isBeingDeleted && 
               <div className="confirm-dialogue" style={{display: "flex"}}>
@@ -90,25 +118,8 @@ export default function EntryItem(
               </div>
               
             }
-            <button className="edit-button date-pick-button"
-              onClick={ (e) => {
-                e.stopPropagation()
-                setIsSettingDate(true)
-                }}
-            >
             
-            📅
             
-            </button>
-
-            {
-              isSettingDate &&
-              <DatePicker className="date-picker" />
-            }
-            
-
-
-          
             
         </div>
     </li>
