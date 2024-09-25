@@ -10,6 +10,7 @@ const DataPointItem = ({name, color}) => {
 
   return (
     <div className="data-point-item">
+    
       <div className="left-section">
         <div className="color-box" 
         style={{"background-color": color}}></div>
@@ -17,9 +18,11 @@ const DataPointItem = ({name, color}) => {
           🖊️
         </button>
       </div>
+
       <div className="center-section">
         <span className="data-point-name">{name}</span>
       </div>
+
       <div className="right-section">
         <button className="eye-button" onClick={toggleVisibility}>
           {isVisible ? '👁️' : '🙈'}
@@ -28,6 +31,7 @@ const DataPointItem = ({name, color}) => {
           ⋮
         </button>
       </div>
+
     </div>
   )
 }

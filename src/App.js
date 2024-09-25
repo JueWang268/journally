@@ -2,12 +2,12 @@ import React, { useState } from 'react'
 // import NewButton from './components/NewJournalButton'
 import JournalSidebar from './components/JournalSidebar'
 import './App.css'
-import Journal from './Journal'
-import Entry from './Entry'
+import Journal from './models/Journal.js'
+import Entry from './models/Entry.js'
 import DeleteDialogue from './components/DeleteDialogue'
 import EntryItem from './components/EntryItem'
-import DataPointItem from './DataPointItem'
-import DataPointGraph from './DataPointGraph'
+import DataPointItem from './components/DataPointItem.js'
+import DataPointGraph from './components/DataPointGraph.js'
 import dateFormat from './config/dateFormat.js'
 
 
@@ -120,8 +120,8 @@ const App = () => {
   }
 
   const deleteJournal = async (journalID) => {
-    const confirmed = await askForInput(findJournal(journalID).title)
-    // const confirmed = true
+    // const confirmed = await askForInput(findJournal(journalID).title)
+    const confirmed = true
     let nextJ = selectedJournal.id
     if (journalID === selectedJournal.id && journals.length > 1){
       if (jids.indexOf(journalID) + 1 < journals.length){
@@ -395,8 +395,7 @@ const App = () => {
                 Avoid instance methods
                 */
                 selectedJournal.title} &gt; {selectedEntry.title} : 
-                Created {dateFormat.format(selectedEntry.dateHistory[0])} : 
-                Modified {dateFormat.format(selectedEntry.dateHistory[selectedEntry.dateHistory.length - 1])}
+                 {dateFormat.format(selectedEntry.dateHistory[0])}
               </div>
               <textarea 
                 className="rich-textarea" 
@@ -410,7 +409,7 @@ const App = () => {
                 {selectedEntry.content}
               </textarea>
             </>
-          ) : (
+          ) : ( // even the demo graph does not show wihtout entries
             <div>
             {/* demo purposes */}
             <DataPointGraph />

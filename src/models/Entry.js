@@ -10,11 +10,4 @@ export default class Entry{
       this.renamingItem = renamingItem
     }
 
-    // dateCreated() {
-    //   return this.dateHistory[0]
-    // }
-
-    // dateModified() {
-    //   return this.dateHistory[this.dateHistory.length - 1]
-    // }
 }
