@@ -263,6 +263,8 @@ const App = () => {
   }
 
   const updateDate = (nid, newDate) => {
+    console.log(`new date for ${nid}, is ${newDate}`);
+    
     const updatedJournals = journals.map(j => {
       if (j.id === selectedJournal.id) {
         const updatedEntries = j.entries.map(n => {

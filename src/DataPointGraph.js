@@ -4,15 +4,16 @@ import { Chart as ChartJS, LinearScale, PointElement, Tooltip, Legend, LineEleme
 
 ChartJS.register(LinearScale, PointElement, Tooltip, Legend, LineElement)
 
+const TODAY = new Date(10, 10, 2022)
+
 const DataPointGraph = () => {
   // Data to be visualized
   const data = {
-    labels: ["Sep 10", "Sep 12", "Sep 14"],
     datasets: [
       {
         label: 'Work productivity',
         data: [
-          { x: 0, y: 20 },
+          { x: 0, y: 100 },
           { x: 1, y: 20 },
           { x: 2, y: 25 },
           { x: 3, y: 25 },

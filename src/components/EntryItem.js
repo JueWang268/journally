@@ -27,7 +27,7 @@ export default function EntryItem(
       <li key={entry.id} 
         className={'entry-card' + (selected? " selected": "")} 
         onClick={handleEntryClick}
-        onMouseLeave={e => {setIsBeingDeleted(false)}}
+        onMouseLeave={e => {setIsBeingDeleted(false); setIsSettingDate(false)}}
       >
         {
           isBeingRenamed ? 
@@ -46,10 +46,40 @@ export default function EntryItem(
           <div className='entry-title'> {entry.title} </div>
         }
 
+        {
+          isSettingDate? 
+          (<DatePicker className="date-picker" selected={entry.dateHistory[0]}
+          onChange={
+            (date) => {
+              handleDateChange(date)
+              setIsSettingDate(false)
+            }
+          }
           
-        <div className="entry-date">
+          />) : 
+          (
+
+          <span style={{"display": "flex"}}>
+          <div className="entry-date">
           {dateFormat.format( entry.dateHistory[0] )}
         </div>
+        
+        <button className="edit-button date-pick-button"
+        onClick={ (e) => {
+          e.stopPropagation()
+          setIsSettingDate(true)
+        }}
+      >
+      📅
+      </button>
+          </span>
+
+          )
+          
+        }
+        
+        
+        
         
         <div className="action-button-container">
             <button className="edit-button" onClick={
@@ -66,32 +96,9 @@ export default function EntryItem(
                 }
               } >
             🗑️
-            </button>
-
-            <button className="edit-button date-pick-button"
-            onClick={ (e) => {
-              e.stopPropagation()
-              setIsSettingDate(true)
-            }}
-            >
-            
-            📅
             
             </button>
             
-            {
-              isSettingDate &&
-              <DatePicker className="date-picker" selected={entry.dateHistory[0]}
-              onChange={
-                (date) => {
-                  handleDateChange(date)
-                  setIsSettingDate(false)
-                }
-              }
-              
-              />
-              
-            }
             
             
             {
