@@ -31,7 +31,7 @@
 .sidebar, .entries-sidebar {
   background-color: #f4f4f4;
   padding: 10px;
-  height: calc(100vh - 50px); /* Adjust for navbar height */
+  height: calc(100vh - 60px); /* Adjust for navbar height */
   overflow-y: auto;
   width: 20%;
 }

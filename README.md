@@ -1,6 +1,6 @@
 # Journally
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+React, Next, Firebase
 
 ## Goals
 
@@ -15,7 +15,7 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 - [X] Multiple journals (like Dayone Premium)
 - [ ] *Graphs* of (customizable) stats over time (e.g. weight, study time, etc)
 - [ ] AI powered prompts (reminders) (cf other diary products)
-- [ ] AI summary feature for time
+- [ ] AI summary?
 
 
 ## Issues

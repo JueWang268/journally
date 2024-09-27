@@ -9,9 +9,9 @@ class Journal {
       this.favorite = favorite;
     }
   
-    toggleFavorite() {
-        this.favorite = !this.favorite;
-    }
+    // toggleFavorite() {
+    //     this.favorite = !this.favorite;
+    // }
 }
   
 export default Journal

@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 // import NewButton from './components/NewJournalButton'
+import Image from 'next/image'
 import JournalSidebar from './components/JournalSidebar'
 import './App.css'
 import Journal from './models/Journal.js'
@@ -294,7 +295,7 @@ const App = () => {
     <div className="app">
       <div className="navbar">
         <div>
-          <img className="icon" src={require(".//icon.png")} alt="journal logo"/>
+          <Image src="/icon.png" width={20} height={20} alt="journal logo"/>
         </div>
         <div className="nav-item" onClick={toggleJournalBar}>Journals</div>
         <div className="nav-item">Calendar</div>
