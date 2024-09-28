@@ -2,7 +2,7 @@ import "../App.css"
 
 export const metadata = {
   title: 'Journally',
-  description: 'Data Driven Journalling Experience Defined by YOU'
+  description: 'Data Powered Journalling Experience Defined by YOU'
 }
 
 

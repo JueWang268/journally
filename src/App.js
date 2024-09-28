@@ -368,6 +368,7 @@ const App = () => {
               <DataPointItem name="Work productivity" color="red"/>
               <DataPointItem name="Coffee consumed" color="turquoise"/>
               <DataPointItem name="Miles run in morning" color="green"/>
+              <DataPointItem name="Miles run in Evening" color="green"/>
 
               {/* demo ends */}
             </div>
