@@ -1,4 +1,4 @@
-import "../App.css"
+import "../styles/App.css"
 
 export const metadata = {
   title: 'Journally',

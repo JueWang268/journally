@@ -1,16 +1,15 @@
 import React, { useState } from 'react'
 // import NewButton from './components/NewJournalButton'
-// changes for githup push
 import Image from 'next/image'
-import JournalSidebar from './components/JournalSidebar'
-import './App.css'
-import Journal from './models/Journal.js'
-import Entry from './models/Entry.js'
-import DeleteDialogue from './components/DeleteDialogue'
-import EntryItem from './components/EntryItem'
-import DataPointItem from './components/DataPointItem.js'
-import DataPointGraph from './components/DataPointGraph.js'
-import dateFormat from './config/dateFormat.js'
+import JournalSidebar from '../components/JournalSidebar.js'
+import '../styles/App.css'
+import Journal from '../models/Journal.js'
+import Entry from '../models/Entry.js'
+import DeleteDialogue from '../components/DeleteDialogue.js'
+import EntryItem from '../components/EntryItem.js'
+import DataPointItem from '../components/DataPointItem.js'
+import DataPointGraph from '../components/DataPointGraph.js'
+import dateFormat from '../config/dateFormat.js'
 
 
 const App = () => {
