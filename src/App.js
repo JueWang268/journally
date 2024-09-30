@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 // import NewButton from './components/NewJournalButton'
+// changes for githup push
 import Image from 'next/image'
 import JournalSidebar from './components/JournalSidebar'
 import './App.css'
