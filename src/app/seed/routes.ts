@@ -65,7 +65,7 @@ async function seedJournals() {
     );
   `;
 
-  const insertedjournals = await Promise.all(
+  const insertedJournals = await Promise.all(
     journals.map(
       (j) => client.sql`
         INSERT INTO journals (id, title)
@@ -75,7 +75,7 @@ async function seedJournals() {
     ),
   );
 
-  return insertedjournals;
+  return insertedJournals;
 }
 
 async function seedDatapoints() {
@@ -113,10 +113,13 @@ export async function GET() {
       await seedJournals();
       await seedDatapoints();
       await client.sql`COMMIT`;
-  
+      console.log("data successfully added");
+      
       return Response;
     } catch (error) {
       await client.sql`ROLLBACK`;
+      console.log(error);
+      
       return Response;
     }
   }

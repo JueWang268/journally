@@ -1,3 +1,5 @@
+"use client"
+
 import React, { useState } from 'react'
 // import NewButton from './components/NewJournalButton'
 import Image from 'next/image'
@@ -341,20 +343,21 @@ const App = () => {
             <ul>
               {
                 selectedEntries.map(entry => (
-                <EntryItem 
-                  entry={entry}
-                  handleRenameEntry={renameEntry}
-                  handleDeleteEntry={() => {delEntry(entry)}}
-                  handleEntryClick={()=> {
-                    console.log(`${JSON.stringify(entry.dateHistory)}`);
-                    setSelectedEntry(entry)
-                  }}
-                  handleDateChange={(newDate) => {updateDate(entry.id, newDate)}}
-                  turnOffRenamingItem={turnOffRenamingItem}
-                  renamed={entry.renamingItem}
-                  selected={entry.id === selectedEntry?.id}
-                />
-              ))}
+                  <EntryItem 
+                    entry={entry}
+                    handleRenameEntry={renameEntry}
+                    handleDeleteEntry={() => {delEntry(entry)}}
+                    handleEntryClick={()=> {
+                      console.log(`${JSON.stringify(entry.dateHistory)}`);
+                      setSelectedEntry(entry)
+                    }}
+                    handleDateChange={(newDate) => {updateDate(entry.id, newDate)}}
+                    turnOffRenamingItem={turnOffRenamingItem}
+                    renamed={entry.renamingItem}
+                    selected={entry.id === selectedEntry?.id}
+                  />
+                ))
+              }
             </ul>) :
             (
               <div> No entries in this journal. 
