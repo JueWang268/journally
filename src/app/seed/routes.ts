@@ -114,10 +114,10 @@ export async function GET() {
       await seedDatapoints();
       await client.sql`COMMIT`;
   
-      return Response.json({ message: 'Database seeded successfully' });
+      return Response;
     } catch (error) {
       await client.sql`ROLLBACK`;
-      return Response.json({ error }, { status: 500 });
+      return Response;
     }
   }
   
