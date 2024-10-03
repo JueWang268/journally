@@ -1,3 +1,4 @@
+// not working as of Oct 1
 import bcrypt from 'bcrypt';
 import { db } from '@vercel/postgres';
 import { users, journals, entries, datapoints } from '../lib/placeholder-data';
@@ -115,12 +116,12 @@ export async function GET() {
       await client.sql`COMMIT`;
       console.log("data successfully added");
       
-      return Response;
+      return Response.json({ message: 'Database seeded successfully' });
     } catch (error) {
       await client.sql`ROLLBACK`;
       console.log(error);
       
-      return Response;
+      return Response.json({error}, { status: 500 });
     }
   }
   
