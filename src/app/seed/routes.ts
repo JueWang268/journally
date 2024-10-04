@@ -116,12 +116,12 @@ export async function GET() {
       await client.sql`COMMIT`;
       console.log("data successfully added");
       
-      return Response.json({ message: 'Database seeded successfully' });
+    //   return Response.json({ message: 'Database seeded successfully' });
     } catch (error) {
       await client.sql`ROLLBACK`;
       console.log(error);
       
-      return Response.json({error}, { status: 500 });
+    //   return Response.json({error}, { status: 500 });
     }
   }
   
