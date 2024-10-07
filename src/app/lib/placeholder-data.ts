@@ -12,14 +12,17 @@ const journals = [
     {
         id: 'd6e15727-9fe1-4961-8c5b-ea44a9bd81aa',
         title: 'Personal Journal',
+        date: '2024-09-20'
     },
     {
         id: '3958dc9e-712f-4377-85e9-fec4b6a6442a',
         title: 'OOP Learning Journal',
+        date: '2024-09-20'
     },
     {
         id: '3958dc9e-742f-4377-85e9-fec4b6a6442a',
-        title: 'Lee Robinson',
+        title: 'Other Journal',
+        date: '2024-09-20'
     }
 ];
 
