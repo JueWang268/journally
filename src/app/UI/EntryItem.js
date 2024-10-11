@@ -1,6 +1,6 @@
 import React, {useState} from 'react'
 import './JournalSideBar.css'
-import dateFormat from '../config/dateFormat'
+import dateFormat from '../../config/dateFormat'
 import DatePicker from 'react-datepicker'
 import "react-datepicker/dist/react-datepicker.css"
 

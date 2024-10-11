@@ -1,21 +1,26 @@
 "use client"
 
+
 import React, { useState } from 'react'
 // import NewButton from './components/NewJournalButton'
 import Image from 'next/image'
-import JournalSidebar from '../components/JournalSidebar.js'
+import JournalSidebar from './UI/JournalSidebar.js'
 import '../styles/App.css'
 import Journal from '../models/Journal.js'
 import Entry from '../models/Entry.js'
-import DeleteDialogue from '../components/DeleteDialogue.js'
-import EntryItem from '../components/EntryItem.js'
-import DataPointItem from '../components/DataPointItem.js'
-import DataPointGraph from '../components/DataPointGraph.js'
+import DeleteDialogue from './UI/DeleteDialogue.js'
+import EntryItem from './UI/EntryItem.js'
+import DataPointItem from './UI/DataPointItem.js'
+import DataPointGraph from './UI/DataPointGraph.js'
 import dateFormat from '../config/dateFormat.js'
+import { fetchJournals } from './lib/data.ts'
 
 
 const App = () => {
+  
   const TODAY = new Date()
+  console.log(`fetch journal is ${JSON.stringify(fetchJournals())}`);
+  
 
   const [journals, setJournals] = useState([
     new Journal(1, "Personal Journal", Date(), []),
@@ -116,7 +121,7 @@ const App = () => {
         },
         onCancel: () => {
           setIsDialogOpen(false)
-          resolve(false) 
+          resolve(false)
         },
       })
     })
