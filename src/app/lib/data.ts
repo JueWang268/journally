@@ -1,6 +1,8 @@
+"use server"
+
 import { sql } from '@vercel/postgres';
 import {
-  Journals,
+  Journals, Entries, Users
 } from './definitions';
 // import { formatCurrency } from './utils';
 
@@ -21,6 +23,19 @@ export async function fetchJournals() {
   }
 }
 
+export async function fetchUsers() {
+  try {
+
+
+    const data = await sql<Users>`SELECT * FROM users`;
+    console.log(JSON.stringify(data.rows));
+    
+    return data.rows;
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to fetch journals.');
+  }
+}
 
 // export async function fetchLatestInvoices() {
 //   try {

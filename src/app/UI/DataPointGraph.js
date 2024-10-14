@@ -1,12 +1,16 @@
 import React from 'react'
 import { Scatter } from 'react-chartjs-2'
 import { Chart as ChartJS, LinearScale, PointElement, Tooltip, Legend, LineElement } from 'chart.js'
+import { fetchJournals, fetchUsers } from '../lib/data.ts'
+
 
 ChartJS.register(LinearScale, PointElement, Tooltip, Legend, LineElement)
 
 const TODAY = new Date(10, 10, 2022)
 
 const DataPointGraph = () => {
+  console.log(`fetch users is ${JSON.stringify(fetchUsers())}`);
+
   // Data to be visualized
   const data = {
     datasets: [
