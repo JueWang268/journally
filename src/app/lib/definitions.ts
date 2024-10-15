@@ -2,6 +2,7 @@ export type Journals = {
     id: string;
     title: string;
     date: string;
+    user_id: string;
   };
   
 export type Users = {

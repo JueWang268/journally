@@ -14,6 +14,7 @@ export async function fetchJournals() {
 
     const data = await sql<Journals>`SELECT * FROM journals`;
 
+
     // console.log('Data fetch completed after 3 seconds.');
 
     return data.rows;
@@ -28,7 +29,6 @@ export async function fetchUsers() {
 
 
     const data = await sql<Users>`SELECT * FROM users`;
-    console.log(JSON.stringify(data.rows));
     
     return data.rows;
   } catch (error) {

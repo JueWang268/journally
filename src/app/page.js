@@ -17,8 +17,6 @@ const App = () => {
   
   const TODAY = new Date()
 
-  
-
   const [journals, setJournals] = useState([
     new Journal(1, "Personal Journal", Date(), []),
     new Journal(2, "OOP Journal 2", Date(), [
