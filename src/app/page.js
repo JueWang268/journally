@@ -1,21 +1,56 @@
-"use client"
-import React, { useState } from 'react'
-import Image from 'next/image'
-import JournalSidebar from './UI/JournalSidebar.js'
-import '../styles/App.css'
-import Journal from '../models/Journal.js'
-import Entry from '../models/Entry.js'
-import DeleteDialogue from './UI/DeleteDialogue.js'
-import EntryItem from './UI/EntryItem.js'
-import DataPointItem from './UI/DataPointItem.js'
-import DataPointGraph from './UI/DataPointGraph.js'
-import dateFormat from '../config/dateFormat.js'
-import useJournals from './hooks/useJournals.js'
-import useEntries from './hooks/useEntries.js'
+"use client";
+import React, { useState } from 'react';
+import Image from 'next/image';
+import JournalSidebar from './UI/JournalSidebar.js';
+import '../styles/App.css';
+import Journal from '../models/Journal.js';
+import Entry from '../models/Entry.js';
+import DeleteDialogue from './UI/DeleteDialogue.js';
+import EntryItem from './UI/EntryItem.js';
+import DataPointItem from './UI/DataPointItem.js';
+import DataPointGraph from './UI/DataPointGraph.js';
+import dateFormat from '../config/dateFormat.js';
+import useJournals from './hooks/useJournals.js';
+import useEntries from './hooks/useEntries.js';
 
+import dynamic from 'next/dynamic';
+import 'react-quill/dist/quill.snow.css'; // Import Quill styles
+
+const QuillEditor = dynamic(() => import('react-quill'), { ssr: false });
 
 const App = () => {
-  
+
+  // const [quillContent, setQuillContent] = useState(null);
+
+  const quillModules = {
+    toolbar: [
+      [{ header: [1, 2, 3, false] }],
+      ['bold', 'italic', 'underline', 'strike', 'blockquote'],
+      [{ list: 'ordered' }, { list: 'bullet' }],
+      ['link', 'image'],
+      [{ align: [] }],
+      [{ color: [] }],
+      ['code-block'],
+      ['clean'],
+    ],
+  };
+
+  const quillFormats = [
+    'header',
+    'bold',
+    'italic',
+    'underline',
+    'strike',
+    'blockquote',
+    'list',
+    'bullet',
+    'link',
+    'image',
+    'align',
+    'color',
+    'code-block',
+  ];
+
   const TODAY = new Date();
   const USER_ID = '410544b2-4001-4271-9855-fec4b6a6442a';
   const { 
@@ -73,11 +108,8 @@ const App = () => {
   }
   
   const createNewJournal = () => {
-    const title = `New Journal ${(new Date()).toISOString().split('T')[0]}`
-    addJournal(title, USER_ID)
-    // setJournals([...journals, 
-    //     new Journal(newId, title, new Date(), [])
-    // ])
+    const title = `New Journal ${(new Date()).toISOString().split('T')[0]}`;
+    addJournal(title, USER_ID);
   }
   
   const createNewEntry = () => {
@@ -91,15 +123,15 @@ const App = () => {
         journalName,
         onConfirm: (result) => {
           // result is true when user types title right
-          setIsDialogOpen(!result)
-          resolve(result)
+          setIsDialogOpen(!result);
+          resolve(result);
         },
         onCancel: () => {
-          setIsDialogOpen(false)
-          resolve(false)
+          setIsDialogOpen(false);
+          resolve(false);
         },
       })
-    })
+    });
   }
 
   const deleteJournal = async (journalId) => {
@@ -154,7 +186,7 @@ const App = () => {
   }
   
   const saveEntryContent = (nid, content) => {
-    console.log(`saving content ${content}`);
+    console.log(`saving content ${JSON.stringify(content)}`);
     
     const old_entry = entries.find(n => n.id === nid);
     editEntry(nid, old_entry.title, content, old_entry.date);
@@ -164,6 +196,21 @@ const App = () => {
     const old_entry = entries.find(n => n.id === nid);
     editEntry(nid, old_entry.title, old_entry.content, newDate);
   }
+
+  const debounce =(func, delay = 5000) => {
+    let timer;
+    return (...args) => {
+      clearTimeout(timer);
+      timer = setTimeout(() => func(...args), delay);
+    };
+  }
+
+  const debouncedSaveEntry = debounce(
+  (entryId, content) => {
+      saveEntryContent(entryId, content);
+    }, 
+  5000);
+  
 
 
   return (
@@ -217,25 +264,25 @@ const App = () => {
             (
               view === "writingPad" ?
               (entries.length > 0 ? (
-            <ul>
-              {
-                entries.map(entry => (
-                  <EntryItem 
-                    entry={entry}
-                    handleRenameEntry={renameEntry}
-                    handleDeleteEntry={() => {delEntry(entry)}}
-                    handleEntryClick={()=> {
-                      // console.log(`${JSON.stringify(entry.date)}`);
-                      setSelectedEntry(entry)
-                    }}
-                    handleDateChange={(newDate) => {updateDate(entry.id, newDate)}}
-                    turnOffRenamingItem={() => {}}
-                    renamed={false}
-                    selected={entry.id === selectedEntry?.id}
-                  />
-                ))
-              }
-            </ul>) :
+              <ul>
+                {
+                  entries.map(entry => (
+                    <EntryItem 
+                      entry={entry}
+                      handleRenameEntry={renameEntry}
+                      handleDeleteEntry={() => {delEntry(entry)}}
+                      handleEntryClick={()=> {
+                        // console.log(`${JSON.stringify(entry.date)}`);
+                        setSelectedEntry(entry);
+                      }}
+                      handleDateChange={(newDate) => {updateDate(entry.id, newDate)}}
+                      turnOffRenamingItem={() => {}}
+                      renamed={false}
+                      selected={entry.id === selectedEntry?.id}
+                    />
+                  ))
+                }
+              </ul>) :
             (
               <div> No entries in this journal. 
               <button className="start-writing-button" 
@@ -277,19 +324,18 @@ const App = () => {
               selectedJournal.title} &gt; {selectedEntry.title} : 
                 {selectedEntry.date}
             </div>
-            <textarea 
-              className="rich-textarea" 
-              value={selectedEntry.content}
-              onChange={
-                (e) => {
-                  saveEntryContent(selectedEntry.id, e.target.value)
-                }
-              }
-            > 
-              {selectedEntry.content}
-            </textarea>
+            <QuillEditor
+                  value={selectedEntry.content}
+                  onChange={(content) => {
+                    console.log(content);
+                    debouncedSaveEntry(selectedEntry.id, content);
+                  }}
+                  modules={quillModules}
+                  formats={quillFormats}
+                  className="w-full h-[70%] mt-10 bg-white"
+                />
           </>
-        ) : ( // even the demo graph does not show wihtout entries
+        ) : (
           <div>
           {/* demo purposes */}
           <DataPointGraph />

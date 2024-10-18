@@ -8,6 +8,8 @@ React, Next, Firebase, PostgresQL
 
 - [ ] User sign-in, cloud storage
     - [ ] Streak count
+- [ ] multimedia
+- [ ] automatic sorting of journal/entry bar
 - [ ] Rich text *formatting*: cf. Dayone
 - [ ] Word count
 - [ ] Sortable and searchable *tags* (Apple Journal’s limitations)
@@ -25,3 +27,4 @@ React, Next, Firebase, PostgresQL
 Ther is a delay in server response, and the state of `selectedEntry` isn't updated in time to be reflected on the textarea.
 - [ ] New Entry button should be grayed out, when `selectedJournal` is null
 - [ ] date on entry item changes to ISO string after changing the date
+- [ ] quill editor value should wait for `selectedEntry` content to finish updating. Consider `async` and `await` for debounce.
