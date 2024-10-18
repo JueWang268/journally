@@ -1,0 +1,69 @@
+import { useState, useEffect } from 'react';
+import { getJournalEntries, createEntry, updateEntry, deleteEntry } from '../api/entriesAPI.tsx';
+
+export default function useEntries(selectedJournalId) {
+  const [entries, setEntries] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+
+  // Fetch entries for the selected journal
+  useEffect(() => {
+    if (!selectedJournalId) {
+      setEntries([]); // If no journal is selected, entries remain empty
+      return;
+    }
+
+    const fetchEntries = async () => {
+      setLoading(true);
+      try {
+        const fetchedEntries = await getJournalEntries(selectedJournalId);
+        setEntries(fetchedEntries);
+      } catch (err) {
+        setError(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchEntries();
+  }, [selectedJournalId]);
+
+  // Create a new entry
+  const addEntry = async (title, content) => {
+    try {
+      const createdEntry = await createEntry(selectedJournalId, title, content);
+      setEntries([...entries, createdEntry]); // Add the new entry to the list
+    } catch (err) {
+      setError(err);
+    }
+  };
+
+  // Update an existing entry
+  const editEntry = async (entryId, title, content, date) => {
+    try {
+      const updatedEntry = await updateEntry(entryId, title, content, date);
+      setEntries(entries.map((entry) => (entry.id === entryId ? updatedEntry : entry)));
+    } catch (err) {
+      setError(err);
+    }
+  };
+
+  // Delete an entry
+  const removeEntry = async (entryId) => {
+    try {
+      await deleteEntry(entryId);
+      setEntries(entries.filter((entry) => entry.id !== entryId));
+    } catch (err) {
+      setError(err);
+    }
+  };
+
+  return {
+    entries,
+    loading,
+    error,
+    addEntry,
+    editEntry,
+    removeEntry,
+  };
+}

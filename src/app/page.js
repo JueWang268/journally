@@ -11,26 +11,37 @@ import EntryItem from './UI/EntryItem.js'
 import DataPointItem from './UI/DataPointItem.js'
 import DataPointGraph from './UI/DataPointGraph.js'
 import dateFormat from '../config/dateFormat.js'
+import useJournals from './hooks/useJournals.js'
+import useEntries from './hooks/useEntries.js'
 
 
 const App = () => {
   
-  const TODAY = new Date()
-
+  const TODAY = new Date();
+  const USER_ID = '410544b2-4001-4271-9855-fec4b6a6442a';
+  const { journals_, loading, error, addJournal, editJournal, removeJournal } = useJournals();
+  const { entries, loading: entriesLoading, error: entriesError, addEntry, editEntry, removeEntry } = useEntries("d6e15727-9fe1-4961-8c5b-ea44a9bd81aa");
+  // console.log("entries", entries);
+  
   const [journals, setJournals] = useState([
     new Journal(1, "Personal Journal", Date(), []),
     new Journal(2, "OOP Journal 2", Date(), [
       new Entry(1, "Dear Diary", new Date(), "Today is a great day!")
     ], true)
   ])
+  const [selectedJournal, setSelectedJournal] = useState(journals[journals.length-1]);
+  // console.log("journals:");
+  // console.log(JSON.stringify(journals_));
+  
   // force journal selection
-  const [selectedJournal, setSelectedJournal] = useState(journals[journals.length-1])
-  const [selectedEntries, setSelectedEntries] = useState(selectedJournal.entries)
-  const [selectedEntry, setSelectedEntry] = useState(null)
-  const [isDialogOpen, setIsDialogOpen] = useState(false)
-  const [retypeProps, setRetypeProps] = useState(null)
-  const [view, setView] = useState("writingPad")
-  const [showJournalBar, setShowJournalBar] = useState(true)
+  const [selectedEntries, setSelectedEntries] = useState(selectedJournal.entries);
+  const [selectedEntry, setSelectedEntry] = useState(null);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [retypeProps, setRetypeProps] = useState(null);
+  const [view, setView] = useState("writingPad");
+  const [showJournalBar, setShowJournalBar] = useState(true);
+
+
 
   const dateTimeFormat = new Intl.DateTimeFormat('en-US', {
     year: "numeric",
@@ -78,8 +89,10 @@ const App = () => {
         return
     }
     const newId = journals[journals.length - 1].id + 1
+    const title = `New Journal ${newId}`
+    addJournal(title, USER_ID)
     setJournals([...journals, 
-        new Journal(newId, `New Journal ${newId}`, new Date(), [])
+        new Journal(newId, title, new Date(), [])
     ])
   }
   

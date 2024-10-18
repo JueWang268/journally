@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
-import { fetchJournals, createJournal, updateJournal, deleteJournal } from '../api/journalsApi';
+import { fetchJournals, createJournal, updateJournal, deleteJournal } from '../api/journalsAPI.tsx';
 
 const useJournals = () => {
-  const [journals, setJournals] = useState([]);
+  const [journals_, setJournals] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -22,9 +22,11 @@ const useJournals = () => {
     loadJournals();
   }, []);
 
-  const addJournal = async (newJournal) => {
+
+
+  const addJournal = async (title, userId) => {
     try {
-      const createdJournal = await createJournal(newJournal);
+      const createdJournal = await createJournal(title, userId);
       setJournals((prev) => [...prev, createdJournal]);
     } catch (err) {
       setError(err);
@@ -52,7 +54,7 @@ const useJournals = () => {
   };
 
   return {
-    journals,
+    journals_,
     loading,
     error,
     addJournal,

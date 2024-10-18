@@ -1,11 +1,15 @@
+"use server"
 import { sql } from '@vercel/postgres';
 import { Entries } from '../lib/definitions';
+
+const date = new Date();
+const formattedDate = date.toISOString().split('T')[0];
 
 export async function createEntry(journalId: string, title: string, content: string) {
     try {
       const data = await sql<Entries>`
         INSERT INTO entries (id, journal_id, title, content, date)
-        VALUES (gen_random_uuid(), ${journalId}, ${title}, ${content}, ${Date()})
+        VALUES (gen_random_uuid(), ${journalId}, ${title}, ${content}, ${formattedDate})
         RETURNING *
       `;
       return data.rows[0]; // return the created entry
@@ -28,6 +32,18 @@ export async function getEntry(entryId: string) {
     }
 }
 
+export async function getJournalEntries(journalId: string) {
+    try {
+        const data = await sql<Entries>`
+        SELECT * FROM entries
+        WHERE journal_id = ${journalId}
+        `;
+        return data.rows; 
+    } catch (error) {
+        console.error(`Error fetching entries in journal "${journalId}":`, error);
+        throw new Error(`Failed to fetch entries in journal "${journalId}".`);
+    }
+}
 export async function deleteEntry(entryId: string) {
     try {
       const data = await sql<Entries>`
