@@ -18,10 +18,10 @@ export default function EntryItem(
     const [isBeingDeleted, setIsBeingDeleted] = useState(false)
     const [isSettingDate, setIsSettingDate] = useState(false)
 
-    const doneRenaming = (nid) => {
-        setIsBeingRenamed(false)
-        turnOffRenamingItem(nid)
-    }
+    // const doneRenaming = (nid) => {
+    //     setIsBeingRenamed(false)
+    //     turnOffRenamingItem(nid)
+    // }
 
     return (
       <li key={entry.id} 
@@ -39,16 +39,16 @@ export default function EntryItem(
                 handleRenameEntry(entry.id, e.target.value)
               }
               else if (e.key === "Escape"){
-                doneRenaming(entry.id)
+                setIsBeingRenamed(false)
               }
             }
-          } onBlur={()=>doneRenaming(entry.id)}/> :
+          } onBlur={() => setIsBeingRenamed(false)}/> :
           <div className='entry-title'> {entry.title} </div>
         }
 
         {
           isSettingDate? 
-          (<DatePicker className="date-picker" selected={entry.dateHistory[0]}
+          (<DatePicker className="date-picker" selected={entry.date}
           onChange={
             (date) => {
               handleDateChange(date)
@@ -61,7 +61,7 @@ export default function EntryItem(
 
           <span style={{"display": "flex"}}>
           <div className="entry-date">
-          {dateFormat.format( entry.dateHistory[0] )}
+          {entry.date}
         </div>
         
         <button className="edit-button date-pick-button"
@@ -77,8 +77,6 @@ export default function EntryItem(
           )
           
         }
-        
-        
         
         
         <div className="action-button-container">

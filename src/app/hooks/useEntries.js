@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
-import { getJournalEntries, createEntry, updateEntry, deleteEntry } from '../api/entriesAPI.tsx';
+import { getJournalEntries, createEntry, updateEntry, deleteEntry, deleteJournalEntries } from '../api/entriesAPI.tsx';
 
 export default function useEntries(selectedJournalId) {
   const [entries, setEntries] = useState([]);
+  const [selectedEntry, setSelectedEntry] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
@@ -58,12 +59,19 @@ export default function useEntries(selectedJournalId) {
     }
   };
 
+  const removeJournalEntries = async (journalId) => {
+    deleteJournalEntries(journalId);
+  }
+
   return {
     entries,
     loading,
     error,
+    selectedEntry,
+    setSelectedEntry,
     addEntry,
     editEntry,
     removeEntry,
+    removeJournalEntries
   };
 }

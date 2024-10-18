@@ -58,6 +58,20 @@ export async function deleteEntry(entryId: string) {
     }
 }
 
+export const deleteJournalEntries = async (journalId: string) => {
+    try {
+        const data = await sql<Entries>`
+          DELETE FROM entries
+          WHERE journal_id = ${journalId}
+          RETURNING *
+        `;
+        return data.rows[0]; // return the deleted entry
+      } catch (error) {
+          console.error(`Error deleting entries in "${journalId}":`, error);
+          throw new Error(`Failed to delete entries in journal "${journalId}".`);
+      }
+}
+
 export async function updateEntry(entryId: string, title: string, content: string, date: string) {
     try {
         const data = await sql<Entries>`

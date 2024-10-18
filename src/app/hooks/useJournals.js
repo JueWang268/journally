@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
-import { fetchJournals, createJournal, updateJournal, deleteJournal } from '../api/journalsAPI.tsx';
+import { fetchJournals, readJournal, createJournal, updateJournal, deleteJournal } from '../api/journalsAPI.tsx';
 
 const useJournals = () => {
   const [journals_, setJournals] = useState([]);
+  const [selectedJournal, setSelectedJournal] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -22,7 +23,19 @@ const useJournals = () => {
     loadJournals();
   }, []);
 
+  const selectJournal = (journalId) => {
+    const journal = journals_.find(j => j.id === journalId);
+    setSelectedJournal(journal || null);
+};
 
+  const getJournal = async (journalId) => {
+    try {
+      const journal = await readJournal(journalId);
+      return journal
+    } catch (err) {
+      setError(err);
+    }
+  };
 
   const addJournal = async (title, userId) => {
     try {
@@ -33,9 +46,9 @@ const useJournals = () => {
     }
   };
 
-  const editJournal = async (id, updatedData) => {
+  const editJournal = async (id, updatedTitle) => {
     try {
-      const updatedJournal = await updateJournal(id, updatedData);
+      const updatedJournal = await updateJournal(id, updatedTitle);
       setJournals((prev) =>
         prev.map((journal) => (journal.id === id ? updatedJournal : journal))
       );
@@ -57,6 +70,8 @@ const useJournals = () => {
     journals_,
     loading,
     error,
+    selectedJournal,
+    setSelectedJournal,
     addJournal,
     editJournal,
     removeJournal,

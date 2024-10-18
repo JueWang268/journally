@@ -1,5 +1,3 @@
-
-
 import React from 'react'
 import "./JournalSideBar.css"
 import NewJournalButton from './NewJournalButton'
@@ -16,11 +14,9 @@ export default function JournalSidebar( {
   handleJournalClick, 
   handleBackButton} ) {
 
-    // const journals_test = fetchJournals()
-    // console.log(journals_test);
     
     return (
-      <>
+    <>
       <div className="sidebar">
       <div className="flex-container">
       <button className="back-button" onClick={handleBackButton}>⬅️ </button>
@@ -30,6 +26,7 @@ export default function JournalSidebar( {
       <ul>
       {
         journals.map(journal => {
+          
           return (
             <div className={"journal-item" + (selectedID === journal.id? ' selected' : '')}
             onClick={() => {

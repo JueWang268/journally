@@ -8,7 +8,6 @@ const formattedDate = date.toISOString().split('T')[0];
 
 
 export async function fetchJournals() {
-  console.log(process.env.POSTGRES_DATABASE);
   
   try {
     const data = await sql<Journals>`SELECT * FROM journals`;

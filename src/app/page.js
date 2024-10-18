@@ -1,5 +1,4 @@
 "use client"
-
 import React, { useState } from 'react'
 import Image from 'next/image'
 import JournalSidebar from './UI/JournalSidebar.js'
@@ -19,28 +18,32 @@ const App = () => {
   
   const TODAY = new Date();
   const USER_ID = '410544b2-4001-4271-9855-fec4b6a6442a';
-  const { journals_, loading, error, addJournal, editJournal, removeJournal } = useJournals();
-  const { entries, loading: entriesLoading, error: entriesError, addEntry, editEntry, removeEntry } = useEntries("d6e15727-9fe1-4961-8c5b-ea44a9bd81aa");
-  // console.log("entries", entries);
-  
-  const [journals, setJournals] = useState([
-    new Journal(1, "Personal Journal", Date(), []),
-    new Journal(2, "OOP Journal 2", Date(), [
-      new Entry(1, "Dear Diary", new Date(), "Today is a great day!")
-    ], true)
-  ])
-  const [selectedJournal, setSelectedJournal] = useState(journals[journals.length-1]);
-  // console.log("journals:");
-  // console.log(JSON.stringify(journals_));
-  
-  // force journal selection
-  const [selectedEntries, setSelectedEntries] = useState(selectedJournal.entries);
-  const [selectedEntry, setSelectedEntry] = useState(null);
+  const { 
+    journals_, 
+    loading, 
+    error, 
+    selectedJournal, 
+    setSelectedJournal, 
+    getJournal, 
+    addJournal, 
+    editJournal, 
+    removeJournal } = useJournals();
+
+  const { 
+    entries, 
+    loading: entriesLoading, 
+    error: entriesError, 
+    selectedEntry, 
+    setSelectedEntry, 
+    addEntry, 
+    editEntry, 
+    removeEntry,
+    removeJournalEntries } = useEntries(selectedJournal?.id);
+
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [retypeProps, setRetypeProps] = useState(null);
   const [view, setView] = useState("writingPad");
   const [showJournalBar, setShowJournalBar] = useState(true);
-
 
 
   const dateTimeFormat = new Intl.DateTimeFormat('en-US', {
@@ -51,30 +54,16 @@ const App = () => {
     minute: "numeric",
     second: "numeric",
     hour12: false
-  })
+  });
 
+  const findJournal = (ID) => journals_.find(j => j.id === ID);
 
-  const findJournal = (ID) => {
-    const target = journals.filter(j => j.id === ID)
-    if (target.length === 1) {
-      return journals.filter(j => j.id === ID)[0]
-    }
-    else {
-      // throw error
-      return null
-    }
-  }
-
-  const jids = journals.map(j => j.id)
+  const jids = journals_.map(j => j.id);
   
   const handleJournalClick = (jid) => {
     const j = findJournal(jid)
-    console.log(`journal reselected to: ${JSON.stringify(j)}`)
+    // console.log(`journal reselected to: ${JSON.stringify(j)}`)
     setSelectedJournal(j)
-    setSelectedEntries(j.entries)
-    if (j.entries.length === 0)
-      setSelectedEntry(null)
-    else {setSelectedEntry(j.entries[j.entries.length - 1])}
   }
 
   const toggleJournalBar = () => setShowJournalBar(!showJournalBar)
@@ -83,42 +72,20 @@ const App = () => {
     setView(prevView => (prevView === "writingPad" ? "dailyStats" : "writingPad"))
   }
   
-
-  const createNewJournal = (journals, setJournals) => {
-    if (! journals[journals.length - 1].id) {
-        return
-    }
-    const newId = journals[journals.length - 1].id + 1
-    const title = `New Journal ${newId}`
+  const createNewJournal = () => {
+    const title = `New Journal ${(new Date()).toISOString().split('T')[0]}`
     addJournal(title, USER_ID)
-    setJournals([...journals, 
-        new Journal(newId, title, new Date(), [])
-    ])
+    // setJournals([...journals, 
+    //     new Journal(newId, title, new Date(), [])
+    // ])
   }
   
-  const createNewEntry = (jid) => {
-    // creates a new entry in a journal with id jid
-    const targetJournal = findJournal(jid)
-    const newEntryID = selectedEntries.length > 0? selectedEntries[selectedEntries.length - 1].id + 1: 1
-    const newEntry = new Entry(
-      newEntryID,
-      `${dateTimeFormat.format(new Date())}`, // title date
-      new Date(TODAY.getFullYear(), TODAY.getMonth(), TODAY.getDate()), 
-      "{User Content}", null, true
-    )
-
-    const otherJournals = journals.filter(
-      j => j.id !== jid
-    )
-    // sorting everytime is not the fastest implementation
-    setSelectedEntries([...selectedEntries, newEntry])
-    setJournals([...otherJournals, 
-        {...targetJournal, entries: [...selectedEntries, newEntry]}
-    ].sort((a,b) => (a.id - b.id)))
+  const createNewEntry = () => {
+    addEntry(`${dateTimeFormat.format(new Date())}`, "{User Content}");
   }
 
   const askForInput = (journalName) => {
-    setIsDialogOpen(true)
+    setIsDialogOpen(true);
     return new Promise((resolve) => {
       setRetypeProps({
         journalName,
@@ -135,174 +102,67 @@ const App = () => {
     })
   }
 
-  const deleteJournal = async (journalID) => {
-    // const confirmed = await askForInput(findJournal(journalID).title)
-    const confirmed = true
-    let nextJ = selectedJournal.id
-    if (journalID === selectedJournal.id && journals.length > 1){
-      if (jids.indexOf(journalID) + 1 < journals.length){
-        nextJ = jids[jids.indexOf(journalID) + 1]
+  const deleteJournal = async (journalId) => {
+    const confirmed = await askForInput(findJournal(journalId).title);
+    // const confirmed = true
+    let nextJ = selectedJournal?.id;
+    if (journalId === selectedJournal?.id && journals_.length > 1){
+      if (jids.indexOf(journalId) + 1 < journals_.length){
+        nextJ = jids[jids.indexOf(journalId) + 1];
       }
       else{
-        nextJ = jids[0]
+        nextJ = jids[0];
       }
     }
 
     // dialogue wont show up journal without entries
     if (confirmed) {
-      setJournals(journals.filter(
-        j => j.id !== journalID
-      ))
+      removeJournal(journalId);
+      removeJournalEntries(journalId);
       // action buttons must stop event propagation
-      handleJournalClick(nextJ)
+      handleJournalClick(nextJ);
     }
-  }
-  
-  const renameJournal = (journalID, newName) => {
-    setJournals(journals.map(
-      j => {
-        if (j.id === journalID){
-          return {...j, title: newName}
-        }
-        return j
-      }
-    ))
   }
 
   const renameEntry = (entryID, newName) => {
-    setJournals(journals.map(
-      j => {
-        if (j.id === selectedJournal.id){
-          const newEntries = j.entries.map(
-            n => {
-              if (n.id === entryID){
-                setSelectedEntry({...n, title: newName, renamingItem: false})
-                return {...n, title: newName, renamingItem: false}
-              }
-              return n
-            }
-          )
-          setSelectedEntries(newEntries)
-
-          // console.log(`now: ${ JSON.stringify({...j, entries: newEntries}.entries) }`)
-          return {...j, entries: newEntries}
-        }
-        return j
-      }
-    ))
-  }
-
-  const turnOffRenamingItem = (nid) => {
-    setJournals(journals.map(
-      j => {
-        if (j.id === selectedJournal.id){
-          const newEntries = j.entries.map(
-            n => {
-              if (n.id === nid){
-                return {...n, renamingItem: false}
-              }
-              return n
-            }
-          )
-          setSelectedEntries(newEntries)
-          return {...j, entries: newEntries}
-        }
-        return j
-      }
-    ))
+    const old_entry = entries.filter(e => e.id === entryID)[0];
+    editEntry(entryID, newName, old_entry.content, old_entry.date);
   }
 
   const delEntry = (entry) => {
-
-    let nextN = entry // case for an empty journal after deletion
-    let nid = entry.id
-    let nids = selectedEntries.map(n => n.id)
+    let nextN = null; 
+    let nid = entry.id;
+    let nids = entries.map(n => n.id);
 
     if (selectedEntry === entry){
-      if (nids.length > 1){
-        if (nids.indexOf(nid) + 1 < selectedEntries.length){
-          nextN = selectedEntries[nids.indexOf(nid) + 1]
+      if (nids.length > 1) {
+        if (nids.indexOf(entry) + 1 < entries.length){
+          nextN = entries[nids.indexOf(nid) + 1];
+        } else {
+          nextN = entries[0];
         }
-        else {
-          nextN = selectedEntries[0]
-        }
-      } else{
-        nextN = null
+      } else {
+        nextN = null;
       }
-    } else{
-      nextN = selectedEntry
+    } else {
+      nextN = selectedEntry;
     }
-    console.log(`${JSON.stringify(nids)} ${JSON.stringify(nextN)}`)
+    console.log(`${JSON.stringify(nids)} ${JSON.stringify(nextN)}`);
     
-    setSelectedEntry(nextN)
-    setJournals(journals.map(
-      j => {
-        if (j.id === selectedJournal.id){
-          const newEntries = j.entries.filter(
-            n => n !== entry
-          )
-          setSelectedEntries(newEntries)
-          // console.log(`now: ${ JSON.stringify({...j, entries: newEntries}.entries) }`)
-          return {...j, entries: newEntries}
-        }
-        return j
-      }
-    ))
+    setSelectedEntry(nextN);
+    removeEntry(entry.id);
   }
   
   const saveEntryContent = (nid, content) => {
-    // console.log(`entry ${nid} has content changed to ${content}`)
-
-      const updatedJournals = journals.map(j => {
-        if (j.id === selectedJournal.id) {
-          const updatedEntries = j.entries.map(n => {
-            if (n.id === nid) {
-              return { ...n, content: content } // Update the entry content here
-            }
-            return n
-          })
-          return { ...j, entries: updatedEntries } // Return the updated journal
-        }
-        return j
-      })
+    console.log(`saving content ${content}`);
     
-      setJournals(updatedJournals)
-    
-      const updatedSelectedEntry = updatedJournals
-        .find(j => j.id === selectedJournal.id)
-        ?.entries.find(n => n.id === nid)
-    
-      setSelectedEntry(updatedSelectedEntry)
-      
-      setSelectedEntries(updatedJournals.find(j => j.id === selectedJournal.id)?.entries || [])
-      
+    const old_entry = entries.find(n => n.id === nid);
+    editEntry(nid, old_entry.title, content, old_entry.date);
   }
 
   const updateDate = (nid, newDate) => {
-    console.log(`new date for ${nid}, is ${newDate}`);
-    
-    const updatedJournals = journals.map(j => {
-      if (j.id === selectedJournal.id) {
-        const updatedEntries = j.entries.map(n => {
-          if (n.id === nid) {
-            return { ...n, dateHistory: [newDate]}
-          }
-          return n
-        })
-        return { ...j, entries: updatedEntries } // Return the updated journal
-      }
-      return j
-    })
-  
-    setJournals(updatedJournals)
-  
-    const updatedSelectedEntry = updatedJournals
-      .find(j => j.id === selectedJournal.id)
-      ?.entries.find(n => n.id === nid)
-  
-    setSelectedEntry(updatedSelectedEntry)
-    
-    setSelectedEntries(updatedJournals.find(j => j.id === selectedJournal.id)?.entries || [])
+    const old_entry = entries.find(n => n.id === nid);
+    editEntry(nid, old_entry.title, old_entry.content, newDate);
   }
 
 
@@ -321,13 +181,17 @@ const App = () => {
 
       <div className="main-layout">
         
-        {showJournalBar &&
-          <JournalSidebar journals={journals}
-          selectedID={selectedJournal.id}
-          handleNewJournal = {() => createNewJournal(journals, setJournals)}
-          handleDeleteJournal = {deleteJournal}
-          handleRenameJournal = {renameJournal}
-          handleJournalClick={handleJournalClick} handleBackButton={toggleJournalBar}/>}
+        {
+          showJournalBar &&
+          <JournalSidebar 
+            journals={journals_}
+            selectedID={selectedJournal?.id}
+            handleNewJournal = {createNewJournal}
+            handleDeleteJournal = {deleteJournal}
+            handleRenameJournal = {editJournal}
+            handleJournalClick={handleJournalClick} 
+            handleBackButton={toggleJournalBar}/>
+        }
         
         <div className="entries-sidebar">
           <div className="flex-container">
@@ -335,7 +199,7 @@ const App = () => {
               {view === "writingPad"? "Entries": "Stats"}
             </h3>
 
-            <button className="new-entry-button" onClick={() => {createNewEntry(selectedJournal.id)}}>
+            <button className="new-entry-button" onClick={createNewEntry}>
             +
             </button>
 
@@ -352,21 +216,21 @@ const App = () => {
           selectedJournal ? 
             (
               view === "writingPad" ?
-              (selectedEntries.length > 0 ? (
+              (entries.length > 0 ? (
             <ul>
               {
-                selectedEntries.map(entry => (
+                entries.map(entry => (
                   <EntryItem 
                     entry={entry}
                     handleRenameEntry={renameEntry}
                     handleDeleteEntry={() => {delEntry(entry)}}
                     handleEntryClick={()=> {
-                      console.log(`${JSON.stringify(entry.dateHistory)}`);
+                      // console.log(`${JSON.stringify(entry.date)}`);
                       setSelectedEntry(entry)
                     }}
                     handleDateChange={(newDate) => {updateDate(entry.id, newDate)}}
-                    turnOffRenamingItem={turnOffRenamingItem}
-                    renamed={entry.renamingItem}
+                    turnOffRenamingItem={() => {}}
+                    renamed={false}
                     selected={entry.id === selectedEntry?.id}
                   />
                 ))
@@ -375,7 +239,7 @@ const App = () => {
             (
               <div> No entries in this journal. 
               <button className="start-writing-button" 
-              onClick={() => {createNewEntry(selectedJournal.id)}}>
+              onClick={createNewEntry}>
               Start Writing
               </button> </div>
             )): 
@@ -391,10 +255,7 @@ const App = () => {
           ) : <div className="no-journal-message"> No journal selected </div>
         }
       </div>
-    
-        {
-          selectedEntry &&
-          <div className="main-content">
+        <div className="main-content">
           <div className="view-switch">
             <div className={`slider ${view === 'writingPad' ? 'left' : 'right'}`} onClick={toggleView}>
               <span className="slider-text">{view === 'writingPad' ? 'Writing Pad' : 'Daily Data'}</span>
@@ -403,49 +264,51 @@ const App = () => {
 
           </div>
 
-          {view === "writingPad" ? (
-            <>
-              <div className="entry-path">
+        {view === "writingPad" ? (
+          selectedEntry &&
+          <>
+            <div className="entry-path">
 
-                {
-                /* it looks like no methods in the entry class work.
-                Probably a "this" binding issue. 
-                Avoid instance methods
-                */
-                selectedJournal.title} &gt; {selectedEntry.title} : 
-                 {dateFormat.format(selectedEntry.dateHistory[0])}
-              </div>
-              <textarea 
-                className="rich-textarea" 
-                value={selectedEntry.content}
-                onChange={
-                  (e) => {
-                    saveEntryContent(selectedEntry.id, e.target.value)
-                  }
-                }
-              > 
-                {selectedEntry.content}
-              </textarea>
-            </>
-          ) : ( // even the demo graph does not show wihtout entries
-            <div>
-            {/* demo purposes */}
-            <DataPointGraph />
-            {/* demo purposes */}
+              {
+              /* it looks like no methods in the entry class work.
+              Probably a "this" binding issue. 
+              Avoid instance methods
+              */
+              selectedJournal.title} &gt; {selectedEntry.title} : 
+                {selectedEntry.date}
             </div>
-          )}
-          {isDialogOpen && (
-            <DeleteDialogue
-              journalName={retypeProps.journalName}
-              onConfirm={retypeProps.onConfirm}
-              onCancel={retypeProps.onCancel}
-              />
-            )}
+            <textarea 
+              className="rich-textarea" 
+              value={selectedEntry.content}
+              onChange={
+                (e) => {
+                  saveEntryContent(selectedEntry.id, e.target.value)
+                }
+              }
+            > 
+              {selectedEntry.content}
+            </textarea>
+          </>
+        ) : ( // even the demo graph does not show wihtout entries
+          <div>
+          {/* demo purposes */}
+          <DataPointGraph />
+          {/* demo purposes */}
           </div>
-        }
+        )}
+
+        {isDialogOpen && (
+          <DeleteDialogue
+            journalName={retypeProps.journalName}
+            onConfirm={retypeProps.onConfirm}
+            onCancel={retypeProps.onCancel}
+            />
+          )}
+        </div>
+        
       </div>
     </div>
   )
 }
 
-export default App
+export default App;
