@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import JournalSidebar from './UI/JournalSidebar.js';
 import '../styles/App.css';
@@ -20,8 +20,7 @@ const QuillEditor = dynamic(() => import('react-quill'), { ssr: false });
 
 const App = () => {
 
-  // const [quillContent, setQuillContent] = useState(null);
-
+  
   const quillModules = {
     toolbar: [
       [{ header: [1, 2, 3, false] }],
@@ -34,7 +33,7 @@ const App = () => {
       ['clean'],
     ],
   };
-
+  
   const quillFormats = [
     'header',
     'bold',
@@ -50,7 +49,7 @@ const App = () => {
     'color',
     'code-block',
   ];
-
+  
   const TODAY = new Date();
   const USER_ID = '410544b2-4001-4271-9855-fec4b6a6442a';
   const { 
@@ -63,34 +62,42 @@ const App = () => {
     addJournal, 
     editJournal, 
     removeJournal } = useJournals();
+    
+    const { 
+      entries, 
+      loading: entriesLoading, 
+      error: entriesError, 
+      selectedEntry, 
+      setSelectedEntry, 
+      addEntry, 
+      editEntry, 
+      removeEntry,
+      removeJournalEntries } = useEntries(selectedJournal?.id);
+      
+      const [isDialogOpen, setIsDialogOpen] = useState(false);
+      const [retypeProps, setRetypeProps] = useState(null);
+      const [view, setView] = useState("writingPad");
+      const [showJournalBar, setShowJournalBar] = useState(true);
+      
+      
+      const dateTimeFormat = new Intl.DateTimeFormat('en-US', {
+        year: "numeric",
+        month: "numeric",
+        day: "numeric",
+        hour: "numeric",
+        minute: "numeric",
+        second: "numeric",
+        hour12: false
+      });
+      const [quillContent, setQuillContent] = useState(null);
+      useEffect(() => {
+        // Whenever selectedEntry changes, update local state with new content
+        setQuillContent(selectedEntry?.content);
+      }, [selectedEntry]);
 
-  const { 
-    entries, 
-    loading: entriesLoading, 
-    error: entriesError, 
-    selectedEntry, 
-    setSelectedEntry, 
-    addEntry, 
-    editEntry, 
-    removeEntry,
-    removeJournalEntries } = useEntries(selectedJournal?.id);
-
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [retypeProps, setRetypeProps] = useState(null);
-  const [view, setView] = useState("writingPad");
-  const [showJournalBar, setShowJournalBar] = useState(true);
-
-
-  const dateTimeFormat = new Intl.DateTimeFormat('en-US', {
-    year: "numeric",
-    month: "numeric",
-    day: "numeric",
-    hour: "numeric",
-    minute: "numeric",
-    second: "numeric",
-    hour12: false
-  });
-
+      useEffect(()=>{console.log("JUST RENDERED");
+      });
+      
   const findJournal = (ID) => journals_.find(j => j.id === ID);
 
   const jids = journals_.map(j => j.id);
@@ -197,7 +204,7 @@ const App = () => {
     editEntry(nid, old_entry.title, old_entry.content, newDate);
   }
 
-  const debounce =(func, delay = 5000) => {
+  const debounce =(func, delay = 1000) => {
     let timer;
     return (...args) => {
       clearTimeout(timer);
@@ -209,9 +216,8 @@ const App = () => {
   (entryId, content) => {
       saveEntryContent(entryId, content);
     }, 
-  5000);
+  1000);
   
-
 
   return (
     <div className="app">
@@ -236,13 +242,13 @@ const App = () => {
             handleNewJournal = {createNewJournal}
             handleDeleteJournal = {deleteJournal}
             handleRenameJournal = {editJournal}
-            handleJournalClick={handleJournalClick} 
+            handleJournalClick={handleJournalClick}
             handleBackButton={toggleJournalBar}/>
         }
         
         <div className="entries-sidebar">
           <div className="flex-container">
-            <h3>  
+            <h3>
               {view === "writingPad"? "Entries": "Stats"}
             </h3>
 
@@ -325,15 +331,16 @@ const App = () => {
                 {selectedEntry.date}
             </div>
             <QuillEditor
-                  value={selectedEntry.content}
-                  onChange={(content) => {
-                    console.log(content);
-                    debouncedSaveEntry(selectedEntry.id, content);
-                  }}
-                  modules={quillModules}
-                  formats={quillFormats}
-                  className="w-full h-[70%] mt-10 bg-white"
-                />
+              value={quillContent}
+              onChange={(content) => {
+                console.log(`new content ${content}`);
+                setQuillContent(content);
+                debouncedSaveEntry(selectedEntry.id, content);
+              }}
+              modules={quillModules}
+              formats={quillFormats}
+              className="w-full h-[70%] mt-10 bg-white"
+            />
           </>
         ) : (
           <div>
