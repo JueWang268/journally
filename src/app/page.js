@@ -282,7 +282,7 @@ const App = () => {
                         // console.log(`${JSON.stringify(entry.date)}`);
                         setSelectedEntry(entry);
                       }}
-                      handleDateChange={(newDate) => {updateDate(entry.id, newDate)}}
+                      handleDateChange={(newDate) => {updateDate(entry.id, dateFormat.format(newDate))}}
                       turnOffRenamingItem={() => {}}
                       renamed={false}
                       selected={entry.id === selectedEntry?.id}

@@ -18,11 +18,6 @@ export default function EntryItem(
     const [isBeingDeleted, setIsBeingDeleted] = useState(false)
     const [isSettingDate, setIsSettingDate] = useState(false)
 
-    // const doneRenaming = (nid) => {
-    //     setIsBeingRenamed(false)
-    //     turnOffRenamingItem(nid)
-    // }
-
     return (
       <li key={entry.id} 
         className={'entry-card' + (selected? " selected": "")} 
@@ -61,7 +56,7 @@ export default function EntryItem(
 
           <span style={{"display": "flex"}}>
           <div className="entry-date">
-          {entry.date}
+          {dateFormat.format(entry.date)}
         </div>
         
         <button className="edit-button date-pick-button"
