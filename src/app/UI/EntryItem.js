@@ -1,9 +1,7 @@
 import React, {useState} from 'react'
 import './JournalSideBar.css'
 import dateFormat from '../../config/dateFormat'
-import DatePicker from 'react-datepicker'
 import "react-datepicker/dist/react-datepicker.css"
-import { type } from '@testing-library/user-event/dist/type'
 
 export default function EntryItem(
     {entry, 
@@ -18,13 +16,20 @@ export default function EntryItem(
     const [isBeingRenamed, setIsBeingRenamed] = useState(renamed);
     const [isBeingDeleted, setIsBeingDeleted] = useState(false);
     const [isSettingDate, setIsSettingDate] = useState(false);
+    const [localDate, setLocalDate] = useState(entry.date);
+
+    const formattedDate = (new Date(localDate+"T04:00:00")).toLocaleDateString('en-US', {
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric'
+    })
     // console.log(typeof(entry.date));
 
     return (
       <li key={entry.id} 
         className={'entry-card' + (selected? " selected": "")} 
         onClick={handleEntryClick}
-        onMouseLeave={e => {setIsBeingDeleted(false); setIsSettingDate(false)}}
+        onMouseLeave={e => {setIsBeingDeleted(false)}}
       >
         {
           isBeingRenamed ? 
@@ -32,11 +37,11 @@ export default function EntryItem(
           autoFocus={true} onFocus={e=>e.target.select()} onKeyDown={
             (e) => {
               if (e.key === "Enter") {
-                setIsBeingRenamed(false)
-                handleRenameEntry(entry.id, e.target.value)
+                setIsBeingRenamed(false);
+                handleRenameEntry(entry.id, e.target.value);
               }
               else if (e.key === "Escape"){
-                setIsBeingRenamed(false)
+                setIsBeingRenamed(false);
               }
             }
           } onBlur={() => setIsBeingRenamed(false)}/> :
@@ -45,29 +50,43 @@ export default function EntryItem(
 
         {
           isSettingDate? 
-          (<DatePicker className="date-picker" selected={entry.date}
+          (<input type='date' className="date-picker" 
+            value={localDate}
           onChange={
-            (date) => {
-              handleDateChange(date)
-              setIsSettingDate(false)
+            (e) => {
+              console.log(`new date ${e.target.value}`);
+              setLocalDate(e.target.value);
             }
           }
+          onBlur={ () =>
+            {
+              handleDateChange(localDate);
+              setIsSettingDate(false);
+            }
+          }
+          onKeyDown={
+              (e) => {
+                if (e.key === "Enter") {
+                  handleDateChange(localDate);
+                  setIsSettingDate(false);
+                }
+            }
+        }
           
           />) : 
           (
 
           <span style={{"display": "flex"}}>
           <div className="entry-date">
-          { 
-          
-            dateFormat.format(new Date(entry.date))
+          {
+            formattedDate
           }
         </div>
         
         <button className="edit-button date-pick-button"
         onClick={ (e) => {
-          e.stopPropagation()
-          setIsSettingDate(true)
+          e.stopPropagation();
+          setIsSettingDate(true);
         }}
       >
       📅

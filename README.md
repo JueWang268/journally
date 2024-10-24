@@ -28,3 +28,6 @@ React, Next, Firebase, PostgresQL
 Ther is a delay in server response, and the state of `selectedEntry` isn't updated in time to be reflected on the textarea.
 - [ ] New Entry button should be grayed out, when `selectedJournal` is null
 - [ ] date on entry item changes to ISO string after changing the date
+
+## TODO
+ - The Entry Item makes a query call eveyr time the date is changed by a key. Fix it.

@@ -12,6 +12,7 @@ import DataPointGraph from './UI/DataPointGraph.js';
 import dateFormat from '../config/dateFormat.js';
 import useJournals from './hooks/useJournals.js';
 import useEntries from './hooks/useEntries.js';
+import debounce from './utils/debounce.js';
 
 import dynamic from 'next/dynamic';
 import 'react-quill/dist/quill.snow.css'; // Import Quill styles
@@ -204,17 +205,17 @@ const App = () => {
     editEntry(nid, old_entry.title, old_entry.content, newDate);
   }
 
-  const debounce =(func, delay = 1000) => {
-    let timer;
-    return (...args) => {
-      clearTimeout(timer);
-      timer = setTimeout(() => func(...args), delay);
-    };
-  }
+  // const debounce =(func, delay = 1000) => {
+  //   let timer;
+  //   return (...args) => {
+  //     clearTimeout(timer);
+  //     timer = setTimeout(() => func(...args), delay);
+  //   }
+  // }
 
   const debouncedSaveEntry = debounce(
-  (entryId, content) => {
-      saveEntryContent(entryId, content);
+    (entryId, content) => {
+      saveEntryContent(entryId, content)
     }, 
   1000);
   
@@ -282,7 +283,7 @@ const App = () => {
                         // console.log(`${JSON.stringify(entry.date)}`);
                         setSelectedEntry(entry);
                       }}
-                      handleDateChange={(newDate) => {updateDate(entry.id, dateFormat.format(newDate))}}
+                      handleDateChange={(newDate) => {updateDate(entry.id, newDate)}}
                       turnOffRenamingItem={() => {}}
                       renamed={false}
                       selected={entry.id === selectedEntry?.id}
