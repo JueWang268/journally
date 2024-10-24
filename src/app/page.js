@@ -261,6 +261,7 @@ const App = () => {
               setView("dailyStats") :
               setView("writingPad")
             }}>
+              {/* Possibily change h3 to something else to have flexibility for styles */}
               <h3>Change to {view === "writingPad" ? "Daily Stats": "Written Entries"}</h3>
             </button>
           

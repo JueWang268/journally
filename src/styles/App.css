@@ -51,6 +51,23 @@
 
 .flex-container{
   display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+}
+
+/* New Entry Button (David) */
+.new-entry-button{
+  /* subject to change */
+  font-size: 20px;
+  padding: 13px 5px;
+
+}
+
+/* Change stats/entries button (David) */
+.toggle-button{
+  /* subject to change */
+  padding: 0px 5px;
 }
 
 .main-content {
@@ -72,10 +89,10 @@
   border-radius: 4px;
 }
 
-
-h3 {
-  margin-top: 0;
-}
+/* change margins? (David) */
+/* h3 {
+  margin: 0px;
+} */
 
 ul {
   list-style-type: none;
