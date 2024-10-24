@@ -1,7 +1,7 @@
 import React, {useState} from 'react'
 import './JournalSideBar.css'
 import dateFormat from '../../config/dateFormat'
-import "react-datepicker/dist/react-datepicker.css"
+// import "react-datepicker/dist/react-datepicker.css"
 
 export default function EntryItem(
     {entry, 
