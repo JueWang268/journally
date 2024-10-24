@@ -3,6 +3,7 @@ import './JournalSideBar.css'
 import dateFormat from '../../config/dateFormat'
 import DatePicker from 'react-datepicker'
 import "react-datepicker/dist/react-datepicker.css"
+import { type } from '@testing-library/user-event/dist/type'
 
 export default function EntryItem(
     {entry, 
@@ -14,9 +15,10 @@ export default function EntryItem(
     renamed,
     selected }
     ) {
-    const [isBeingRenamed, setIsBeingRenamed] = useState(renamed)
-    const [isBeingDeleted, setIsBeingDeleted] = useState(false)
-    const [isSettingDate, setIsSettingDate] = useState(false)
+    const [isBeingRenamed, setIsBeingRenamed] = useState(renamed);
+    const [isBeingDeleted, setIsBeingDeleted] = useState(false);
+    const [isSettingDate, setIsSettingDate] = useState(false);
+    // console.log(typeof(entry.date));
 
     return (
       <li key={entry.id} 
@@ -56,7 +58,10 @@ export default function EntryItem(
 
           <span style={{"display": "flex"}}>
           <div className="entry-date">
-          {dateFormat.format(entry.date)}
+          { 
+          
+            dateFormat.format(new Date(entry.date))
+          }
         </div>
         
         <button className="edit-button date-pick-button"
@@ -77,15 +82,15 @@ export default function EntryItem(
         <div className="action-button-container">
             <button className="edit-button" onClick={
                 (e) => {
-                  e.stopPropagation()
-                  setIsBeingRenamed(true)}
+                  e.stopPropagation();
+                  setIsBeingRenamed(true);}
             } >
             🖊️
             </button>
             <button className="edit-button" onClick={
               (e) => {
-                  e.stopPropagation()
-                  setIsBeingDeleted(true)
+                  e.stopPropagation();
+                  setIsBeingDeleted(true);
                 }
               } >
             🗑️
@@ -99,9 +104,9 @@ export default function EntryItem(
               <div className="confirm-dialogue" style={{display: "flex"}}>
                 <button className="edit-button confirm-delete-button"
                 onClick={ (e) => {
-                e.stopPropagation()
-                handleDeleteEntry(entry.id)
-                setIsBeingDeleted(false)
+                e.stopPropagation();
+                handleDeleteEntry(entry.id);
+                setIsBeingDeleted(false);
                 }}
                 >
                 ✅
@@ -109,8 +114,8 @@ export default function EntryItem(
                 
                 <button className="edit-button cancel-delete-button"
                 onClick={ (e) => {
-                  e.stopPropagation()
-                  setIsBeingDeleted(false)}
+                  e.stopPropagation();
+                  setIsBeingDeleted(false);}
                 }
                 >
                 ❎ 
