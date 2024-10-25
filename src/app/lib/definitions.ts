@@ -17,5 +17,13 @@ export type Entries = {
     journal_id: string;
     title: string;
     content: string;
-    date: Date;
+    date: string;
 };
+
+export type Datapoints = {
+    id: string;
+    user_id: string;
+    name: string;
+    value: number;
+    date: string;
+}

@@ -10,12 +10,13 @@ React, Next, Firebase, PostgresQL
     - [ ] Streak count
 - [ ] multimedia
 - [ ] automatic sorting of journal/entry bar
-- [ ] Rich text *formatting*: cf. Dayone
+- [X] Rich text *formatting*: cf. Dayone
 - [ ] Word count
 - [ ] Sortable and searchable *tags* (Apple Journal’s limitations)
 - [ ] *Search* by date, day, time…
 - [X] Multiple journals (like Dayone Premium)
-- [ ] *Graphs* of (customizable) stats over time (e.g. weight, study time, etc)
+- [X] *Graphs* of (customizable) stats over time (e.g. weight, study time, etc)
+    - [ ] Aggregate data for day, week, month...
 - [ ] AI powered prompts (reminders) (cf other diary products)
 - [ ] AI summary?
 

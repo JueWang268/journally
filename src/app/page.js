@@ -7,6 +7,7 @@ import Journal from '../models/Journal.js';
 import Entry from '../models/Entry.js';
 import DeleteDialogue from './UI/DeleteDialogue.js';
 import EntryItem from './UI/EntryItem.js';
+import StatsBar from './UI/StatsBar.js';
 import DataPointItem from './UI/DataPointItem.js';
 import DataPointGraph from './UI/DataPointGraph.js';
 import dateFormat from '../config/dateFormat.js';
@@ -298,15 +299,7 @@ const App = () => {
               Start Writing
               </button> </div>
             )): 
-            <div className="stats-bar">
-              {/* demo purposes */}
-              <DataPointItem name="Work productivity" color="red"/>
-              <DataPointItem name="Coffee consumed" color="turquoise"/>
-              <DataPointItem name="Miles run in morning" color="green"/>
-              <DataPointItem name="Miles run in Evening" color="yellow"/>
-
-              {/* demo ends */}
-            </div>
+            <StatsBar userId = {USER_ID} />
           ) : <div className="no-journal-message"> No journal selected </div>
         }
       </div>

@@ -6,7 +6,7 @@ export default function JournalItem(
     handleRenameJournal, 
     handleDeleteJournal }
     ) {
-    const [isBeingRenamed, setIsBeingRenamed] = useState(false)
+    const [isBeingRenamed, setIsBeingRenamed] = useState(false);
 
     return (
       <li key={key} style={{display: "flex", width: "100%"}}>
