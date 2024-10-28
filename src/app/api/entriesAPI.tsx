@@ -1,9 +1,8 @@
 "use server"
 import { sql } from '@vercel/postgres';
 import { Entries } from '../lib/definitions';
+import { ISODate } from '../utils/ISODate';
 
-const date = new Date();
-const ISODate = date.toISOString().split('T')[0];
 
 export async function createEntry(journalId: string, title: string, content: string) {
     try {

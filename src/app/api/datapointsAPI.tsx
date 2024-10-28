@@ -46,5 +46,34 @@ export async function readGroupedDp (userId: string) {
         console.error('Error reading datapoints:', error);
         throw new Error(`Failed to read datapoints".`);
     }
+}
 
+export async function updateDp (dpId: string, name: string, value: string) {
+  try{
+    const data = await sql<Datapoints>`
+    UPDATE datapoints
+    SET value = ${value}, name = ${name}
+    WHERE id = ${dpId}
+    RETURNING *
+    `;
+    return data;
+  }
+  catch (e) {
+    console.error(`Error modifying dp: ${e}`);
+    throw new Error(`Error modifying dp: ${e}`);
+  }
+}
+
+export async function deleteDp(dpId: string) {
+  try {
+    const data = await sql<Datapoints>`
+      DELETE FROM datapoints
+      WHERE id = ${dpId}
+      RETURNING *
+    `;
+    return data.rows[0]; // return the deleted dp
+  } catch (error) {
+      console.error(`Error deleting dp with id "${dpId}":`, error);
+      throw new Error(`Failed to delete dp "${dpId}".`);
+  }
 }

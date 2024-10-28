@@ -107,13 +107,13 @@ const App = () => {
   const handleJournalClick = (jid) => {
     const j = findJournal(jid)
     // console.log(`journal reselected to: ${JSON.stringify(j)}`)
-    setSelectedJournal(j)
+    setSelectedJournal(j);
   }
 
-  const toggleJournalBar = () => setShowJournalBar(!showJournalBar)
+  const toggleJournalBar = () => setShowJournalBar(!showJournalBar);
 
   const toggleView = () => {
-    setView(prevView => (prevView === "writingPad" ? "dailyStats" : "writingPad"))
+    setView(prevView => (prevView === "writingPad" ? "dailyStats" : "writingPad"));
   }
   
   const createNewJournal = () => {
@@ -145,7 +145,7 @@ const App = () => {
 
   const deleteJournal = async (journalId) => {
     const confirmed = await askForInput(findJournal(journalId).title);
-    // const confirmed = true
+    // const confirmed = true;
     let nextJ = selectedJournal?.id;
     if (journalId === selectedJournal?.id && journals_.length > 1){
       if (jids.indexOf(journalId) + 1 < journals_.length){
