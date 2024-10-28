@@ -1,12 +1,17 @@
 import React, { useState } from 'react'
 import './DataPointItem.css'
 
-const DataPointItem = ({name, color, timeline}) => {
+const DataPointItem = ({name, color, timeline, onDelete}) => {
   const [timelineVisible, setTimelineVisible] = useState(true);
   const [isVisible, setIsVisible] = useState(true);
+  const [hidden, setHidden] = useState(true);
 
   const toggleVisibility = () => {
     setIsVisible(!isVisible);
+  }
+
+  const toggleHidden = () => {
+    setHidden(!hidden);
   }
 
   return (
@@ -39,13 +44,29 @@ const DataPointItem = ({name, color, timeline}) => {
       {timelineVisible && (
         <div className="timeline-section">
           <div className="timeline-header">
-            <span className='timeline-table-cell'>Date</span>
-            <span className='timeline-table-cell'>Value</span>
+          <span className='timeline-table-cell'>Date</span>
+          <span className='timeline-table-cell'>Value</span>
+          <button className="timeline-action-button" onClick={toggleHidden} >
+          {
+            hidden? 
+            "..." : "back"
+          }
+          </button>
+            
           </div>
-          {timeline.map(({ date, value }, index) => (
+          {timeline?.map(({ date, value, id }, index) => (
             <div className="timeline-row" key={index}>
               <span className='timeline-table-cell'>{date}</span>
               <span className='timeline-table-cell'>{value}</span>
+
+              {(
+                !hidden && 
+                  <div>
+                  <button className="edit-timeline-button">🖋️</button>
+                  <button className="delete-timeline-button" onClick={() => {onDelete(id)}}>🗑️</button>
+                  </div>
+              )}
+              
             </div>
           ))}
         </div>

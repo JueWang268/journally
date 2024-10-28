@@ -32,31 +32,31 @@ export async function readDp (userId: string) {
     
 export async function readGroupedDp (userId: string) {
   try {
-      const data = await sql<Datapoints>`
-        SELECT 
-            name, 
-            ARRAY_AGG(jsonb_build_object('date', date, 'value', value)) AS data
-        FROM 
-            datapoints
-        GROUP BY 
-            name;
-      `;
-      return data.rows; 
-    } catch (error) {
-        console.error('Error reading datapoints:', error);
-        throw new Error(`Failed to read datapoints".`);
-    }
+    const data = await sql<Datapoints>`
+      SELECT 
+          name, 
+          ARRAY_AGG(jsonb_build_object('date', date, 'value', value, 'id', id)) AS data
+      FROM 
+          datapoints
+      GROUP BY 
+          name;
+    `;
+    return data.rows; 
+  } catch (error) {
+    console.error('Error reading datapoints:', error);
+    throw new Error(`Failed to read datapoints".`);
+  }
 }
 
-export async function updateDp (dpId: string, name: string, value: string) {
+export async function updateDp (dpId: string, name: string, value: string, date: string) {
   try{
     const data = await sql<Datapoints>`
     UPDATE datapoints
-    SET value = ${value}, name = ${name}
+    SET value = ${value}, name = ${name}, date=${date}
     WHERE id = ${dpId}
     RETURNING *
     `;
-    return data;
+    return data.rows[0];
   }
   catch (e) {
     console.error(`Error modifying dp: ${e}`);

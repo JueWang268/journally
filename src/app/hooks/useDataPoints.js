@@ -27,13 +27,44 @@ export default function useDatapoints(userId) {
         };
 
         fetchDp();
-        }, [userId]);
+        }, [userId, datapoints]);
         
-    const createDatapoint = () => {} 
+    const createDatapoint = async (userId, name, value) => {
+        try {
+            const newDp = await createDp(userId, name, value);
+            setDatapoints([...datapoints, newDp]);
+        }
+        catch (err) {
+            setError(err);
+        }
+    }
+
+    const editDp = async (dpId, name, value, date) => {
+        try {
+          const updatedDp = await updateDp(dpId, name, value, date);
+          setDatapoints(datapoints.map((dp) => (dp.id === dpId ? updatedDp : dp)));
+        } catch (err) {
+          setError(err);
+        }
+    };
+    
+    const removeDp = async (dpId) => {
+        try {
+          const removed = await deleteDp(dpId);
+          setDatapoints(datapoints.filter((dp) => dp.id !== dpId));
+        } catch (err) {
+          setError(err);
+        }
+        
+    }
+
 
     return {
         datapoints, 
         loading, 
-        error
+        error,
+        createDatapoint,
+        editDp,
+        removeDp
     };
 }

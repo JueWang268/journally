@@ -32,7 +32,7 @@ export default function useEntries(selectedJournalId) {
   // refresh entries, and select a differnt entry once a diff journal is selected
   useEffect(() => {
     setSelectedEntry(entries[0])}, 
-  [entries]);
+  [selectedJournalId]);
 
   // Create a new entry
   const addEntry = async (title, content) => {

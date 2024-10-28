@@ -31,4 +31,5 @@ Ther is a delay in server response, and the state of `selectedEntry` isn't updat
 - [ ] date on entry item changes to ISO string after changing the date
 
 ## TODO
- - The Entry Item makes a query call eveyr time the date is changed by a key. Fix it.
+ - The Entry Item makes a query call eveyr time the date is changed by a key
+ - The Quill Editor still doesn't debounce because it is triggered every keystroke

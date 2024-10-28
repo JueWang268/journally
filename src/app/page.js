@@ -97,8 +97,8 @@ const App = () => {
         setQuillContent(selectedEntry?.content);
       }, [selectedEntry]);
 
-      useEffect(()=>{console.log("JUST RENDERED");
-      });
+      // useEffect(()=>{console.log("JUST RENDERED");
+      // });
       
   const findJournal = (ID) => journals_.find(j => j.id === ID);
 
@@ -171,7 +171,7 @@ const App = () => {
   }
 
   const delEntry = (entry) => {
-    let nextN = null; 
+    let nextN = null;
     let nid = entry.id;
     let nids = entries.map(n => n.id);
 
@@ -216,7 +216,7 @@ const App = () => {
 
   const debouncedSaveEntry = debounce(
     (entryId, content) => {
-      saveEntryContent(entryId, content)
+      saveEntryContent(entryId, content);
     }, 
   1000);
   
@@ -328,7 +328,7 @@ const App = () => {
             <QuillEditor
               value={quillContent}
               onChange={(content) => {
-                console.log(`new content ${content}`);
+                // console.log(`new content ${content}`);
                 setQuillContent(content);
                 debouncedSaveEntry(selectedEntry.id, content);
               }}
