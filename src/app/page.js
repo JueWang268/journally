@@ -1,14 +1,15 @@
 "use client";
 import React, { useState, useEffect } from 'react';
+import { DataPointsProvider, useDataPointsContext } from './context/DatapointsContext';
 import Image from 'next/image';
 import JournalSidebar from './UI/JournalSidebar.js';
+import NewEntryDataButton from './UI/NewEntryDataButton.js';
 import '../styles/App.css';
 import Journal from '../models/Journal.js';
 import Entry from '../models/Entry.js';
 import DeleteDialogue from './UI/DeleteDialogue.js';
 import EntryItem from './UI/EntryItem.js';
 import StatsBar from './UI/StatsBar.js';
-import DataPointItem from './UI/DataPointItem.js';
 import DataPointGraph from './UI/DataPointGraph.js';
 import dateFormat from '../config/dateFormat.js';
 import useJournals from './hooks/useJournals.js';
@@ -75,6 +76,8 @@ const App = () => {
       editEntry, 
       removeEntry,
       removeJournalEntries } = useEntries(selectedJournal?.id);
+    // const { datapoints, dploading, dperror, createDatapoint, editDp, removeDp } = useDataPointsContext();
+
       
       const [isDialogOpen, setIsDialogOpen] = useState(false);
       const [retypeProps, setRetypeProps] = useState(null);
@@ -248,15 +251,17 @@ const App = () => {
             handleBackButton={toggleJournalBar}/>
         }
         
+        <DataPointsProvider userId={USER_ID}>
+        
         <div className="entries-sidebar">
           <div className="flex-container">
             <h3>
               {view === "writingPad"? "Entries": "Stats"}
             </h3>
 
-            <button className="new-entry-button" onClick={createNewEntry}>
-            +
-            </button>
+            <NewEntryDataButton view={view} createNewEntry={createNewEntry} userId={USER_ID}>
+            
+            </NewEntryDataButton>
 
             <button className="toggle-button" onClick={() => {
               view === "writingPad" ?
@@ -303,6 +308,7 @@ const App = () => {
           ) : <div className="no-journal-message"> No journal selected </div>
         }
       </div>
+
         <div className="main-content">
           <div className="view-switch">
             <div className={`slider ${view === 'writingPad' ? 'left' : 'right'}`} onClick={toggleView}>
@@ -328,7 +334,6 @@ const App = () => {
             <QuillEditor
               value={quillContent}
               onChange={(content) => {
-                // console.log(`new content ${content}`);
                 setQuillContent(content);
                 debouncedSaveEntry(selectedEntry.id, content);
               }}
@@ -344,16 +349,20 @@ const App = () => {
           {/* demo purposes */}
           </div>
         )}
-
+        
         {isDialogOpen && (
           <DeleteDialogue
-            journalName={retypeProps.journalName}
-            onConfirm={retypeProps.onConfirm}
-            onCancel={retypeProps.onCancel}
-            />
-          )}
+          journalName={retypeProps.journalName}
+          onConfirm={retypeProps.onConfirm}
+          onCancel={retypeProps.onCancel}
+          />
+          )
+        }
         </div>
-        
+
+        </DataPointsProvider>
+      
+      
       </div>
     </div>
   )

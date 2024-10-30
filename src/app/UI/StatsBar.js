@@ -1,22 +1,24 @@
 "use client"
-import { React } from 'React';
-import useDatapoints from '../hooks/useDatapoints';
+import { React } from 'react';
+import { useDataPointsContext } from '../context/DatapointsContext';
 import DataPointItem from './DataPointItem.js';
 
 
 export default function StatsBar( { userId } ) {
-  const { datapoints, loading, error, createDatapoint, editDp, removeDp } = useDatapoints(userId);
-  // const dp_types = 
+  const { datapoints, loading, error, createDatapoint, editDp, removeDp } = useDataPointsContext();
+
   
   return (
     <div className="stats-bar">
       {
         datapoints.map( dp => 
-          <DataPointItem name={dp.name} color = "red" timeline={dp.data} onDelete={removeDp}></DataPointItem>
+          <div>
+            <DataPointItem name={dp.name} color = "red" timeline={dp.data} onEdit={editDp} onDelete={removeDp}></DataPointItem>
+            <button className="add-data-button" onClick={()=>{createDatapoint(userId, dp.name, 1)}}> + </button>
+          </div>
         )
       }
-      <button className="add-data-button" onClick={()=>{createDatapoint(userId, "Reading Time", 1)}}> + </button>
- 
+
     </div>
   );
 }
