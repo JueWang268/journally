@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { fetchJournals, readJournal, createJournal, updateJournal, deleteJournal } from '../api/journalsAPI.tsx';
+import { fetchJournals, readJournal, createJournal, updateJournal, deleteJournal, deleteTag } from '../api/journalsAPI.tsx';
 
 const useJournals = () => {
   const [journals_, setJournals] = useState([]);
@@ -37,9 +37,10 @@ const useJournals = () => {
     }
   };
 
-  const addJournal = async (title, userId) => {
+  // updated with tag
+  const addJournal = async (title, userId, tag) => {
     try {
-      const createdJournal = await createJournal(title, userId);
+      const createdJournal = await createJournal(title, userId, tag);
       setJournals((prev) => [...prev, createdJournal]);
     } catch (err) {
       setError(err);
@@ -66,6 +67,16 @@ const useJournals = () => {
     }
   };
 
+  // delete Tag
+  const removeTag = async (id) => {
+    try{
+      const updatedJournal = await deleteTag(id);
+      setJournals(journals_.map(journal => journal.id === id ? updatedJournal : journal));
+    } catch (err) {
+      setError(err);
+    }
+  };
+
   return {
     journals_,
     loading,
@@ -75,6 +86,7 @@ const useJournals = () => {
     addJournal,
     editJournal,
     removeJournal,
+    removeTag,
   };
 };
 
