@@ -1,15 +1,29 @@
 import React from 'react'
 import { Scatter } from 'react-chartjs-2'
 import { Chart as ChartJS, LinearScale, PointElement, Tooltip, Legend, LineElement } from 'chart.js'
+import { useDataPointsContext } from '../context/DatapointsContext';
 
 
 
-ChartJS.register(LinearScale, PointElement, Tooltip, Legend, LineElement)
-
-const TODAY = new Date(10, 10, 2022)
+ChartJS.register(LinearScale, PointElement, Tooltip, Legend, LineElement);
 
 const DataPointGraph = () => {
+  const { datapoints, loading, error, createDatapoint, editDp, removeDp } = useDataPointsContext();
 
+  const combinedData = [];
+  for (const name in datapoints) {
+      datapoints[name].forEach(dp => {
+          combinedData.push({
+              date: dp.date,
+              value: dp.value
+          });
+      });
+  }
+  
+  // Prepare data for Chart.js
+  const labels = combinedData.map(dp => dp.date);
+  const values = combinedData.map(dp => dp.value);
+  
   // Data to be visualized
   const data = {
     datasets: [
@@ -60,7 +74,7 @@ const DataPointGraph = () => {
         pointRadius: 6, // Size of the points
       }
     ],
-  }
+  };
 
   const options = {
     scales: {
@@ -91,13 +105,13 @@ const DataPointGraph = () => {
       },
     },
 
-  }
+  };
 
   return (
     <div style={{ width: '800px', margin: '0 0' }}>
       <Scatter data={data} options={options} />
     </div>
-  )
-}
+  );
+};
 
-export default DataPointGraph
+export default DataPointGraph;

@@ -5,7 +5,7 @@ import { useDataPointsContext } from '../context/DatapointsContext';
 
 
 const DataPointItem = ({name, color, timeline, onEdit, onDelete}) => {
-  const { datapoints, loading, error, createDatapoint, editDp, removeDp, setDatapoints } = useDataPointsContext();
+  const { setDatapoints } = useDataPointsContext();
   // timeline is a group of datapoints
   const [timelineVisible, setTimelineVisible] = useState(true);
   const [isVisible, setIsVisible] = useState(true);
@@ -88,12 +88,7 @@ const DataPointItem = ({name, color, timeline, onEdit, onDelete}) => {
           <div className="timeline-header">
             <span className='timeline-table-cell'>Date</span>
             <span className='timeline-table-cell'>Value</span>
-            <button className="timeline-action-button" onClick={toggleHidden} >
-            {
-              hidden? 
-              "..." : "back"
-            }
-            </button>
+            <span></span>
           </div>
 
           {            // <div className="timeline-row" key={index}>
