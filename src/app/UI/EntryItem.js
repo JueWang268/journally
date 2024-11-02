@@ -22,11 +22,10 @@ export default function EntryItem(
       month: 'short',
       day: 'numeric',
       year: 'numeric'
-    })
-    // console.log(typeof(entry.date));
+    });
 
     return (
-      <li key={entry.id} 
+      <li key={entry.id}
         className={'entry-card' + (selected? " selected": "")} 
         onClick={handleEntryClick}
         onMouseLeave={e => {setIsBeingDeleted(false)}}
@@ -78,10 +77,8 @@ export default function EntryItem(
 
           <span style={{"display": "flex"}}>
           <div className="entry-date">
-          {
-            formattedDate
-          }
-        </div>
+            {formattedDate}
+          </div>
         
         <button className="edit-button date-pick-button"
         onClick={ (e) => {

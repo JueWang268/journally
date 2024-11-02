@@ -3,9 +3,10 @@ import './DataPointItem.css';
 import TimelineRow from './TimelineRow.js';
 import { useDataPointsContext } from '../context/DatapointsContext';
 
+
 const DataPointItem = ({name, color, timeline, onEdit, onDelete}) => {
+  const { datapoints, loading, error, createDatapoint, editDp, removeDp, setDatapoints } = useDataPointsContext();
   // timeline is a group of datapoints
-  const { datapoints, loading, error, createDatapoint, editDp, removeDp } = useDataPointsContext();
   const [timelineVisible, setTimelineVisible] = useState(true);
   const [isVisible, setIsVisible] = useState(true);
   const [hidden, setHidden] = useState(true);
@@ -47,10 +48,19 @@ const DataPointItem = ({name, color, timeline, onEdit, onDelete}) => {
               onKeyDown={
                 (e) => {
                   if (e.key === "Enter") {
+                    // dp group rename
                     setIsEditing(false);
                     timeline?.map(
-                      (dp => editDp(dp.id, e.target.value, dp.value, dp.date))
+                      (dp => onEdit(dp.id, e.target.value, dp.value, dp.date))
                     );
+                    setDatapoints(prev => {
+                      const updatedDps = {...prev};
+                      if (updatedDps[name]){
+                        updatedDps[e.target.value] = updatedDps[name];
+                        delete updatedDps[name];
+                      }
+                      return updatedDps;
+                    });
                   }
                   else if (e.key === "Escape"){
                     setIsEditing(false);

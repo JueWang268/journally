@@ -1,9 +1,10 @@
 "use client"
 import { React, useState } from 'react';
-
+import { useDataPointsContext } from '../context/DatapointsContext';
 
 export default function TimelineRow({id, name, date, value, onEdit, onDelete, index}) {
   const [isEditing, setIsEditing] = useState(false);
+  // const { datapoints, loading, error, createDatapoint, onEdit, removeDp, setDatapoints } = useDataPointsContext();
 
   return (
     <div className="timeline-row" key={index}>
@@ -16,7 +17,7 @@ export default function TimelineRow({id, name, date, value, onEdit, onDelete, in
             (e) => {
               if (e.key === "Enter") {
                 setIsEditing(false);
-                onEdit(id, name,  value, e.target.value,);
+                onEdit(id, name, value, e.target.value);
               }
               else if (e.key === "Escape"){
                 setIsEditing(false);
@@ -26,7 +27,7 @@ export default function TimelineRow({id, name, date, value, onEdit, onDelete, in
             onBlur={ (e) =>
               {
                 setIsEditing(false);
-                onEdit(id, name,  value, e.target.value,);
+                onEdit(id, name,  value, e.target.value);
               }
             }
             className='timeline-input'
@@ -39,14 +40,14 @@ export default function TimelineRow({id, name, date, value, onEdit, onDelete, in
             onBlur={ (e) =>
               {
                 setIsEditing(false);
-                onEdit(id, name,  e.target.value,date);
+                onEdit(id, name, e.target.value, date);
               }
             }
             onKeyDown={
             (e) => {
               if (e.key === "Enter") {
                 setIsEditing(false);
-                onEdit(id, name,  e.target.value,date);
+                const updatedDp = onEdit(id, name, e.target.value, date);
               }
               else if (e.key === "Escape"){
                 setIsEditing(false);
@@ -70,7 +71,10 @@ export default function TimelineRow({id, name, date, value, onEdit, onDelete, in
         }
       </button>
       {
-        isEditing && <button className="delete-timeline-button" onClick={() => {onDelete(id)}}>🗑️</button>
+        isEditing && <button className="delete-timeline-button" onClick={() => {
+          setIsEditing(false);
+          onDelete(id);
+        }}>🗑️</button>
       }
     </div>
   );

@@ -6,15 +6,16 @@ import DataPointItem from './DataPointItem.js';
 
 export default function StatsBar( { userId } ) {
   const { datapoints, loading, error, createDatapoint, editDp, removeDp } = useDataPointsContext();
-
+  console.log(JSON.stringify(datapoints), "is the datapoints");
+  
   
   return (
     <div className="stats-bar">
       {
-        datapoints.map( dp => 
+        Object.keys(datapoints).map( dp_group_name => 
           <div>
-            <DataPointItem name={dp.name} color = "red" timeline={dp.data} onEdit={editDp} onDelete={removeDp}></DataPointItem>
-            <button className="add-data-button" onClick={()=>{createDatapoint(userId, dp.name, 1)}}> + </button>
+            <DataPointItem name={dp_group_name} color = "red" timeline={datapoints[dp_group_name]} onEdit={editDp} onDelete={removeDp}></DataPointItem>
+            <button className="add-data-button" onClick={()=>{createDatapoint(userId, dp_group_name, 1)}}> + </button>
           </div>
         )
       }

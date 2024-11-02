@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState } from 'react';
-import useDatapoints from '../hooks/useDatapoints';
+import useDatapoints from '../hooks/useDataPoints';
 
 const DataPointsContext = createContext();
 
@@ -9,6 +9,8 @@ export const useDataPointsContext = () => {
 
 export const DataPointsProvider = ({ userId, children }) => {
     const datapointsData = useDatapoints(userId);
+    console.log(datapointsData.datapoints);
+    
 
     return (
         <DataPointsContext.Provider value={datapointsData}>

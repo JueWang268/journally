@@ -26,4 +26,15 @@ export type Datapoints = {
     name: string;
     value: number;
     date: string;
-}
+};
+
+export type Datapoint = {
+    id: string;
+    date: string;
+    value: number;
+};
+
+export type GroupedDatapoints = {
+    name: string;
+    data: Datapoint[];
+};

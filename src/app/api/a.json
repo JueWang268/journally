@@ -1,0 +1,77 @@
+[
+    {
+        "name":"nd in Gym",
+        "data":[{"id":"f3cd717f-9755-4bd7-8412-97e3f66358a1","date":"2024-11-01","value":1}]
+    },
+    {
+        "id":"ef124b63-b825-4b67-aa36-00f7f8b4a405","user_id":"410544b2-4001-4271-9855-fec4b6a6442a","name":"New Name","value":"1","date":"2024-11-01"
+    }
+]
+
+[{"result":
+    {"New Name":[{"id":"1be7fb0f-cb82-4ee1-8344-dd14562dbf4c","date":"2024-11-01","value":7},{"id":"d17671ad-172f-42de-b5d9-243fe005c37c","date":"2024-11-01","value":2},{"id":"b0d88905-72e3-4197-884d-a69270105d5e","date":"2024-11-01","value":1}]}}]
+
+    [
+        {"name":"New Name","data":[{"date":"2024-11-01","value":7},{"date":"2024-11-01","value":2},{"date":"2024-11-01","value":1}]},
+        
+        {"id":"6094defd-4a48-4973-afa7-a646163de123","user_id":"410544b2-4001-4271-9855-fec4b6a6442a","name":"New Name","value":"1","date":"2024-11-02"}
+    ]
+
+
+    INSERT INTO datapoints (id, user_id, name, value, date)
+    VALUES (
+        gen_random_uuid(), 
+        '410544b2-4001-4271-9855-fec4b6a6442a',
+        'daily steps',       -- Example name
+        425,                 -- Example value
+        '2024-10-01'          -- Example date in YYYY-MM-DD format
+    );
+    
+
+    import React, { useState } from 'react';
+
+    const MyComponent = () => {
+        const [datapoints, setDatapoints] = useState({
+            "New Name": [
+                { id: "1be7fb0f-cb82-4ee1-8344-dd14562dbf4c", date: "2024-11-01", value: 7 },
+                { id: "d17671ad-172f-42de-b5d9-243fe005c37c", date: "2024-11-01", value: 2 },
+                { id: "b0d88905-72e3-4197-884d-a69270105d5e", date: "2024-11-01", value: 1 },
+                { id: "6094defd-4a48-4973-afa7-a646163de123", date: "2024-11-02", value: 1 }
+            ],
+            "daily steps": [
+                { id: "55c72b2f-927a-4dae-8058-2a41ac64195f", date: "2024-10-01", value: 77 },
+                { id: "52a08a44-a15c-4d09-b381-eb8a3e7f573f", date: "2024-11-02", value: 1 }
+            ]
+        });
+    
+        const removeDp = (dpId) => {
+            setDatapoints(prevDatapoints => {
+                // Create a copy of the existing state
+                const updatedDatapoints = { ...prevDatapoints };
+    
+                // Iterate over each key in the object
+                for (const name in updatedDatapoints) {
+                    // Filter out the data point with the matching id
+                    updatedDatapoints[name] = updatedDatapoints[name].filter(dp => dp.id !== dpId);
+                }
+    
+                return updatedDatapoints; // Return the updated state
+            });
+        };
+    
+        // Example usage
+        const handleRemoveDataPoint = () => {
+            removeDp("1be7fb0f-cb82-4ee1-8344-dd14562dbf4c"); // Replace with the id you want to remove
+        };
+    
+        return (
+            <div>
+                <h1>Data Points</h1>
+                <button onClick={handleRemoveDataPoint}>Remove Data Point</button>
+                <pre>{JSON.stringify(datapoints, null, 2)}</pre>
+            </div>
+        );
+    };
+    
+    export default MyComponent;
+    

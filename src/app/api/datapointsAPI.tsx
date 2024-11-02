@@ -1,6 +1,6 @@
 "use server"
 import { sql } from "@vercel/postgres";
-import { Datapoints } from "../lib/definitions";
+import { Datapoints, GroupedDatapoints } from "../lib/definitions";
 import { ISODate } from "../utils/ISODate";
 
 
@@ -32,20 +32,32 @@ export async function readDp (userId: string) {
     
 export async function readGroupedDp (userId: string) {
   try {
-    const data = await sql<Datapoints>`
-      SELECT 
-          name, 
-          ARRAY_AGG(jsonb_build_object('date', date, 'value', value, 'id', id)) AS data
-      FROM 
+    
+    const data = await sql<GroupedDatapoints>`
+      SELECT
+          name,
+          ARRAY_AGG(jsonb_build_object('id', id, 'date', date, 'value', value)) AS data
+      FROM
           datapoints
-      GROUP BY 
-          name;
+      WHERE 
+        user_id = ${userId}
+      GROUP BY
+         name;
     `;
-    return data.rows; 
-  } catch (error) {
-    console.error('Error reading datapoints:', error);
-    throw new Error(`Failed to read datapoints".`);
-  }
+    console.log(`api data looks like ${data.rows}!`);
+
+    const grouped = data.rows.reduce((acc, { name, data }) => {
+      acc[name] = data; // Assigning the data array to the key of the name
+      return acc; // Returning the accumulator for the next iteration
+    }, {});
+    
+    console.log(JSON.stringify(grouped));
+    return grouped; 
+
+    } catch (error) {
+        console.error('Error reading datapoints:', error);
+        throw new Error(`Failed to read datapoints ${error}.`);
+    }
 }
 
 export async function updateDp (dpId: string, name: string, value: string, date: string) {
