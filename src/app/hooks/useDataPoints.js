@@ -28,8 +28,8 @@ export default function useDatapoints(userId) {
             return;
         }
 
-        fetchDp(userId);
-        }, [userId]);
+    fetchDp(userId);
+    }, [userId]);
         
     const createDatapoint = async (userId, name, value) => {
         // datapoints are ALWAYS GROUPED
@@ -47,7 +47,9 @@ export default function useDatapoints(userId) {
                 {
                     const updatedDps = {...preDatapoints};
                     if (updatedDps[name]){
-                        updatedDps[name] = [...updatedDps[name], newTLDP];
+                        const sortedDpArr = [...updatedDps[name], newTLDP];
+                        sortedDpArr.sort((a,b) => Number(Date(a.date) - Date(b.date)));
+                        updatedDps[name] = sortedDpArr;
                     }
                     else {
                         updatedDps[name] = [newTLDP];
@@ -75,6 +77,7 @@ export default function useDatapoints(userId) {
                         (dp.id === dpId) ? 
                     {"id": dpId, "date":date, "value":value} : dp
                 );
+                updatedDps.sort((a,b) => new Date(a.date) - new Date(b.date));
                 return {
                     ...prevDatapoints,
                     [name]: [...updatedDps]

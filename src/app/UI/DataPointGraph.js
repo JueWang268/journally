@@ -1,117 +1,74 @@
-import React from 'react'
-import { Scatter } from 'react-chartjs-2'
-import { Chart as ChartJS, LinearScale, PointElement, Tooltip, Legend, LineElement } from 'chart.js'
+import React, { useEffect, useRef } from 'react';
+import { Chart, registerables } from 'chart.js';
+import 'chartjs-adapter-date-fns'; // Import the date adapter
 import { useDataPointsContext } from '../context/DatapointsContext';
 
 
+Chart.register(...registerables);
 
-ChartJS.register(LinearScale, PointElement, Tooltip, Legend, LineElement);
+const list_colors = ['red', 'blue', 'green'];
 
-const DataPointGraph = () => {
-  const { datapoints, loading, error, createDatapoint, editDp, removeDp } = useDataPointsContext();
+const MyChart = () => {
+    const chartRef = useRef(null);
+    const { datapoints } = useDataPointsContext();
 
-  const combinedData = [];
-  for (const name in datapoints) {
-      datapoints[name].forEach(dp => {
-          combinedData.push({
-              date: dp.date,
-              value: dp.value
-          });
-      });
-  }
-  
-  // Prepare data for Chart.js
-  const labels = combinedData.map(dp => dp.date);
-  const values = combinedData.map(dp => dp.value);
-  
-  // Data to be visualized
-  const data = {
-    datasets: [
-      {
-        label: 'Work productivity',
-        data: [
-          { x: 0, y: 100 },
-          { x: 1, y: 20 },
-          { x: 2, y: 25 },
-          { x: 3, y: 25 },
-          { x: 4, y: 15 },
-          { x: 5, y: 55 },
-          { x: 6, y: 35 },
-        ],
-        backgroundColor: 'red',
-        borderColor: 'red',
-        showLine: true, // Disconnected points
-        pointRadius: 6, // Size of the points
-      },{
-        label: 'Coffee consumed',
-        data: [
-          { x: 0, y: 30 },
-          { x: 1, y: 30 },
-          { x: 2, y: 32 },
-          { x: 3, y: 34 },
-          { x: 5, y: 40 },
-          { x: 6, y: 55 },
-          { x: 7, y: 50 },
-        ],
-        backgroundColor: 'turquoise',
-        borderColor: 'turquoise',
-        showLine: true, // Disconnected points
-        pointRadius: 6, // Size of the points
-      },{
-        label: 'Miles run in morning',
-        data: [
-          { x: 0, y: 0 },
-          { x: 1, y: 0 },
-          { x: 2, y: 0 },
-          { x: 3, y: 0 },
-          { x: 5, y: 10 },
-          { x: 6, y: 0 },
-          { x: 7, y: 10 },
-        ],
-        backgroundColor: 'green',
-        borderColor: 'green',
-        showLine: true, // Disconnected points
-        pointRadius: 6, // Size of the points
-      }
-    ],
-  };
+    useEffect(() => {
+        const datasets = (Object.keys(datapoints))?.map((name, index) => {
+            return {
+                label: name,
+                data: datapoints[name].map(dp => ({
+                    x: dp.date, // Use 'x' for date
+                    y: dp.value  // Use 'y' for value
+                })),
+                backgroundColor: list_colors[index % 3],
+                borderColor: list_colors[index % 3],
+                fill: false,
+            };
+        });
 
-  const options = {
-    scales: {
-      x: {
-        // type: 'category',
-        labels: data.labels, // Dates for x-axis
-        grid: {
-          display: true, // Show grid
-          color: '#ddd', // Color of the grid
-        },
-      },
-      y: {
-        beginAtZero: true,
-        grid: {
-          display: true, // Show grid
-          color: '#ddd', // Color of the grid
-        },
-      },
-      y1: {
-        type: 'linear',
-        display: true,
-        position: 'right',
+        const ctx = chartRef.current.getContext('2d');
+        const myChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                datasets: datasets // Use the separate datasets
+            },
+            options: {
+                scales: {
+                    x: {
+                        type: 'time',
+                        time: {
+                            unit: 'day',
+                            tooltipFormat: 'yyyy-MM-dd', // Format for tooltips
+                            displayFormats: {
+                                day: 'yyyy-MM-dd' // Format on the x-axis
+                            }
+                        },
+                        title: {
+                            display: true,
+                            text: 'Date'
+                        }
+                    },
+                    y: {
+                        title: {
+                            display: true,
+                            text: 'Value'
+                        }
+                    }
+                }
+            }
+        });
 
-        // grid line settings
-        grid: {
-          drawOnChartArea: false, // only want the grid lines for one axis to show up
-        },
-      },
-    },
+        return () => {
+            myChart.destroy();
+        };
+    }, [datapoints]);
 
-  };
-
-  return (
-    <div style={{ width: '800px', margin: '0 0' }}>
-      <Scatter data={data} options={options} />
-    </div>
-  );
+    return (
+        <canvas
+            ref={chartRef}
+            style={{ width: '800px', margin: '0 0' }}
+        />
+    );
 };
 
-export default DataPointGraph;
+export default MyChart;

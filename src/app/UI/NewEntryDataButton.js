@@ -16,5 +16,5 @@ export default function NewEntryDataButton({ view, createNewEntry, userId }) {
       }>
       +
       </button>
-  )
+  );
 }
