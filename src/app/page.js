@@ -100,8 +100,12 @@ const App = () => {
         setQuillContent(selectedEntry?.content);
       }, [selectedEntry]);
 
-      // useEffect(()=>{console.log("JUST RENDERED");
-      // });
+      
+      // refresh entries, and select a differnt entry once a diff journal is selected
+      useEffect(() => {
+        if (selectedEntry?.journal_id !== selectedJournal?.id)
+          setSelectedEntry(entries[0])},
+      [selectedJournal, entries, selectedEntry, setSelectedEntry]);
       
   const findJournal = (ID) => journals_.find(j => j.id === ID);
 
@@ -109,7 +113,6 @@ const App = () => {
   
   const handleJournalClick = (jid) => {
     const j = findJournal(jid)
-    // console.log(`journal reselected to: ${JSON.stringify(j)}`)
     setSelectedJournal(j);
   }
 

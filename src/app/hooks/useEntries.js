@@ -11,6 +11,7 @@ export default function useEntries(selectedJournalId) {
   useEffect(() => {
     if (!selectedJournalId) {
       setEntries([]); // If no journal is selected, entries remain empty
+      setSelectedEntry(null);
       return;
     }
 
@@ -18,7 +19,7 @@ export default function useEntries(selectedJournalId) {
       setLoading(true);
       try {
         const fetchedEntries = await getJournalEntries(selectedJournalId);
-        setEntries(fetchedEntries);
+        setEntries(e => fetchedEntries);
       } catch (err) {
         setError(err);
       } finally {
@@ -28,11 +29,6 @@ export default function useEntries(selectedJournalId) {
 
     fetchEntries();
   }, [selectedJournalId]);
-
-  // refresh entries, and select a differnt entry once a diff journal is selected
-  useEffect(() => {
-    setSelectedEntry(entries[0])}, 
-  [selectedJournalId]);
 
   // Create a new entry
   const addEntry = async (title, content) => {
