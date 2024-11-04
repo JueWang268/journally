@@ -16,6 +16,11 @@ export default function useDatapoints(userId) {
             setLoading(true);
             try {
                 const fetchedDp = await readGroupedDp(userId);
+                // sort datapoints on boot
+                Object.keys(fetchedDp).map(
+                    (k) => 
+                        fetchedDp[k].sort((a,b) => new Date(a.date) - new Date(b.date))
+                );
                 setDatapoints(fetchedDp);
             } catch (err) {
                 setError(err);
