@@ -4,20 +4,15 @@ import { useState } from 'react';
 import { useCreateUserWithEmailAndPassword } from 'react-firebase-hooks/auth';
 import { auth } from '../firebase/config.js';
 import { useRouter } from 'next/navigation.js';
-// import { useUsers } from '../hooks/useUsers.js';
+import { createUser } from '../api/usersAPI.tsx';
+
 
 export default function SignUpPage() {
   const [formData, setFormData] = useState({
+    name: '',
     email: '',
     password: '',
   });
-
-  // const {
-  //   loading,
-  //   error,
-  //   addUser,
-  //   editUser,
-  //   removeUser } = useUsers();
 
   const [createUserWithEmailAndPassword] = useCreateUserWithEmailAndPassword(auth);
   // const userSession = sessionStorage.getItem('user');
@@ -38,15 +33,14 @@ export default function SignUpPage() {
       const result = await createUserWithEmailAndPassword(formData.email, formData.password);
       console.log({ result })
       if (result) {
-        // addUser(formData.email, )
-        sessionStorage.setItem('user', true)
-        setFormData('', '');
-        router.push('/');
-        console.log('signed up');
+        createUser(result.user.uid, formData.name, formData.name, formData.password);
+        sessionStorage.setItem('user', true);
+        router.push('../');
         console.log('pushed from sign up to page');
       }
     }
-    catch {
+    catch (e) {
+      console.log('errored')
       console.log(e);
     }
   };
@@ -58,9 +52,19 @@ export default function SignUpPage() {
 
   return (
     <div className='auth-container'>
-      <h2 >Sign Up</h2>
-      <form onSubmit={handleSignUp}>
+      <h2 className='auth-title' >Sign Up</h2>
+      <form className='auth-form' onSubmit={handleSignUp}>
         <input
+          className='auth-input'
+          type="name"
+          name="name"
+          placeholder="Name"
+          value={formData.name}
+          onChange={handleInputChange}
+          required
+        />
+        <input
+          className='auth-input'
           type="email"
           name="email"
           placeholder="Email"
@@ -69,6 +73,7 @@ export default function SignUpPage() {
           required
         />
         <input
+          className='auth-input'
           type="password"
           name="password"
           placeholder="Password"
@@ -76,10 +81,10 @@ export default function SignUpPage() {
           onChange={handleInputChange}
           required
         />
-        <button type="submit">Sign Up</button>
+        <button className='auth-button' type="submit">Sign Up</button>
       </form>
 
-      <button onClick={handleSignUpButtonClick}>Sign In</button>
+      <button className='auth-button' onClick={handleSignUpButtonClick}>Sign In</button>
     </div >
   );
 }

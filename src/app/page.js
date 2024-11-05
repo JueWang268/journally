@@ -25,23 +25,27 @@ import 'react-quill/dist/quill.snow.css';
 const QuillEditor = dynamic(() => import('react-quill'), { ssr: false });
 
 const App = () => {
-  const [user] = useAuthState(auth);
+  const user = useAuthState(auth);
   const router = useRouter();
 
+  const USER_ID = '410544b2-4001-4271-9855-fec4b6a6442a';
+  
   useEffect(() => {
+    // user[0].uid
     const userSession = sessionStorage.getItem('user');
-    if (!user && !userSession) {
-      console.log({ user });
-      // router.push('/signup');
+    if (user[0]) {
+      sessionStorage.setItem('user', true);
+    } else if (!user[0] && !userSession) {
       router.push('/signin');
+      console.log('pushed to signin');
     }
   });
 
   const handleLogout = () => {
-    console.log('logged out');
     signOut(auth);
     sessionStorage.removeItem('user');
     router.push('/signin');
+    console.log('logged out');
   };
 
   const quillModules = {
@@ -74,7 +78,7 @@ const App = () => {
   ];
 
   const TODAY = new Date();
-  const USER_ID = '410544b2-4001-4271-9855-fec4b6a6442a';
+  
   const {
     journals_,
     loading,
@@ -252,15 +256,16 @@ const App = () => {
         <div className="nav-item" onClick={toggleJournalBar}>Journals</div>
         <div className="nav-item">Calendar</div>
         <div className="nav-item">Graph</div>
-        <div className="nav-item">🌏</div>
+        <div className="nav-item" >🌏</div>
         <div className="user-icon" onClick={() =>
           // alert('User options')
           handleLogout()
         }>👤</div>
+
+
       </div>
 
       <div className="main-layout">
-
         {
           showJournalBar &&
           <JournalSidebar
@@ -270,7 +275,8 @@ const App = () => {
             handleDeleteJournal={deleteJournal}
             handleRenameJournal={editJournal}
             handleJournalClick={handleJournalClick}
-            handleBackButton={toggleJournalBar} />
+            handleBackButton={toggleJournalBar}
+          />
         }
 
         <div className="entries-sidebar">

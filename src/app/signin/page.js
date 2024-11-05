@@ -5,7 +5,6 @@ import { useState } from 'react';
 import { useSignInWithEmailAndPassword } from 'react-firebase-hooks/auth';
 import { auth } from '../firebase/config.js';
 import { useRouter } from 'next/navigation.js';
-import { useUsers } from '../hooks/useUsers.js';
 
 export default function SignInPage() {
   const [formData, setFormData] = useState({
@@ -27,19 +26,18 @@ export default function SignInPage() {
 
   const handleSignIn = async (e) => {
     e.preventDefault();
-    console.log('User data:', formData);
+    // console.log('User data:', formData);
     try {
       const result = await signInWithEmailAndPassword(formData.email, formData.password);
       console.log({ result })
       if (result) {
-        sessionStorage.setItem('user', true)
-        setFormData('', '');
-        router.push('/');
-        console.log('signed in');
+        sessionStorage.setItem('user', true);
+        router.push('../');
         console.log('pushed from sign in to page');
       }
     }
     catch {
+      console.log('errored somewhere in sign in');
       console.log(e);
     }
   };
@@ -51,9 +49,10 @@ export default function SignInPage() {
 
   return (
     <div className='auth-container'>
-      <h2 >Sign In</h2>
-      <form onSubmit={handleSignIn}>
+      <h2 className='auth-title'>Sign In</h2>
+      <form className='auth-form' onSubmit={handleSignIn}>
         <input
+          className='auth-input'
           type="email"
           name="email"
           placeholder="Email"
@@ -62,6 +61,7 @@ export default function SignInPage() {
           required
         />
         <input
+          className='auth-input'
           type="password"
           name="password"
           placeholder="Password"
@@ -69,10 +69,10 @@ export default function SignInPage() {
           onChange={handleInputChange}
           required
         />
-        <button type="submit">Sign In</button>
+        <button className='auth-button' type="submit">Sign In</button>
       </form>
 
-      <button onClick={handleSignUpButtonClick}>Sign Up</button>
+      <button className='auth-button' onClick={handleSignUpButtonClick}>Sign Up</button>
     </div >
   );
 }

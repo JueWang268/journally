@@ -9,6 +9,7 @@ export default function useUsers(id) {
   // Create a new user
   const addUser = async (id, name, email, password) => {
     try {
+      console.log("trying addUser call");
       const createdUser = await createUser(id, name, email, password);
     } catch (err) {
       setError(err);

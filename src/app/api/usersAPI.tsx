@@ -12,6 +12,7 @@ export async function createUser(
   password: string // maybe do not need this
 ) {
   try {
+    console.log("trying sql call");
     const data = await sql<Users>`
         INSERT INTO users (id, name, email, password)
         VALUES (${id}, ${name}, ${email}, ${password})
