@@ -61,7 +61,10 @@ const App = () => {
     getJournal, 
     addJournal, 
     editJournal, 
-    removeJournal } = useJournals();
+    removeJournal,
+    // DL
+    createTag,
+    removeTag, } = useJournals();
     
     const { 
       entries, 
@@ -243,7 +246,10 @@ const App = () => {
             handleDeleteJournal = {deleteJournal}
             handleRenameJournal = {editJournal}
             handleJournalClick={handleJournalClick}
-            handleBackButton={toggleJournalBar}/>
+            handleBackButton={toggleJournalBar}
+            // DL
+            handleAddTag = {createTag}
+            handleRemoveTag = {removeTag}/>
         }
         
         <div className="entries-sidebar">

@@ -12,7 +12,10 @@ export default function JournalSidebar( {
   handleDeleteJournal, 
   handleRenameJournal,
   handleJournalClick, 
-  handleBackButton} ) {
+  handleBackButton,
+  // DL
+  handleAddTag,
+  handleRemoveTag} ) {
 
     
     return (
@@ -35,7 +38,10 @@ export default function JournalSidebar( {
 
               <JournalItem  key={journal.id}  journal={journal}
               handleRenameJournal={handleRenameJournal}
-              handleDeleteJournal={handleDeleteJournal} />
+              handleDeleteJournal={handleDeleteJournal}
+              // DL
+              handleAddTag={handleAddTag}
+              handleRemoveTag={handleRemoveTag} />
               
             </div>
           )})}

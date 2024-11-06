@@ -20,6 +20,7 @@ console.log("Fetched Journals Data:", data.rows);
 export async function fetchJournals() {
   try {
     const data = await sql<Journals>`SELECT * FROM journals`;
+    console.log("Fetched Journals Data:", data.rows);
     return data.rows;
 
   } catch (error) {
@@ -55,6 +56,24 @@ export async function createJournal(title: string, userId: string, tag: string) 
         console.error('Error creating and inserting journal:', error);
         throw new Error(`Failed to create journal "${title}".`);
       }
+}
+
+// add tag
+export async function addTag(id, tag){
+  try{
+    const data = await sql<Journals>`
+      UPDATE journals
+      SET tag = ${tag}
+      WHERE id = ${id}
+      RETURNING *;
+    `;
+
+    return data.rows[0];
+
+  } catch (error){
+    console.error('Error adding tag:', error);
+    throw new Error(`Failed to add tag to journal with id "${id}".`);
+  }
 }
 
 // delete tag
