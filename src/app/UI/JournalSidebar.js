@@ -17,6 +17,13 @@ export default function JournalSidebar( {
   handleAddTag,
   handleRemoveTag} ) {
 
+    // sort journals by tags alphabetically (DL)
+    const sortedJournals = journals.slice().sort((a, b) => {
+      if (a.tag && b.tag) return a.tag.localeCompare(b.tag);
+      if (a.tag) return -1;
+      if (b.tag) return 1;
+      return 0;
+    });
     
     return (
     <>
@@ -28,7 +35,7 @@ export default function JournalSidebar( {
       </div>
       <ul>
       {
-        journals.map(journal => {
+        sortedJournals.map(journal => {
           
           return (
             <div className={"journal-item" + (selectedID === journal.id? ' selected' : '')}
