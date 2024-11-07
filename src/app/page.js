@@ -31,7 +31,7 @@ const App = () => {
   const user = useAuthState(auth);
   const router = useRouter();
 
-  const USER_ID = '410544b2-4001-4271-9855-fec4b6a6442a';
+  // const USER_ID = '410544b2-4001-4271-9855-fec4b6a6442a';
   
   useEffect(() => {
     // user[0].uid
@@ -39,15 +39,15 @@ const App = () => {
     if (user[0]) {
       sessionStorage.setItem('user', true);
     } else if (!user[0] && !userSession) {
-      router.push('/signin');
-      console.log('pushed to signin');
+      router.push('/login');
+      console.log('pushed to login');
     }
   });
 
   const handleLogout = () => {
     signOut(auth);
     sessionStorage.removeItem('user');
-    router.push('/signin');
+    router.push('/login');
     console.log('logged out');
   };
 
