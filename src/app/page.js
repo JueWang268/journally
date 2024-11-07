@@ -1,26 +1,56 @@
 "use client";
 import React, { useState, useEffect } from 'react';
+import { DataPointsProvider, useDataPointsContext } from './context/DatapointsContext';
 import Image from 'next/image';
 import JournalSidebar from './UI/JournalSidebar.js';
+import NewEntryDataButton from './UI/NewEntryDataButton.js';
 import '../styles/App.css';
 import Journal from '../models/Journal.js';
 import Entry from '../models/Entry.js';
 import DeleteDialogue from './UI/DeleteDialogue.js';
 import EntryItem from './UI/EntryItem.js';
-import DataPointItem from './UI/DataPointItem.js';
+import StatsBar from './UI/StatsBar.js';
 import DataPointGraph from './UI/DataPointGraph.js';
 import dateFormat from '../config/dateFormat.js';
 import useJournals from './hooks/useJournals.js';
 import useEntries from './hooks/useEntries.js';
+import debounce from './utils/debounce.js';
 
+// Tony's imports
+import { useAuthState } from 'react-firebase-hooks/auth'
+import { auth } from './firebase/config.js'
+import { useRouter } from 'next/navigation';
+import { signOut } from 'firebase/auth';
 import dynamic from 'next/dynamic';
-import 'react-quill/dist/quill.snow.css'; // Import Quill styles
+import 'react-quill/dist/quill.snow.css';
+
 
 const QuillEditor = dynamic(() => import('react-quill'), { ssr: false });
 
 const App = () => {
+  const user = useAuthState(auth);
+  const router = useRouter();
 
+  const USER_ID = '410544b2-4001-4271-9855-fec4b6a6442a';
   
+  useEffect(() => {
+    // user[0].uid
+    const userSession = sessionStorage.getItem('user');
+    if (user[0]) {
+      sessionStorage.setItem('user', true);
+    } else if (!user[0] && !userSession) {
+      router.push('/signin');
+      console.log('pushed to signin');
+    }
+  });
+
+  const handleLogout = () => {
+    signOut(auth);
+    sessionStorage.removeItem('user');
+    router.push('/signin');
+    console.log('logged out');
+  };
+
   const quillModules = {
     toolbar: [
       [{ header: [1, 2, 3, false] }],
@@ -33,7 +63,7 @@ const App = () => {
       ['clean'],
     ],
   };
-  
+
   const quillFormats = [
     'header',
     'bold',
@@ -49,7 +79,7 @@ const App = () => {
     'color',
     'code-block',
   ];
-  
+
   const TODAY = new Date();
   const USER_ID = '410544b2-4001-4271-9855-fec4b6a6442a';
   const { 
@@ -76,6 +106,8 @@ const App = () => {
       editEntry, 
       removeEntry,
       removeJournalEntries } = useEntries(selectedJournal?.id);
+    // const { datapoints, dploading, dperror, createDatapoint, editDp, removeDp } = useDataPointsContext();
+
       
       const [isDialogOpen, setIsDialogOpen] = useState(false);
       const [retypeProps, setRetypeProps] = useState(null);
@@ -98,30 +130,33 @@ const App = () => {
         setQuillContent(selectedEntry?.content);
       }, [selectedEntry]);
 
-      useEffect(()=>{console.log("JUST RENDERED");
-      });
+      
+      // refresh entries, and select a differnt entry once a diff journal is selected
+      useEffect(() => {
+        if (selectedEntry?.journal_id !== selectedJournal?.id)
+          setSelectedEntry(entries[0])},
+      [selectedJournal, entries, selectedEntry, setSelectedEntry]);
       
   const findJournal = (ID) => journals_.find(j => j.id === ID);
 
   const jids = journals_.map(j => j.id);
-  
+
   const handleJournalClick = (jid) => {
     const j = findJournal(jid)
-    // console.log(`journal reselected to: ${JSON.stringify(j)}`)
-    setSelectedJournal(j)
+    setSelectedJournal(j);
   }
 
-  const toggleJournalBar = () => setShowJournalBar(!showJournalBar)
+  const toggleJournalBar = () => setShowJournalBar(!showJournalBar);
 
   const toggleView = () => {
-    setView(prevView => (prevView === "writingPad" ? "dailyStats" : "writingPad"))
+    setView(prevView => (prevView === "writingPad" ? "dailyStats" : "writingPad"));
   }
-  
+
   const createNewJournal = () => {
     const title = `New Journal ${(new Date()).toISOString().split('T')[0]}`;
     addJournal(title, USER_ID);
   }
-  
+
   const createNewEntry = () => {
     addEntry(`${dateTimeFormat.format(new Date())}`, "{User Content}");
   }
@@ -146,13 +181,13 @@ const App = () => {
 
   const deleteJournal = async (journalId) => {
     const confirmed = await askForInput(findJournal(journalId).title);
-    // const confirmed = true
+    // const confirmed = true;
     let nextJ = selectedJournal?.id;
-    if (journalId === selectedJournal?.id && journals_.length > 1){
-      if (jids.indexOf(journalId) + 1 < journals_.length){
+    if (journalId === selectedJournal?.id && journals_.length > 1) {
+      if (jids.indexOf(journalId) + 1 < journals_.length) {
         nextJ = jids[jids.indexOf(journalId) + 1];
       }
-      else{
+      else {
         nextJ = jids[0];
       }
     }
@@ -172,13 +207,13 @@ const App = () => {
   }
 
   const delEntry = (entry) => {
-    let nextN = null; 
+    let nextN = null;
     let nid = entry.id;
     let nids = entries.map(n => n.id);
 
-    if (selectedEntry === entry){
+    if (selectedEntry === entry) {
       if (nids.length > 1) {
-        if (nids.indexOf(entry) + 1 < entries.length){
+        if (nids.indexOf(entry) + 1 < entries.length) {
           nextN = entries[nids.indexOf(nid) + 1];
         } else {
           nextN = entries[0];
@@ -190,14 +225,14 @@ const App = () => {
       nextN = selectedEntry;
     }
     console.log(`${JSON.stringify(nids)} ${JSON.stringify(nextN)}`);
-    
+
     setSelectedEntry(nextN);
     removeEntry(entry.id);
   }
-  
+
   const saveEntryContent = (nid, content) => {
     console.log(`saving content ${JSON.stringify(content)}`);
-    
+
     const old_entry = entries.find(n => n.id === nid);
     editEntry(nid, old_entry.title, content, old_entry.date);
   }
@@ -207,44 +242,48 @@ const App = () => {
     editEntry(nid, old_entry.title, old_entry.content, newDate);
   }
 
-  const debounce =(func, delay = 1000) => {
-    let timer;
-    return (...args) => {
-      clearTimeout(timer);
-      timer = setTimeout(() => func(...args), delay);
-    };
-  }
+  // const debounce =(func, delay = 1000) => {
+  //   let timer;
+  //   return (...args) => {
+  //     clearTimeout(timer);
+  //     timer = setTimeout(() => func(...args), delay);
+  //   }
+  // }
 
   const debouncedSaveEntry = debounce(
-  (entryId, content) => {
+    (entryId, content) => {
       saveEntryContent(entryId, content);
-    }, 
-  1000);
-  
+    },
+    1000);
+
 
   return (
     <div className="app">
       <div className="navbar">
         <div>
-          <Image src="/icon.png" width={20} height={20} alt="journal logo"/>
+          <Image src="/icon.png" width={20} height={20} alt="journal logo" />
         </div>
         <div className="nav-item" onClick={toggleJournalBar}>Journals</div>
         <div className="nav-item">Calendar</div>
         <div className="nav-item">Graph</div>
-        <div className="nav-item">🌏</div>
-        <div className="user-icon" onClick={() => alert('User options')}>👤</div>
+        <div className="nav-item" >🌏</div>
+        <div className="user-icon" onClick={() =>
+          // alert('User options')
+          handleLogout()
+        }>👤</div>
+
+
       </div>
 
       <div className="main-layout">
-        
         {
           showJournalBar &&
-          <JournalSidebar 
+          <JournalSidebar
             journals={journals_}
             selectedID={selectedJournal?.id}
-            handleNewJournal = {createNewJournal}
-            handleDeleteJournal = {deleteJournal}
-            handleRenameJournal = {editJournal}
+            handleNewJournal={createNewJournal}
+            handleDeleteJournal={deleteJournal}
+            handleRenameJournal={editJournal}
             handleJournalClick={handleJournalClick}
             handleBackButton={toggleJournalBar}
             // DL
@@ -252,25 +291,27 @@ const App = () => {
             handleRemoveTag = {removeTag}/>
         }
         
+        <DataPointsProvider userId={USER_ID}>
+        
         <div className="entries-sidebar">
           <div className="flex-container">
             <h3>
-              {view === "writingPad"? "Entries": "Stats"}
+              {view === "writingPad" ? "Entries" : "Stats"}
             </h3>
 
-            <button className="new-entry-button" onClick={createNewEntry}>
-            +
-            </button>
+            <NewEntryDataButton view={view} createNewEntry={createNewEntry} userId={USER_ID}>
+              
+            </NewEntryDataButton>
 
             <button className="toggle-button" onClick={() => {
               view === "writingPad" ?
-              setView("dailyStats") :
-              setView("writingPad")
+                setView("dailyStats") :
+                setView("writingPad")
             }}>
               {/* Possibily change h3 to something else to have flexibility for styles */}
-              <h3>Change to {view === "writingPad" ? "Daily Stats": "Written Entries"}</h3>
+              <h3>Change to {view === "writingPad" ? "Daily Stats" : "Written Entries"}</h3>
             </button>
-          
+
           </div>
         {
           selectedJournal ? 
@@ -303,18 +344,11 @@ const App = () => {
               Start Writing
               </button> </div>
             )): 
-            <div className="stats-bar">
-              {/* demo purposes */}
-              <DataPointItem name="Work productivity" color="red"/>
-              <DataPointItem name="Coffee consumed" color="turquoise"/>
-              <DataPointItem name="Miles run in morning" color="green"/>
-              <DataPointItem name="Miles run in Evening" color="yellow"/>
-
-              {/* demo ends */}
-            </div>
+            <StatsBar userId = {USER_ID} />
           ) : <div className="no-journal-message"> No journal selected </div>
         }
       </div>
+
         <div className="main-content">
           <div className="view-switch">
             <div className={`slider ${view === 'writingPad' ? 'left' : 'right'}`} onClick={toggleView}>
@@ -324,23 +358,22 @@ const App = () => {
 
           </div>
 
-        {view === "writingPad" ? (
-          selectedEntry &&
-          <>
-            <div className="entry-path">
+          {view === "writingPad" ? (
+            selectedEntry &&
+            <>
+              <div className="entry-path">
 
-              {
-              /* it looks like no methods in the entry class work.
-              Probably a "this" binding issue. 
-              Avoid instance methods
-              */
-              selectedJournal.title} &gt; {selectedEntry.title} : 
+                {
+                  /* it looks like no methods in the entry class work.
+                  Probably a "this" binding issue. 
+                  Avoid instance methods
+                  */
+                  selectedJournal.title} &gt; {selectedEntry.title} :
                 {selectedEntry.date}
             </div>
             <QuillEditor
               value={quillContent}
               onChange={(content) => {
-                console.log(`new content ${content}`);
                 setQuillContent(content);
                 debouncedSaveEntry(selectedEntry.id, content);
               }}
@@ -356,18 +389,22 @@ const App = () => {
           {/* demo purposes */}
           </div>
         )}
-
+        
         {isDialogOpen && (
           <DeleteDialogue
-            journalName={retypeProps.journalName}
-            onConfirm={retypeProps.onConfirm}
-            onCancel={retypeProps.onCancel}
-            />
-          )}
+          journalName={retypeProps.journalName}
+          onConfirm={retypeProps.onConfirm}
+          onCancel={retypeProps.onCancel}
+          />
+          )
+        }
         </div>
-        
+
+        </DataPointsProvider>
+      
+      
       </div>
-    </div>
+    </div >
   )
 }
 

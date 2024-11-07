@@ -1,8 +1,7 @@
 import React, {useState} from 'react'
 import './JournalSideBar.css'
 import dateFormat from '../../config/dateFormat'
-import DatePicker from 'react-datepicker'
-import "react-datepicker/dist/react-datepicker.css"
+// import "react-datepicker/dist/react-datepicker.css"
 
 export default function EntryItem(
     {entry, 
@@ -14,20 +13,22 @@ export default function EntryItem(
     renamed,
     selected }
     ) {
-    const [isBeingRenamed, setIsBeingRenamed] = useState(renamed)
-    const [isBeingDeleted, setIsBeingDeleted] = useState(false)
-    const [isSettingDate, setIsSettingDate] = useState(false)
+    const [isBeingRenamed, setIsBeingRenamed] = useState(renamed);
+    const [isBeingDeleted, setIsBeingDeleted] = useState(false);
+    const [isSettingDate, setIsSettingDate] = useState(false);
+    const [localDate, setLocalDate] = useState(entry.date);
 
-    // const doneRenaming = (nid) => {
-    //     setIsBeingRenamed(false)
-    //     turnOffRenamingItem(nid)
-    // }
+    const formattedDate = (new Date(localDate+"T04:00:00")).toLocaleDateString('en-US', {
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric'
+    });
 
     return (
-      <li key={entry.id} 
+      <li key={entry.id}
         className={'entry-card' + (selected? " selected": "")} 
         onClick={handleEntryClick}
-        onMouseLeave={e => {setIsBeingDeleted(false); setIsSettingDate(false)}}
+        onMouseLeave={e => {setIsBeingDeleted(false)}}
       >
         {
           isBeingRenamed ? 
@@ -35,11 +36,11 @@ export default function EntryItem(
           autoFocus={true} onFocus={e=>e.target.select()} onKeyDown={
             (e) => {
               if (e.key === "Enter") {
-                setIsBeingRenamed(false)
-                handleRenameEntry(entry.id, e.target.value)
+                setIsBeingRenamed(false);
+                handleRenameEntry(entry.id, e.target.value);
               }
               else if (e.key === "Escape"){
-                setIsBeingRenamed(false)
+                setIsBeingRenamed(false);
               }
             }
           } onBlur={() => setIsBeingRenamed(false)}/> :
@@ -48,26 +49,41 @@ export default function EntryItem(
 
         {
           isSettingDate? 
-          (<DatePicker className="date-picker" selected={entry.date}
+          (<input type='date' className="date-picker" 
+            value={localDate}
           onChange={
-            (date) => {
-              handleDateChange(date)
-              setIsSettingDate(false)
+            (e) => {
+              console.log(`new date ${e.target.value}`);
+              setLocalDate(e.target.value);
             }
           }
+          onBlur={ () =>
+            {
+              handleDateChange(localDate);
+              setIsSettingDate(false);
+            }
+          }
+          onKeyDown={
+              (e) => {
+                if (e.key === "Enter") {
+                  handleDateChange(localDate);
+                  setIsSettingDate(false);
+                }
+            }
+        }
           
           />) : 
           (
 
           <span style={{"display": "flex"}}>
           <div className="entry-date">
-          {entry.date}
-        </div>
+            {formattedDate}
+          </div>
         
         <button className="edit-button date-pick-button"
         onClick={ (e) => {
-          e.stopPropagation()
-          setIsSettingDate(true)
+          e.stopPropagation();
+          setIsSettingDate(true);
         }}
       >
       📅
@@ -82,15 +98,15 @@ export default function EntryItem(
         <div className="action-button-container">
             <button className="edit-button" onClick={
                 (e) => {
-                  e.stopPropagation()
-                  setIsBeingRenamed(true)}
+                  e.stopPropagation();
+                  setIsBeingRenamed(true);}
             } >
             🖊️
             </button>
             <button className="edit-button" onClick={
               (e) => {
-                  e.stopPropagation()
-                  setIsBeingDeleted(true)
+                  e.stopPropagation();
+                  setIsBeingDeleted(true);
                 }
               } >
             🗑️
@@ -104,9 +120,9 @@ export default function EntryItem(
               <div className="confirm-dialogue" style={{display: "flex"}}>
                 <button className="edit-button confirm-delete-button"
                 onClick={ (e) => {
-                e.stopPropagation()
-                handleDeleteEntry(entry.id)
-                setIsBeingDeleted(false)
+                e.stopPropagation();
+                handleDeleteEntry(entry.id);
+                setIsBeingDeleted(false);
                 }}
                 >
                 ✅
@@ -114,8 +130,8 @@ export default function EntryItem(
                 
                 <button className="edit-button cancel-delete-button"
                 onClick={ (e) => {
-                  e.stopPropagation()
-                  setIsBeingDeleted(false)}
+                  e.stopPropagation();
+                  setIsBeingDeleted(false);}
                 }
                 >
                 ❎ 
