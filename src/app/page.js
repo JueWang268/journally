@@ -81,17 +81,20 @@ const App = () => {
   ];
 
   const TODAY = new Date();
-  
-  const {
-    journals_,
-    loading,
-    error,
-    selectedJournal,
-    setSelectedJournal,
-    getJournal,
-    addJournal,
-    editJournal,
-    removeJournal } = useJournals();
+  const USER_ID = '410544b2-4001-4271-9855-fec4b6a6442a';
+  const { 
+    journals_, 
+    loading, 
+    error, 
+    selectedJournal, 
+    setSelectedJournal, 
+    getJournal, 
+    addJournal, 
+    editJournal, 
+    removeJournal,
+    // DL
+    createTag,
+    removeTag, } = useJournals();
     
     const { 
       entries, 
@@ -283,7 +286,9 @@ const App = () => {
             handleRenameJournal={editJournal}
             handleJournalClick={handleJournalClick}
             handleBackButton={toggleJournalBar}
-          />
+            // DL
+            handleAddTag = {createTag}
+            handleRemoveTag = {removeTag}/>
         }
         
         <DataPointsProvider userId={USER_ID}>
