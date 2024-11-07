@@ -33,7 +33,7 @@ export default function SignUpPage() {
       const result = await createUserWithEmailAndPassword(formData.email, formData.password);
       console.log({ result })
       if (result) {
-        createUser(result.user.uid, formData.name, formData.name, formData.password);
+        createUser(result.user.uid, formData.name, formData.email, formData.password);
         sessionStorage.setItem('user', true);
         router.push('../');
         console.log('pushed from sign up to page');
@@ -45,9 +45,9 @@ export default function SignUpPage() {
     }
   };
 
-  const handleSignUpButtonClick = () => {
-    router.push('../signin');
-    console.log('signin clicked')
+  const handleLoginButtonClick = () => {
+    router.push('../login');
+    console.log('login clicked')
   };
 
   return (
@@ -84,7 +84,7 @@ export default function SignUpPage() {
         <button className='auth-button' type="submit">Sign Up</button>
       </form>
 
-      <button className='auth-button' onClick={handleSignUpButtonClick}>Sign In</button>
+      <button className='auth-button' onClick={handleLoginButtonClick}>Login</button>
     </div >
   );
 }

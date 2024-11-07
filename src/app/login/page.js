@@ -6,7 +6,7 @@ import { useSignInWithEmailAndPassword } from 'react-firebase-hooks/auth';
 import { auth } from '../firebase/config.js';
 import { useRouter } from 'next/navigation.js';
 
-export default function SignInPage() {
+export default function LoginPage() {
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -24,7 +24,7 @@ export default function SignInPage() {
     });
   };
 
-  const handleSignIn = async (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
     // console.log('User data:', formData);
     try {
@@ -33,11 +33,11 @@ export default function SignInPage() {
       if (result) {
         sessionStorage.setItem('user', true);
         router.push('../');
-        console.log('pushed from sign in to page');
+        console.log('pushed from login to page');
       }
     }
     catch {
-      console.log('errored somewhere in sign in');
+      console.log('errored somewhere in login');
       console.log(e);
     }
   };
@@ -49,8 +49,8 @@ export default function SignInPage() {
 
   return (
     <div className='auth-container'>
-      <h2 className='auth-title'>Sign In</h2>
-      <form className='auth-form' onSubmit={handleSignIn}>
+      <h2 className='auth-title'>Login</h2>
+      <form className='auth-form' onSubmit={handleLogin}>
         <input
           className='auth-input'
           type="email"
@@ -69,7 +69,7 @@ export default function SignInPage() {
           onChange={handleInputChange}
           required
         />
-        <button className='auth-button' type="submit">Sign In</button>
+        <button className='auth-button' type="submit">Login</button>
       </form>
 
       <button className='auth-button' onClick={handleSignUpButtonClick}>Sign Up</button>
