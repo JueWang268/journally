@@ -16,14 +16,41 @@ import useJournals from './hooks/useJournals.js';
 import useEntries from './hooks/useEntries.js';
 import debounce from './utils/debounce.js';
 
+// Tony's imports
+import { useAuthState } from 'react-firebase-hooks/auth'
+import { auth } from './firebase/config.js'
+import { useRouter } from 'next/navigation';
+import { signOut } from 'firebase/auth';
 import dynamic from 'next/dynamic';
-import 'react-quill/dist/quill.snow.css'; // Import Quill styles
+import 'react-quill/dist/quill.snow.css';
+
 
 const QuillEditor = dynamic(() => import('react-quill'), { ssr: false });
 
 const App = () => {
+  const user = useAuthState(auth);
+  const router = useRouter();
 
+  const USER_ID = '410544b2-4001-4271-9855-fec4b6a6442a';
   
+  useEffect(() => {
+    // user[0].uid
+    const userSession = sessionStorage.getItem('user');
+    if (user[0]) {
+      sessionStorage.setItem('user', true);
+    } else if (!user[0] && !userSession) {
+      router.push('/signin');
+      console.log('pushed to signin');
+    }
+  });
+
+  const handleLogout = () => {
+    signOut(auth);
+    sessionStorage.removeItem('user');
+    router.push('/signin');
+    console.log('logged out');
+  };
+
   const quillModules = {
     toolbar: [
       [{ header: [1, 2, 3, false] }],
@@ -36,7 +63,7 @@ const App = () => {
       ['clean'],
     ],
   };
-  
+
   const quillFormats = [
     'header',
     'bold',
@@ -52,18 +79,18 @@ const App = () => {
     'color',
     'code-block',
   ];
-  
+
   const TODAY = new Date();
-  const USER_ID = '410544b2-4001-4271-9855-fec4b6a6442a';
-  const { 
-    journals_, 
-    loading, 
-    error, 
-    selectedJournal, 
-    setSelectedJournal, 
-    getJournal, 
-    addJournal, 
-    editJournal, 
+  
+  const {
+    journals_,
+    loading,
+    error,
+    selectedJournal,
+    setSelectedJournal,
+    getJournal,
+    addJournal,
+    editJournal,
     removeJournal } = useJournals();
     
     const { 
@@ -110,7 +137,7 @@ const App = () => {
   const findJournal = (ID) => journals_.find(j => j.id === ID);
 
   const jids = journals_.map(j => j.id);
-  
+
   const handleJournalClick = (jid) => {
     const j = findJournal(jid)
     setSelectedJournal(j);
@@ -121,12 +148,12 @@ const App = () => {
   const toggleView = () => {
     setView(prevView => (prevView === "writingPad" ? "dailyStats" : "writingPad"));
   }
-  
+
   const createNewJournal = () => {
     const title = `New Journal ${(new Date()).toISOString().split('T')[0]}`;
     addJournal(title, USER_ID);
   }
-  
+
   const createNewEntry = () => {
     addEntry(`${dateTimeFormat.format(new Date())}`, "{User Content}");
   }
@@ -153,11 +180,11 @@ const App = () => {
     const confirmed = await askForInput(findJournal(journalId).title);
     // const confirmed = true;
     let nextJ = selectedJournal?.id;
-    if (journalId === selectedJournal?.id && journals_.length > 1){
-      if (jids.indexOf(journalId) + 1 < journals_.length){
+    if (journalId === selectedJournal?.id && journals_.length > 1) {
+      if (jids.indexOf(journalId) + 1 < journals_.length) {
         nextJ = jids[jids.indexOf(journalId) + 1];
       }
-      else{
+      else {
         nextJ = jids[0];
       }
     }
@@ -181,9 +208,9 @@ const App = () => {
     let nid = entry.id;
     let nids = entries.map(n => n.id);
 
-    if (selectedEntry === entry){
+    if (selectedEntry === entry) {
       if (nids.length > 1) {
-        if (nids.indexOf(entry) + 1 < entries.length){
+        if (nids.indexOf(entry) + 1 < entries.length) {
           nextN = entries[nids.indexOf(nid) + 1];
         } else {
           nextN = entries[0];
@@ -195,14 +222,14 @@ const App = () => {
       nextN = selectedEntry;
     }
     console.log(`${JSON.stringify(nids)} ${JSON.stringify(nextN)}`);
-    
+
     setSelectedEntry(nextN);
     removeEntry(entry.id);
   }
-  
+
   const saveEntryContent = (nid, content) => {
     console.log(`saving content ${JSON.stringify(content)}`);
-    
+
     const old_entry = entries.find(n => n.id === nid);
     editEntry(nid, old_entry.title, content, old_entry.date);
   }
@@ -223,35 +250,40 @@ const App = () => {
   const debouncedSaveEntry = debounce(
     (entryId, content) => {
       saveEntryContent(entryId, content);
-    }, 
-  1000);
-  
+    },
+    1000);
+
 
   return (
     <div className="app">
       <div className="navbar">
         <div>
-          <Image src="/icon.png" width={20} height={20} alt="journal logo"/>
+          <Image src="/icon.png" width={20} height={20} alt="journal logo" />
         </div>
         <div className="nav-item" onClick={toggleJournalBar}>Journals</div>
         <div className="nav-item">Calendar</div>
         <div className="nav-item">Graph</div>
-        <div className="nav-item">🌏</div>
-        <div className="user-icon" onClick={() => alert('User options')}>👤</div>
+        <div className="nav-item" >🌏</div>
+        <div className="user-icon" onClick={() =>
+          // alert('User options')
+          handleLogout()
+        }>👤</div>
+
+
       </div>
 
       <div className="main-layout">
-        
         {
           showJournalBar &&
-          <JournalSidebar 
+          <JournalSidebar
             journals={journals_}
             selectedID={selectedJournal?.id}
-            handleNewJournal = {createNewJournal}
-            handleDeleteJournal = {deleteJournal}
-            handleRenameJournal = {editJournal}
+            handleNewJournal={createNewJournal}
+            handleDeleteJournal={deleteJournal}
+            handleRenameJournal={editJournal}
             handleJournalClick={handleJournalClick}
-            handleBackButton={toggleJournalBar}/>
+            handleBackButton={toggleJournalBar}
+          />
         }
         
         <DataPointsProvider userId={USER_ID}>
@@ -259,22 +291,22 @@ const App = () => {
         <div className="entries-sidebar">
           <div className="flex-container">
             <h3>
-              {view === "writingPad"? "Entries": "Stats"}
+              {view === "writingPad" ? "Entries" : "Stats"}
             </h3>
 
             <NewEntryDataButton view={view} createNewEntry={createNewEntry} userId={USER_ID}>
-            
+              
             </NewEntryDataButton>
 
             <button className="toggle-button" onClick={() => {
               view === "writingPad" ?
-              setView("dailyStats") :
-              setView("writingPad")
+                setView("dailyStats") :
+                setView("writingPad")
             }}>
               {/* Possibily change h3 to something else to have flexibility for styles */}
-              <h3>Change to {view === "writingPad" ? "Daily Stats": "Written Entries"}</h3>
+              <h3>Change to {view === "writingPad" ? "Daily Stats" : "Written Entries"}</h3>
             </button>
-          
+
           </div>
         {
           selectedJournal ? 
@@ -321,17 +353,17 @@ const App = () => {
 
           </div>
 
-        {view === "writingPad" ? (
-          selectedEntry &&
-          <>
-            <div className="entry-path">
+          {view === "writingPad" ? (
+            selectedEntry &&
+            <>
+              <div className="entry-path">
 
-              {
-              /* it looks like no methods in the entry class work.
-              Probably a "this" binding issue. 
-              Avoid instance methods
-              */
-              selectedJournal.title} &gt; {selectedEntry.title} : 
+                {
+                  /* it looks like no methods in the entry class work.
+                  Probably a "this" binding issue. 
+                  Avoid instance methods
+                  */
+                  selectedJournal.title} &gt; {selectedEntry.title} :
                 {selectedEntry.date}
             </div>
             <QuillEditor
@@ -367,7 +399,7 @@ const App = () => {
       
       
       </div>
-    </div>
+    </div >
   )
 }
 
