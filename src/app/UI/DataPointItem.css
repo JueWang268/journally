@@ -1,57 +1,79 @@
 .data-point-item {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    width: 95%;
-    padding: 10px;
-    margin: 10px 0;
-    border: 1px solid lightgray;
-    border-radius: 5px;
-    background-color: white;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  }
-  
-  .left-section {
-    display: flex;
-    align-items: center;
-  }
-  
-  .color-box {
-    width: 20px;
-    height: 20px;
-    background-color: blue;
-    margin-right: 10px;
-    border-radius: 3px;
-  }
-  
-  .rename-button {
-    border: none;
-    background: none;
-    cursor: pointer;
-    font-size: 18px;
-  }
-  
-  .center-section {
-    flex-grow: 1;
-    text-align: center;
-  }
-  
-  .data-point-name {
-    font-size: 16px;
-    font-weight: bold;
-  }
-  
-  .right-section {
-    display: flex;
-    align-items: center;
-  }
-  
-  .eye-button,
-  .options-button {
-    border: none;
-    background: none;
-    cursor: pointer;
-    font-size: 18px;
-    margin-left: 10px;
-  }
-  
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 95%;
+  padding: 10px;
+  margin: 10px 0;
+  border: 1px solid lightgray;
+  border-radius: 5px;
+  background-color: white;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.left-section {
+  display: flex;
+  align-items: center;
+}
+
+.color-box {
+  width: 20px;
+  height: 20px;
+  background-color: blue;
+  margin-right: 10px;
+  border-radius: 3px;
+}
+
+.rename-button {
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-size: 18px;
+}
+
+.center-section {
+  flex-grow: 1;
+  text-align: center;
+}
+
+.data-point-name {
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.right-section {
+  display: flex;
+  align-items: center;
+}
+
+.eye-button,
+.options-button {
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-size: 18px;
+  margin-left: 10px;
+}
+
+.timeline-section {
+  display: block;
+  background-color: lightgray;
+  padding: 0.5rem;
+  border-radius: 6px;
+  margin-top: 0.5rem;
+}
+
+.timeline-header {
+  display: flex;
+  justify-content: space-between;
+  font-weight: bold;
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 0.3rem;
+  margin-bottom: 0.3rem;
+}
+
+.timeline-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.2rem 0;
+}

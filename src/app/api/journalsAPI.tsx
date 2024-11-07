@@ -1,10 +1,7 @@
 "use server"
 import { sql } from '@vercel/postgres';
 import { Journals } from '../lib/definitions';
-
-const date = new Date();
-const formattedDate = date.toISOString().split('T')[0];
-
+import { ISODate } from '../utils/ISODate';
 
 
 export async function fetchJournals() {
@@ -34,12 +31,12 @@ export async function createJournal(title: string, userId: string) {
     try {
         const data = await sql<Journals>`
         INSERT INTO journals (id, title, date, user_id)
-        VALUES (gen_random_uuid(), ${title}, ${formattedDate}, ${userId})
+        VALUES (gen_random_uuid(), ${title}, ${ISODate}, ${userId})
         RETURNING *
         `;
 
         // return the latest journal
-        return data.rows[0]
+        return data.rows[0];
         
       } catch (error) {
         console.error('Error creating and inserting journal:', error);

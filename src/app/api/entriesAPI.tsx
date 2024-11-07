@@ -1,15 +1,14 @@
 "use server"
 import { sql } from '@vercel/postgres';
 import { Entries } from '../lib/definitions';
+import { ISODate } from '../utils/ISODate';
 
-const date = new Date();
-const formattedDate = date.toISOString().split('T')[0];
 
 export async function createEntry(journalId: string, title: string, content: string) {
     try {
       const data = await sql<Entries>`
         INSERT INTO entries (id, journal_id, title, content, date)
-        VALUES (gen_random_uuid(), ${journalId}, ${title}, ${content}, ${formattedDate})
+        VALUES (gen_random_uuid(), ${journalId}, ${title}, ${content}, ${ISODate})
         RETURNING *
       `;
       return data.rows[0]; // return the created entry

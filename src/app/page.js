@@ -1,17 +1,20 @@
 "use client";
 import React, { useState, useEffect } from 'react';
+import { DataPointsProvider, useDataPointsContext } from './context/DatapointsContext';
 import Image from 'next/image';
 import JournalSidebar from './UI/JournalSidebar.js';
+import NewEntryDataButton from './UI/NewEntryDataButton.js';
 import '../styles/App.css';
 import Journal from '../models/Journal.js';
 import Entry from '../models/Entry.js';
 import DeleteDialogue from './UI/DeleteDialogue.js';
 import EntryItem from './UI/EntryItem.js';
-import DataPointItem from './UI/DataPointItem.js';
+import StatsBar from './UI/StatsBar.js';
 import DataPointGraph from './UI/DataPointGraph.js';
 import dateFormat from '../config/dateFormat.js';
 import useJournals from './hooks/useJournals.js';
 import useEntries from './hooks/useEntries.js';
+import debounce from './utils/debounce.js';
 
 import dynamic from 'next/dynamic';
 import 'react-quill/dist/quill.snow.css'; // Import Quill styles
@@ -73,6 +76,8 @@ const App = () => {
       editEntry, 
       removeEntry,
       removeJournalEntries } = useEntries(selectedJournal?.id);
+    // const { datapoints, dploading, dperror, createDatapoint, editDp, removeDp } = useDataPointsContext();
+
       
       const [isDialogOpen, setIsDialogOpen] = useState(false);
       const [retypeProps, setRetypeProps] = useState(null);
@@ -95,8 +100,12 @@ const App = () => {
         setQuillContent(selectedEntry?.content);
       }, [selectedEntry]);
 
-      useEffect(()=>{console.log("JUST RENDERED");
-      });
+      
+      // refresh entries, and select a differnt entry once a diff journal is selected
+      useEffect(() => {
+        if (selectedEntry?.journal_id !== selectedJournal?.id)
+          setSelectedEntry(entries[0])},
+      [selectedJournal, entries, selectedEntry, setSelectedEntry]);
       
   const findJournal = (ID) => journals_.find(j => j.id === ID);
 
@@ -104,14 +113,13 @@ const App = () => {
   
   const handleJournalClick = (jid) => {
     const j = findJournal(jid)
-    // console.log(`journal reselected to: ${JSON.stringify(j)}`)
-    setSelectedJournal(j)
+    setSelectedJournal(j);
   }
 
-  const toggleJournalBar = () => setShowJournalBar(!showJournalBar)
+  const toggleJournalBar = () => setShowJournalBar(!showJournalBar);
 
   const toggleView = () => {
-    setView(prevView => (prevView === "writingPad" ? "dailyStats" : "writingPad"))
+    setView(prevView => (prevView === "writingPad" ? "dailyStats" : "writingPad"));
   }
   
   const createNewJournal = () => {
@@ -143,7 +151,7 @@ const App = () => {
 
   const deleteJournal = async (journalId) => {
     const confirmed = await askForInput(findJournal(journalId).title);
-    // const confirmed = true
+    // const confirmed = true;
     let nextJ = selectedJournal?.id;
     if (journalId === selectedJournal?.id && journals_.length > 1){
       if (jids.indexOf(journalId) + 1 < journals_.length){
@@ -169,7 +177,7 @@ const App = () => {
   }
 
   const delEntry = (entry) => {
-    let nextN = null; 
+    let nextN = null;
     let nid = entry.id;
     let nids = entries.map(n => n.id);
 
@@ -204,16 +212,16 @@ const App = () => {
     editEntry(nid, old_entry.title, old_entry.content, newDate);
   }
 
-  const debounce =(func, delay = 1000) => {
-    let timer;
-    return (...args) => {
-      clearTimeout(timer);
-      timer = setTimeout(() => func(...args), delay);
-    };
-  }
+  // const debounce =(func, delay = 1000) => {
+  //   let timer;
+  //   return (...args) => {
+  //     clearTimeout(timer);
+  //     timer = setTimeout(() => func(...args), delay);
+  //   }
+  // }
 
   const debouncedSaveEntry = debounce(
-  (entryId, content) => {
+    (entryId, content) => {
       saveEntryContent(entryId, content);
     }, 
   1000);
@@ -246,15 +254,17 @@ const App = () => {
             handleBackButton={toggleJournalBar}/>
         }
         
+        <DataPointsProvider userId={USER_ID}>
+        
         <div className="entries-sidebar">
           <div className="flex-container">
             <h3>
               {view === "writingPad"? "Entries": "Stats"}
             </h3>
 
-            <button className="new-entry-button" onClick={createNewEntry}>
-            +
-            </button>
+            <NewEntryDataButton view={view} createNewEntry={createNewEntry} userId={USER_ID}>
+            
+            </NewEntryDataButton>
 
             <button className="toggle-button" onClick={() => {
               view === "writingPad" ?
@@ -297,18 +307,11 @@ const App = () => {
               Start Writing
               </button> </div>
             )): 
-            <div className="stats-bar">
-              {/* demo purposes */}
-              <DataPointItem name="Work productivity" color="red"/>
-              <DataPointItem name="Coffee consumed" color="turquoise"/>
-              <DataPointItem name="Miles run in morning" color="green"/>
-              <DataPointItem name="Miles run in Evening" color="yellow"/>
-
-              {/* demo ends */}
-            </div>
+            <StatsBar userId = {USER_ID} />
           ) : <div className="no-journal-message"> No journal selected </div>
         }
       </div>
+
         <div className="main-content">
           <div className="view-switch">
             <div className={`slider ${view === 'writingPad' ? 'left' : 'right'}`} onClick={toggleView}>
@@ -334,7 +337,6 @@ const App = () => {
             <QuillEditor
               value={quillContent}
               onChange={(content) => {
-                console.log(`new content ${content}`);
                 setQuillContent(content);
                 debouncedSaveEntry(selectedEntry.id, content);
               }}
@@ -350,16 +352,20 @@ const App = () => {
           {/* demo purposes */}
           </div>
         )}
-
+        
         {isDialogOpen && (
           <DeleteDialogue
-            journalName={retypeProps.journalName}
-            onConfirm={retypeProps.onConfirm}
-            onCancel={retypeProps.onCancel}
-            />
-          )}
+          journalName={retypeProps.journalName}
+          onConfirm={retypeProps.onConfirm}
+          onCancel={retypeProps.onCancel}
+          />
+          )
+        }
         </div>
-        
+
+        </DataPointsProvider>
+      
+      
       </div>
     </div>
   )
