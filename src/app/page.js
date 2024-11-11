@@ -28,21 +28,77 @@ import 'react-quill/dist/quill.snow.css';
 const QuillEditor = dynamic(() => import('react-quill'), { ssr: false });
 
 const App = () => {
-  const user = useAuthState(auth);
+  const [user, authLoading] = useAuthState(auth);
   const router = useRouter();
 
-  // const USER_ID = '410544b2-4001-4271-9855-fec4b6a6442a';
-  
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [retypeProps, setRetypeProps] = useState(null);
+  const [view, setView] = useState("writingPad");
+  const [showJournalBar, setShowJournalBar] = useState(true);
+  const [quillContent, setQuillContent] = useState(null);
+
+  const USER_ID = '410544b2-4001-4271-9855-fec4b6a6442a';
+  // const temp_uid = user?.uid;
+  const temp_uid = USER_ID;
+
+  const {
+    journals_,
+    loading: journalsLoading,
+    error,
+    selectedJournal,
+    setSelectedJournal,
+    getJournal,
+    addJournal,
+    editJournal,
+    removeJournal,
+    createTag,
+    removeTag,
+  } = useJournals(temp_uid);
+
+  const {
+    entries,
+    loading: entriesLoading,
+    error: entriesError,
+    selectedEntry,
+    setSelectedEntry,
+    addEntry,
+    editEntry,
+    removeEntry,
+    removeJournalEntries
+  } = useEntries(selectedJournal?.id);
+
+  // const { datapoints, dploading, dperror, createDatapoint, editDp, removeDp } = useDataPointsContext();
+
+  // Auth check
   useEffect(() => {
-    // user[0].uid
-    const userSession = sessionStorage.getItem('user');
-    if (user[0]) {
-      sessionStorage.setItem('user', true);
-    } else if (!user[0] && !userSession) {
+    if (!authLoading && !user) {
       router.push('/login');
-      console.log('pushed to login');
     }
-  });
+  }, [user, authLoading, router]);
+
+  // Selections of journals and entries
+  useEffect(() => {
+    setQuillContent(selectedEntry?.content);
+  }, [selectedEntry]);
+
+  useEffect(() => {
+    if (selectedEntry?.journal_id !== selectedJournal?.id) {
+      setSelectedEntry(entries[0]);
+      // user[0].uid
+      const userSession = sessionStorage.getItem('user');
+      if (user[0]) {
+        sessionStorage.setItem('user', true);
+      } else if (!user[0] && !userSession) {
+        router.push('/signin');
+        console.log('pushed to signin');
+      }
+    }
+  }, [selectedJournal, entries, selectedEntry, setSelectedEntry]);
+
+
+  if (authLoading || journalsLoading || entriesLoading) {
+    return <div>Loading...</div>;
+  }
 
   const handleLogout = () => {
     signOut(auth);
@@ -81,62 +137,19 @@ const App = () => {
   ];
 
   const TODAY = new Date();
-  const USER_ID = '410544b2-4001-4271-9855-fec4b6a6442a';
-  const { 
-    journals_, 
-    loading, 
-    error, 
-    selectedJournal, 
-    setSelectedJournal, 
-    getJournal, 
-    addJournal, 
-    editJournal, 
-    removeJournal,
-    // DL
-    createTag,
-    removeTag, } = useJournals();
-    
-    const { 
-      entries, 
-      loading: entriesLoading, 
-      error: entriesError, 
-      selectedEntry, 
-      setSelectedEntry, 
-      addEntry, 
-      editEntry, 
-      removeEntry,
-      removeJournalEntries } = useEntries(selectedJournal?.id);
-    // const { datapoints, dploading, dperror, createDatapoint, editDp, removeDp } = useDataPointsContext();
 
-      
-      const [isDialogOpen, setIsDialogOpen] = useState(false);
-      const [retypeProps, setRetypeProps] = useState(null);
-      const [view, setView] = useState("writingPad");
-      const [showJournalBar, setShowJournalBar] = useState(true);
-      
-      
-      const dateTimeFormat = new Intl.DateTimeFormat('en-US', {
-        year: "numeric",
-        month: "numeric",
-        day: "numeric",
-        hour: "numeric",
-        minute: "numeric",
-        second: "numeric",
-        hour12: false
-      });
-      const [quillContent, setQuillContent] = useState(null);
-      useEffect(() => {
-        // Whenever selectedEntry changes, update local state with new content
-        setQuillContent(selectedEntry?.content);
-      }, [selectedEntry]);
+  // const { datapoints, dploading, dperror, createDatapoint, editDp, removeDp } = useDataPointsContext();
 
-      
-      // refresh entries, and select a differnt entry once a diff journal is selected
-      useEffect(() => {
-        if (selectedEntry?.journal_id !== selectedJournal?.id)
-          setSelectedEntry(entries[0])},
-      [selectedJournal, entries, selectedEntry, setSelectedEntry]);
-      
+  const dateTimeFormat = new Intl.DateTimeFormat('en-US', {
+    year: "numeric",
+    month: "numeric",
+    day: "numeric",
+    hour: "numeric",
+    minute: "numeric",
+    second: "numeric",
+    hour12: false
+  });
+
   const findJournal = (ID) => journals_.find(j => j.id === ID);
 
   const jids = journals_.map(j => j.id);
@@ -154,7 +167,7 @@ const App = () => {
 
   const createNewJournal = () => {
     const title = `New Journal ${(new Date()).toISOString().split('T')[0]}`;
-    addJournal(title, USER_ID);
+    addJournal(title, temp_uid);
   }
 
   const createNewEntry = () => {
@@ -256,6 +269,9 @@ const App = () => {
     },
     1000);
 
+  if (authLoading || journalsLoading || entriesLoading) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div className="app">
@@ -287,122 +303,122 @@ const App = () => {
             handleJournalClick={handleJournalClick}
             handleBackButton={toggleJournalBar}
             // DL
-            handleAddTag = {createTag}
-            handleRemoveTag = {removeTag}/>
+            handleAddTag={createTag}
+            handleRemoveTag={removeTag} />
         }
-        
+
         <DataPointsProvider userId={USER_ID}>
-        
-        <div className="entries-sidebar">
-          <div className="flex-container">
-            <h3>
-              {view === "writingPad" ? "Entries" : "Stats"}
-            </h3>
 
-            <NewEntryDataButton view={view} createNewEntry={createNewEntry} userId={USER_ID}>
-              
-            </NewEntryDataButton>
+          <div className="entries-sidebar">
+            <div className="flex-container">
+              <h3>
+                {view === "writingPad" ? "Entries" : "Stats"}
+              </h3>
 
-            <button className="toggle-button" onClick={() => {
-              view === "writingPad" ?
-                setView("dailyStats") :
-                setView("writingPad")
-            }}>
-              {/* Possibily change h3 to something else to have flexibility for styles */}
-              <h3>Change to {view === "writingPad" ? "Daily Stats" : "Written Entries"}</h3>
-            </button>
+              <NewEntryDataButton view={view} createNewEntry={createNewEntry} userId={USER_ID}>
 
+              </NewEntryDataButton>
+
+              <button className="toggle-button" onClick={() => {
+                view === "writingPad" ?
+                  setView("dailyStats") :
+                  setView("writingPad")
+              }}>
+                {/* Possibily change h3 to something else to have flexibility for styles */}
+                <h3>Change to {view === "writingPad" ? "Daily Stats" : "Written Entries"}</h3>
+              </button>
+
+            </div>
+            {
+              selectedJournal ?
+                (
+                  view === "writingPad" ?
+                    (entries.length > 0 ? (
+                      <ul>
+                        {
+                          entries.map(entry => (
+                            <EntryItem
+                              entry={entry}
+                              handleRenameEntry={renameEntry}
+                              handleDeleteEntry={() => { delEntry(entry) }}
+                              handleEntryClick={() => {
+                                // console.log(`${JSON.stringify(entry.date)}`);
+                                setSelectedEntry(entry);
+                              }}
+                              handleDateChange={(newDate) => { updateDate(entry.id, newDate) }}
+                              turnOffRenamingItem={() => { }}
+                              renamed={false}
+                              selected={entry.id === selectedEntry?.id}
+                            />
+                          ))
+                        }
+                      </ul>) :
+                      (
+                        <div> No entries in this journal.
+                          <button className="start-writing-button"
+                            onClick={createNewEntry}>
+                            Start Writing
+                          </button> </div>
+                      )) :
+                    <StatsBar userId={USER_ID} />
+                ) : <div className="no-journal-message"> No journal selected </div>
+            }
           </div>
-        {
-          selectedJournal ? 
-            (
-              view === "writingPad" ?
-              (entries.length > 0 ? (
-              <ul>
-                {
-                  entries.map(entry => (
-                    <EntryItem 
-                      entry={entry}
-                      handleRenameEntry={renameEntry}
-                      handleDeleteEntry={() => {delEntry(entry)}}
-                      handleEntryClick={()=> {
-                        // console.log(`${JSON.stringify(entry.date)}`);
-                        setSelectedEntry(entry);
-                      }}
-                      handleDateChange={(newDate) => {updateDate(entry.id, newDate)}}
-                      turnOffRenamingItem={() => {}}
-                      renamed={false}
-                      selected={entry.id === selectedEntry?.id}
-                    />
-                  ))
-                }
-              </ul>) :
-            (
-              <div> No entries in this journal. 
-              <button className="start-writing-button" 
-              onClick={createNewEntry}>
-              Start Writing
-              </button> </div>
-            )): 
-            <StatsBar userId = {USER_ID} />
-          ) : <div className="no-journal-message"> No journal selected </div>
-        }
-      </div>
 
-        <div className="main-content">
-          <div className="view-switch">
-            <div className={`slider ${view === 'writingPad' ? 'left' : 'right'}`} onClick={toggleView}>
-              <span className="slider-text">{view === 'writingPad' ? 'Writing Pad' : 'Daily Data'}</span>
-              <div className="slider-button"></div>
+          <div className="main-content">
+            <div className="view-switch">
+              <div className={`slider ${view === 'writingPad' ? 'left' : 'right'}`} onClick={toggleView}>
+                <span className="slider-text">{view === 'writingPad' ? 'Writing Pad' : 'Daily Data'}</span>
+                <div className="slider-button"></div>
+              </div>
+
             </div>
 
-          </div>
+            {view === "writingPad" ? (
+              selectedEntry &&
+              <>
+                <div className="entry-path">
 
-          {view === "writingPad" ? (
-            selectedEntry &&
-            <>
-              <div className="entry-path">
+                  {
+                    /* it looks like no methods in the entry class work.
+                    Probably a "this" binding issue. 
+                    Avoid instance methods
+                    */
+                    selectedJournal.title} &gt; {selectedEntry.title} :
+                  {selectedEntry.date}
+                </div>
+                <QuillEditor
+                  value={quillContent}
+                  onChange={(content) => {
+                    setQuillContent(content);
+                    debouncedSaveEntry(selectedEntry.id, content);
+                  }}
+                  modules={quillModules}
+                  formats={quillFormats}
+                  className="w-full h-[70%] mt-10 bg-white"
+                />
+              </>
+            ) : (
+              <div>
+                {/* demo purposes */}
+                <DataPointGraph />
+                {/* demo purposes */}
+              </div>
+            )}
 
-                {
-                  /* it looks like no methods in the entry class work.
-                  Probably a "this" binding issue. 
-                  Avoid instance methods
-                  */
-                  selectedJournal.title} &gt; {selectedEntry.title} :
-                {selectedEntry.date}
-            </div>
-            <QuillEditor
-              value={quillContent}
-              onChange={(content) => {
-                setQuillContent(content);
-                debouncedSaveEntry(selectedEntry.id, content);
-              }}
-              modules={quillModules}
-              formats={quillFormats}
-              className="w-full h-[70%] mt-10 bg-white"
-            />
-          </>
-        ) : (
-          <div>
-          {/* demo purposes */}
-          <DataPointGraph />
-          {/* demo purposes */}
+            {isDialogOpen && (
+              <DeleteDialogue
+                journalName={retypeProps.journalName}
+                onConfirm={retypeProps.onConfirm}
+                onCancel={retypeProps.onCancel}
+              />
+            )
+            }
           </div>
-        )}
-        
-        {isDialogOpen && (
-          <DeleteDialogue
-          journalName={retypeProps.journalName}
-          onConfirm={retypeProps.onConfirm}
-          onCancel={retypeProps.onCancel}
-          />
-          )
-        }
-        </div>
 
         </DataPointsProvider>
-      
-      
+
+
       </div>
     </div >
   )

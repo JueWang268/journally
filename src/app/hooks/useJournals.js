@@ -1,32 +1,38 @@
 import { useState, useEffect } from 'react';
 import { fetchJournals, readJournal, createJournal, updateJournal, deleteJournal, addTag, deleteTag } from '../api/journalsAPI.tsx';
 
-const useJournals = () => {
+const useJournals = (userId) => {
   const [journals_, setJournals] = useState([]);
   const [selectedJournal, setSelectedJournal] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  const loadJournals = async (userId) => {
+    if (!userId) {
+      setJournals([]);
+      setLoading(false);
+      return;
+    }
+
+    try {
+      const data = await fetchJournals(userId);
+      setJournals(data);
+    } catch (err) {
+      setError(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   // load the journals from db
   useEffect(() => {
-    const loadJournals = async () => {
-      try {
-        const data = await fetchJournals();
-        setJournals(data);
-      } catch (err) {
-        setError(err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    loadJournals();
+    loadJournals(userId);
   }, []);
 
   const selectJournal = (journalId) => {
     const journal = journals_.find(j => j.id === journalId);
     setSelectedJournal(journal || null);
-};
+  };
 
   const getJournal = async (journalId) => {
     try {
@@ -75,14 +81,14 @@ const useJournals = () => {
         prev.map((journal) => (journal.id === id ? updatedJournal : journal))
       );
       console.log(`Tag "${tag}" added to journal with ID ${id}`);
-    } catch (err){
+    } catch (err) {
       setError(err);
     }
   }
 
   // delete Tag
   const removeTag = async (id) => {
-    try{
+    try {
       const updatedJournal = await deleteTag(id);
       setJournals(journals_.map(journal => journal.id === id ? updatedJournal : journal));
     } catch (err) {
