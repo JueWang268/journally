@@ -1,3 +1,10 @@
+/* DL */
+.journal-title-container{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
 
 .journal-item {
   display: flex;
@@ -51,6 +58,24 @@
 
 .journal-item:hover .edit-button {
   display: flex;
+}
+
+/* DL */
+.tag-container{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+/* DL */
+.journal-tag {
+  padding: 0.3em 0.8em;
+  border-radius: 20px;
+  background-color: #07ddfa;
+  font-size: 0.9rem;
+  font-weight: 500;
+  margin: 0.2em;
 }
 
 /* shared btw entries and journals */

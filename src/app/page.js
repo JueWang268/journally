@@ -103,7 +103,7 @@ const App = () => {
   const handleLogout = () => {
     signOut(auth);
     sessionStorage.removeItem('user');
-    router.push('/signin');
+    router.push('/login');
     console.log('logged out');
   };
 

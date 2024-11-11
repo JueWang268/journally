@@ -12,8 +12,18 @@ export default function JournalSidebar( {
   handleDeleteJournal, 
   handleRenameJournal,
   handleJournalClick, 
-  handleBackButton} ) {
+  handleBackButton,
+  // DL
+  handleAddTag,
+  handleRemoveTag} ) {
 
+    // sort journals by tags alphabetically (DL)
+    const sortedJournals = journals.slice().sort((a, b) => {
+      if (a.tag && b.tag) return a.tag.localeCompare(b.tag);
+      if (a.tag) return -1;
+      if (b.tag) return 1;
+      return 0;
+    });
     
     return (
     <>
@@ -25,7 +35,7 @@ export default function JournalSidebar( {
       </div>
       <ul>
       {
-        journals.map(journal => {
+        sortedJournals.map(journal => {
           
           return (
             <div className={"journal-item" + (selectedID === journal.id? ' selected' : '')}
@@ -35,7 +45,10 @@ export default function JournalSidebar( {
 
               <JournalItem  key={journal.id}  journal={journal}
               handleRenameJournal={handleRenameJournal}
-              handleDeleteJournal={handleDeleteJournal} />
+              handleDeleteJournal={handleDeleteJournal}
+              // DL
+              handleAddTag={handleAddTag}
+              handleRemoveTag={handleRemoveTag} />
               
             </div>
           )})}
