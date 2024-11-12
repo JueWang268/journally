@@ -1,5 +1,5 @@
 'use client'
-import '../../styles/renamingtoAuth.css';
+import '../../styles/Auth.css';
 import { useState } from 'react';
 import { useCreateUserWithEmailAndPassword } from 'react-firebase-hooks/auth';
 import { auth } from '../firebase/config.js';
@@ -51,40 +51,50 @@ export default function SignUpPage() {
   };
 
   return (
-    <div className='auth-container'>
-      <h2 className='auth-title' >Sign Up</h2>
-      <form className='auth-form' onSubmit={handleSignUp}>
-        <input
-          className='auth-input'
-          type="name"
-          name="name"
-          placeholder="Name"
-          value={formData.name}
-          onChange={handleInputChange}
-          required
-        />
-        <input
-          className='auth-input'
-          type="email"
-          name="email"
-          placeholder="Email"
-          value={formData.email}
-          onChange={handleInputChange}
-          required
-        />
-        <input
-          className='auth-input'
-          type="password"
-          name="password"
-          placeholder="Password"
-          value={formData.password}
-          onChange={handleInputChange}
-          required
-        />
-        <button className='auth-button' type="submit">Sign Up</button>
-      </form>
+    <div className='auth-page'>
+      <div className='auth-container'>
+        <div className='auth-content'>
+          <h1 className='auth-title'>Sign Up</h1>
+          <span className='auth-description'>Register your account</span>
+          <form className='auth-form' onSubmit={handleSignUp}>
+            <input
+              className='auth-input'
+              type="name"
+              name="name"
+              placeholder="Name"
+              value={formData.name}
+              onChange={handleInputChange}
+              required
+            />
+            <input
+              className='auth-input'
+              type="email"
+              name="email"
+              placeholder="Username"
+              value={formData.email}
+              onChange={handleInputChange}
+              required
+            />
+            <input
+              className='auth-input'
+              type="password"
+              name="password"
+              placeholder="Password"
+              value={formData.password}
+              onChange={handleInputChange}
+              required
+            />
+            <button className='auth-button' type="submit">Sign Up</button>
+          </form>
 
-      <button className='auth-button' onClick={handleLoginButtonClick}>Login</button>
-    </div >
+          <div className='auth-redirect'>
+            <span>Already have an account?</span>
+            <button className='auth-redirect-button' onClick={handleLoginButtonClick}>Login</button>
+          </div>
+
+        </div >
+      </div>
+    </div>
+
   );
 }

@@ -1,6 +1,6 @@
 
 'use client'
-import '../../styles/renamingtoAuth.css';
+import '../../styles/Auth.css';
 import { useState } from 'react';
 import { useSignInWithEmailAndPassword } from 'react-firebase-hooks/auth';
 import { auth } from '../firebase/config.js';
@@ -48,31 +48,35 @@ export default function LoginPage() {
   };
 
   return (
-    <div className='auth-container'>
-      <h2 className='auth-title'>Login</h2>
-      <form className='auth-form' onSubmit={handleLogin}>
-        <input
-          className='auth-input'
-          type="email"
-          name="email"
-          placeholder="Email"
-          value={formData.email}
-          onChange={handleInputChange}
-          required
-        />
-        <input
-          className='auth-input'
-          type="password"
-          name="password"
-          placeholder="Password"
-          value={formData.password}
-          onChange={handleInputChange}
-          required
-        />
-        <button className='auth-button' type="submit">Login</button>
-      </form>
-
-      <button className='auth-button' onClick={handleSignUpButtonClick}>Sign Up</button>
-    </div >
+    <div className='auth-page'>
+      <div className='auth-container'>
+        <div className='auth-content'>
+          <h1 className='auth-title'>Login</h1>
+          <span className='auth-description'>Sign into your account</span>
+          <form className='auth-form' onSubmit={handleLogin}>
+            <input
+              className='auth-input'
+              type="email"
+              name="email"
+              placeholder="Username"
+              value={formData.email}
+              onChange={handleInputChange}
+              required
+            />
+            <input
+              className='auth-input'
+              type="password"
+              name="password"
+              placeholder="Password"
+              value={formData.password}
+              onChange={handleInputChange}
+              required
+            />
+            <button className='auth-button' type="submit">Login</button>
+          </form>
+          <button className='auth-redirect-button' onClick={handleSignUpButtonClick}>Register New Account</button>
+        </div >
+      </div>
+    </div>
   );
 }
