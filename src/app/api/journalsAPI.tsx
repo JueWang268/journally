@@ -41,6 +41,22 @@ export async function readJournal(id: string) {
   }
 }
 
+export async function checkColumnInfo() {
+  try {
+    const columnInfo = await sql`
+      SELECT column_name, data_type, character_maximum_length
+      FROM information_schema.columns 
+      WHERE table_name = 'journals' 
+      AND column_name = 'user_id';
+    `;
+    console.log("Column info:", columnInfo.rows[0]);
+    return columnInfo.rows[0];
+  } catch (error) {
+    console.error("Error checking column info:", error);
+    throw error;
+  }
+}
+
 // added tag to parameters and to the "INSERT INTO" and "VALUES"
 export async function createJournal(
   title: string,
