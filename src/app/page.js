@@ -17,10 +17,9 @@ import useEntries from './hooks/useEntries.js';
 import debounce from './utils/debounce.js';
 
 // Tony's imports
-import { useAuthState } from 'react-firebase-hooks/auth'
-import { auth } from './firebase/config.js'
+import { UserAuth } from './context/AuthContext.js';
+
 import { useRouter } from 'next/navigation';
-import { signOut } from 'firebase/auth';
 import dynamic from 'next/dynamic';
 import 'react-quill/dist/quill.snow.css';
 
@@ -28,8 +27,17 @@ import 'react-quill/dist/quill.snow.css';
 const QuillEditor = dynamic(() => import('react-quill'), { ssr: false });
 
 const App = () => {
-  const [user, authLoading] = useAuthState(auth);
+  const {
+    user, authLoading, authError,
+    userSignIn, userSignUp,
+    googleSignIn,
+    userSignOut
+  } = UserAuth();
   const router = useRouter();
+
+  if (!user) {
+    router.push('/login');
+  }
 
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [retypeProps, setRetypeProps] = useState(null);
@@ -69,43 +77,11 @@ const App = () => {
 
   // const { datapoints, dploading, dperror, createDatapoint, editDp, removeDp } = useDataPointsContext();
 
-  // Auth check
-  useEffect(() => {
-    if (!authLoading && !user) {
-      router.push('/login');
-    }
-  }, [user, authLoading, router]);
 
   // Selections of journals and entries
   useEffect(() => {
     setQuillContent(selectedEntry?.content);
   }, [selectedEntry]);
-
-  useEffect(() => {
-    if (selectedEntry?.journal_id !== selectedJournal?.id) {
-      setSelectedEntry(entries[0]);
-      // user[0].uid
-      const userSession = sessionStorage.getItem('user');
-      if (user[0]) {
-        sessionStorage.setItem('user', true);
-      } else if (!user[0] && !userSession) {
-        router.push('/signin');
-        console.log('pushed to signin');
-      }
-    }
-  }, [selectedJournal, entries, selectedEntry, setSelectedEntry]);
-
-
-  if (authLoading || journalsLoading || entriesLoading) {
-    return <div>Loading...</div>;
-  }
-
-  const handleLogout = () => {
-    signOut(auth);
-    sessionStorage.removeItem('user');
-    router.push('/login');
-    console.log('logged out');
-  };
 
   const quillModules = {
     toolbar: [
@@ -269,8 +245,8 @@ const App = () => {
     },
     1000);
 
-  if (authLoading || journalsLoading || entriesLoading) {
-    return <div>Loading...</div>;
+  if (authLoading) {
+    return <div><span>Loading...</span></div>;
   }
 
   return (
@@ -285,7 +261,7 @@ const App = () => {
         <div className="nav-item" >🌏</div>
         <div className="user-icon" onClick={() =>
           // alert('User options')
-          handleLogout()
+          userSignOut()
         }>👤</div>
 
 
