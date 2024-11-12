@@ -1,21 +1,27 @@
-
 'use client'
 import '../../styles/Auth.css';
+import Image from 'next/image'
 import { useState } from 'react';
-import { useSignInWithEmailAndPassword } from 'react-firebase-hooks/auth';
-import { auth } from '../firebase/config.js';
 import { useRouter } from 'next/navigation.js';
+import { UserAuth } from '../context/AuthContext.js';
 
 export default function LoginPage() {
+  const {
+    user, authLoading, authError,
+    userSignIn, userSignUp,
+    googleSignIn,
+    userSignOut
+  } = UserAuth();
+  const router = useRouter();
+
+  if (user) {
+    router.push('../');
+  }
+
   const [formData, setFormData] = useState({
     email: '',
     password: '',
   });
-
-  const [signInWithEmailAndPassword] = useSignInWithEmailAndPassword(auth);
-  // const userSession = sessionStorage.getItem('user');
-  const router = useRouter();
-
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData({
@@ -24,28 +30,28 @@ export default function LoginPage() {
     });
   };
 
-  const handleLogin = async (e) => {
+  const handleLogin = (e) => {
     e.preventDefault();
-    // console.log('User data:', formData);
     try {
-      const result = await signInWithEmailAndPassword(formData.email, formData.password);
+      const result = userSignIn(formData.email, formData.password);
       console.log({ result })
       if (result) {
-        sessionStorage.setItem('user', true);
         router.push('../');
         console.log('pushed from login to page');
       }
     }
     catch {
-      console.log('errored somewhere in login');
       console.log(e);
     }
   };
 
   const handleSignUpButtonClick = () => {
     router.push('../signup');
-    console.log('signup clicked')
   };
+
+  if (authLoading) {
+    return <div><span>Loading...</span></div>;
+  }
 
   return (
     <div className='auth-page'>
@@ -74,7 +80,17 @@ export default function LoginPage() {
             />
             <button className='auth-button' type="submit">Login</button>
           </form>
-          <button className='auth-redirect-button' onClick={handleSignUpButtonClick}>Register New Account</button>
+          <img
+            className='google-auth-button'
+            src="https://developers.google.com/identity/images/btn_google_signin_dark_normal_web.png" // Google Sign-In button image
+            alt="Sign in with Google"
+            onClick={googleSignIn}
+          />
+          <div className='auth-redirect'>
+            <span>Don't have an account?</span>
+            <button className='auth-redirect-button' onClick={handleSignUpButtonClick}>Register new account</button>
+          </div>
+
         </div >
       </div>
     </div>

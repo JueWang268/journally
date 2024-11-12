@@ -1,23 +1,28 @@
 'use client'
 import '../../styles/Auth.css';
 import { useState } from 'react';
-import { useCreateUserWithEmailAndPassword } from 'react-firebase-hooks/auth';
-import { auth } from '../firebase/config.js';
 import { useRouter } from 'next/navigation.js';
 import { createUser } from '../api/usersAPI.tsx';
-
+import { UserAuth } from '../context/AuthContext.js';
 
 export default function SignUpPage() {
+  const {
+    user, authLoading, authError,
+    userSignIn, userSignUp,
+    googleSignIn,
+    userSignOut
+  } = UserAuth();
+  const router = useRouter();
+
+  if (user) {
+    router.push('../');
+  }
+
   const [formData, setFormData] = useState({
     name: '',
     email: '',
     password: '',
   });
-
-  const [createUserWithEmailAndPassword] = useCreateUserWithEmailAndPassword(auth);
-  // const userSession = sessionStorage.getItem('user');
-  const router = useRouter();
-
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData({
@@ -26,29 +31,28 @@ export default function SignUpPage() {
     });
   };
 
-  const handleSignUp = async (e) => {
+  const handleSignUp = (e) => {
     e.preventDefault();
-    console.log('User data:', formData);
     try {
-      const result = await createUserWithEmailAndPassword(formData.email, formData.password);
-      console.log({ result })
+      const result = createUserWithEmailAndPassword(formData.email, formData.password);
       if (result) {
         createUser(result.user.uid, formData.name, formData.email, formData.password);
-        sessionStorage.setItem('user', true);
         router.push('../');
-        console.log('pushed from sign up to page');
+        console.log('pushed from signup to page');
       }
     }
     catch (e) {
-      console.log('errored')
       console.log(e);
     }
   };
 
   const handleLoginButtonClick = () => {
     router.push('../login');
-    console.log('login clicked')
   };
+
+  if (authLoading) {
+    return <div><span>Loading...</span></div>;
+  }
 
   return (
     <div className='auth-page'>
