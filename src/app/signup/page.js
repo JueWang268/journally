@@ -1,5 +1,5 @@
 'use client'
-import '../../styles/auth.css';
+import '../../styles/renamingtoAuth.css';
 import { useState } from 'react';
 import { useCreateUserWithEmailAndPassword } from 'react-firebase-hooks/auth';
 import { auth } from '../firebase/config.js';
