@@ -9,7 +9,7 @@ export default function JournalSidebar( {
   journals,
   selectedID,
   handleNewJournal, 
-  handleDeleteJournal, 
+  handleDeleteJournal,
   handleRenameJournal,
   handleJournalClick, 
   handleBackButton,
@@ -17,11 +17,15 @@ export default function JournalSidebar( {
   handleAddTag,
   handleRemoveTag} ) {
 
-    // sort journals by tags alphabetically (DL)
+    // sort journals by date (DL)
     const sortedJournals = journals.slice().sort((a, b) => {
-      if (a.tag && b.tag) return a.tag.localeCompare(b.tag);
-      if (a.tag) return -1;
-      if (b.tag) return 1;
+      const dateA = new Date(a.date);
+      const dateB = new Date(b.date);
+
+      // Compare dates in descending order
+      if (dateA && dateB) return dateB - dateA;
+      if (dateA) return -1;
+      if (dateB) return 1;
       return 0;
     });
     

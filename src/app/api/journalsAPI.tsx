@@ -5,7 +5,7 @@ import { ISODate } from '../utils/ISODate';
 import { journals } from '../lib/placeholder-data';
 
 const date = new Date();
-const formattedDate = date.toISOString().split('T')[0];
+const formattedDate = date.toISOString();
 
 
 // to drop the tag column: DROP COLUMN tag;
@@ -58,11 +58,13 @@ export async function createJournal(title: string, userId: string, tag: string) 
 }
 
 // add tag
-export async function addTag(id, tag){
+export async function addTag(id: string, tag: string){
   try{
+    // update date (DL)
+    const currentDate = new Date().toISOString();
     const data = await sql<Journals>`
       UPDATE journals
-      SET tag = ${tag}
+      SET tag = ${tag}, date = ${currentDate}
       WHERE id = ${id}
       RETURNING *;
     `;
@@ -78,9 +80,11 @@ export async function addTag(id, tag){
 // delete tag
 export async function deleteTag(id: string){
   try{
+    // update date (DL)
+    const currentDate = new Date().toISOString();
     const data = await sql<Journals>`
       UPDATE journals
-      SET tag = NULL
+      SET tag = NULL, date = ${currentDate}
       WHERE id = ${id}
       RETURNING *;
     `;
@@ -95,9 +99,11 @@ export async function deleteTag(id: string){
 
 export async function updateJournal(id: string, newTitle: string) {
   try {
+    // update date (DL)
+    const currentDate = new Date().toISOString();
     const data = await sql<Journals>`
         UPDATE journals
-        SET title = ${newTitle}
+        SET title = ${newTitle}, date = ${currentDate}
         WHERE id = ${id}
         RETURNING *;
         `;
