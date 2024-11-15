@@ -1,0 +1,131 @@
+.auth-page {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  height: 98vh;
+
+  background-color: white;
+}
+
+.auth-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  height: 50vh;
+  min-height: 25rem;
+  width: 100%;
+  max-width: 30rem;
+
+  padding: 3vh 0;
+
+  border-radius: 24px;
+  box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
+}
+
+.auth-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  height: 90%;
+  width: 100%;
+
+  border-top: 1px solid black;
+  border-bottom: 1px solid black;
+  font-family: sans-serif;
+}
+
+.auth-title {
+  margin: 1vh;
+
+  font-weight: 600;
+}
+
+.auth-description {
+  font-weight: 100;
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  width: 75%;
+
+  margin: 2vh 0 2vh 0;
+  gap: 2vh;
+}
+
+.auth-input {
+  height: 50%;
+  width: 80%;
+
+  padding: 1.25vh 1.25rem;
+
+  color: #414040;
+  border: none;
+  border-radius: 25px;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.05);
+  background: linear-gradient(90deg, white 0%, #D0D2EC 100%)
+}
+
+.auth-input::placeholder {
+  color: #706E6E;
+}
+
+/* TOOD: color of highlight */
+.auth-input:focus {
+  outline: none;
+  border-color: #4477ce;
+  box-shadow: 0 0 0 3px rgba(68, 119, 206, 0.1);
+}
+
+.google-auth-button {
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.auth-button {
+  width: 40%;
+
+  margin: 0 auto;
+  padding: 1vh;
+
+  border: none;
+  border-radius: 25px;
+  font-size: 1.25rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.auth-button {
+  background-color: #86B6F6;
+  color: white;
+  margin: 0rem 1vh;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+}
+
+.auth-button:hover {
+  background-color: #7eace8;
+  transform: translateY(-1px);
+}
+
+.auth-redirect {
+  margin-top: 1.5vh;
+  color: #414040;
+  font-weight: 100;
+  font-size: 0.8rem;
+}
+
+.auth-redirect-button {
+  font-size: 0.85rem;
+  border: none;
+  cursor: pointer;
+  background-color: transparent;
+}

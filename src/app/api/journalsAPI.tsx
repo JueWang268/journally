@@ -1,26 +1,28 @@
-"use server"
-import { sql } from '@vercel/postgres';
-import { Journals } from '../lib/definitions';
-import { ISODate } from '../utils/ISODate';
-import { journals } from '../lib/placeholder-data';
+"use server";
+import { sql } from "@vercel/postgres";
+import { Journals } from "../lib/definitions";
+import { ISODate } from "../utils/ISODate";
+import { journals } from "../lib/placeholder-data";
 
 const date = new Date();
-const formattedDate = date.toISOString().split('T')[0];
-
+const formattedDate = date.toISOString().split("T")[0];
 
 // to drop the tag column: DROP COLUMN tag;
 // await sql`
 //   ALTER TABLE journals
-//   ADD COLUMN tag VARCHAR(255); 
+//   ADD COLUMN tag VARCHAR(255);
 // `;
 
 // print the table to console
 const data = await sql<Journals>`SELECT * FROM journals`;
 console.log("Fetched Journals Data:", data.rows);
 
-export async function fetchJournals() {
+export async function fetchJournals(userId: string) {
   try {
-    const data = await sql<Journals>`SELECT * FROM journals`;
+    const data = await sql<Journals>`
+      SELECT * FROM journals
+      WHERE user_id = ${userId}
+    `;
     console.log("Fetched Journals Data:", data.rows);
     return data.rows;
   } catch (error) {
@@ -39,27 +41,46 @@ export async function readJournal(id: string) {
   }
 }
 
+export async function checkColumnInfo() {
+  try {
+    const columnInfo = await sql`
+      SELECT column_name, data_type, character_maximum_length
+      FROM information_schema.columns 
+      WHERE table_name = 'journals' 
+      AND column_name = 'user_id';
+    `;
+    console.log("Column info:", columnInfo.rows[0]);
+    return columnInfo.rows[0];
+  } catch (error) {
+    console.error("Error checking column info:", error);
+    throw error;
+  }
+}
+
 // added tag to parameters and to the "INSERT INTO" and "VALUES"
-export async function createJournal(title: string, userId: string, tag: string) {
-    try {
-        const data = await sql<Journals>`
-        INSERT INTO journals (id, title, date, user_id, tag)
-        VALUES (gen_random_uuid(), ${title}, ${formattedDate}, ${userId}, ${tag})
-        RETURNING *
+export async function createJournal(
+  title: string,
+  userId: string,
+  tag: string
+) {
+  try {
+    const data = await sql<Journals>`
+          INSERT INTO journals (id, title, date, user_id, tag)
+          VALUES (gen_random_uuid(), ${title}, ${formattedDate}, ${userId}, ${tag})
+          RETURNING *
         `;
 
-        // return the latest journal
-        return data.rows[0];
-        
-      } catch (error) {
-        console.error('Error creating and inserting journal:', error);
-        throw new Error(`Failed to create journal "${title}".`);
-      }
+    // return the latest journal
+    return data.rows[0];
+  } catch (error) {
+    console.error("Error creating and inserting journal:", error);
+    throw new Error(`Failed to create journal "${title}".`);
+  }
 }
 
 // add tag
-export async function addTag(id, tag){
-  try{
+export async function addTag(id: string, tag: string) {
+  try {
     const data = await sql<Journals>`
       UPDATE journals
       SET tag = ${tag}
@@ -68,16 +89,15 @@ export async function addTag(id, tag){
     `;
 
     return data.rows[0];
-
-  } catch (error){
-    console.error('Error adding tag:', error);
+  } catch (error) {
+    console.error("Error adding tag:", error);
     throw new Error(`Failed to add tag to journal with id "${id}".`);
   }
 }
 
 // delete tag
-export async function deleteTag(id: string){
-  try{
+export async function deleteTag(id: string) {
+  try {
     const data = await sql<Journals>`
       UPDATE journals
       SET tag = NULL
@@ -86,9 +106,8 @@ export async function deleteTag(id: string){
     `;
 
     return data.rows[0];
-
   } catch (error) {
-    console.error('Error deleting tag:', error);
+    console.error("Error deleting tag:", error);
     throw new Error(`Failed to delete tag for journal with id "${id}".`);
   }
 }
