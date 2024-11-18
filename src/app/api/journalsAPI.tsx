@@ -114,9 +114,11 @@ export async function deleteTag(id: string) {
 
 export async function updateJournal(id: string, newTitle: string) {
   try {
+    // update date (DL)
+    const currentDate = new Date().toISOString();
     const data = await sql<Journals>`
         UPDATE journals
-        SET title = ${newTitle}
+        SET title = ${newTitle}, date = ${currentDate}
         WHERE id = ${id}
         RETURNING *;
         `;
