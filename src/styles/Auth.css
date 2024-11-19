@@ -30,11 +30,11 @@
   align-items: center;
   justify-content: center;
 
-  height: 90%;
+  height: 100%;
   width: 100%;
 
-  border-top: 1px solid black;
-  border-bottom: 1px solid black;
+  /* border-top: 1px solid black;
+  border-bottom: 1px solid black; */
   font-family: sans-serif;
 }
 
@@ -81,7 +81,7 @@
 /* TOOD: color of highlight */
 .auth-input:focus {
   outline: none;
-  border-color: #4477ce;
+  border-color: #8E94FD;
   box-shadow: 0 0 0 3px rgba(68, 119, 206, 0.1);
 }
 
@@ -105,26 +105,32 @@
 }
 
 .auth-button {
-  background-color: #86B6F6;
+  background-color: #8E94FD;
   color: white;
   margin: 0rem 1vh;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
 }
 
 .auth-button:hover {
-  background-color: #7eace8;
+  background-color: #8188ff;
   transform: translateY(-1px);
 }
 
 .auth-redirect {
+  justify-items: center;
+}
+
+.auth-redirect-line {
   margin-top: 1.5vh;
   color: #414040;
   font-weight: 100;
   font-size: 0.8rem;
 }
 
+
 .auth-redirect-button {
   font-size: 0.85rem;
+  padding: 0;
   border: none;
   cursor: pointer;
   background-color: transparent;
