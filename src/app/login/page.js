@@ -1,7 +1,7 @@
 'use client'
 import '../../styles/Auth.css';
 import Image from 'next/image'
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation.js';
 import { UserAuth } from '../context/AuthContext.js';
 
@@ -14,9 +14,11 @@ export default function LoginPage() {
   } = UserAuth();
   const router = useRouter();
 
-  if (user) {
-    router.push('../');
-  }
+  useEffect(() => {
+    if (user) {
+      router.push('../');
+    }
+  }, [user, router]);
 
   const [formData, setFormData] = useState({
     email: '',
@@ -90,7 +92,7 @@ export default function LoginPage() {
           <div className='auth-redirect'>
             <div className='auth-redirect-line'>
               <span>Forgot Password? </span>
-              <button className='auth-redirect-button' onClick={console.log('Password Reset')}>Click here</button>
+              <button className='auth-redirect-button' onClick={null}>Click here</button>
               <span> to reset</span>
             </div>
             <button className='auth-redirect-button' onClick={handleSignUpButtonClick}>Register new account</button>

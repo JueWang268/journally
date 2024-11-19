@@ -1,11 +1,10 @@
 'use client'
 import '../../styles/Auth.css';
 import Image from 'next/image';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation.js';
 import { createUser } from '../api/usersAPI.tsx';
 import { UserAuth } from '../context/AuthContext.js';
-
 
 export default function SignUpPage() {
   const {
@@ -16,9 +15,11 @@ export default function SignUpPage() {
   } = UserAuth();
   const router = useRouter();
 
-  if (user) {
-    router.push('../');
-  }
+  useEffect(() => {
+    if (user) {
+      router.push('../');
+    }
+  }, [user, router]);
 
   const [formData, setFormData] = useState({
     name: '',
@@ -36,7 +37,7 @@ export default function SignUpPage() {
   const handleSignUp = (e) => {
     e.preventDefault();
     try {
-      const result = createUserWithEmailAndPassword(formData.email, formData.password);
+      const result = userSignUp(formData.email, formData.password);
       if (result) {
         createUser(result.user.uid, formData.name, formData.email, formData.password);
         router.push('../');

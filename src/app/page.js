@@ -35,9 +35,13 @@ const App = () => {
   } = UserAuth();
   const router = useRouter();
 
-  if (!user) {
-    router.push('/login');
-  }
+
+
+  useEffect(() => {
+    if (!user) {
+      router.push('/login');
+    }
+  }, [user, router]);
 
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [retypeProps, setRetypeProps] = useState(null);
@@ -45,9 +49,8 @@ const App = () => {
   const [showJournalBar, setShowJournalBar] = useState(true);
   const [quillContent, setQuillContent] = useState(null);
 
-  const USER_ID = '410544b2-4001-4271-9855-fec4b6a6442a';
-  // const temp_uid = user?.uid;
-  const temp_uid = USER_ID;
+  // const USER_ID = '410544b2-4001-4271-9855-fec4b6a6442a';
+  const USER_ID = user?.uid;
 
   const {
     journals_,
@@ -61,7 +64,7 @@ const App = () => {
     removeJournal,
     createTag,
     removeTag,
-  } = useJournals(temp_uid);
+  } = useJournals(USER_ID);
 
   const {
     entries,
@@ -143,7 +146,7 @@ const App = () => {
 
   const createNewJournal = () => {
     const title = `New Journal ${(new Date()).toISOString().split('T')[0]}`;
-    addJournal(title, temp_uid);
+    addJournal(title, USER_ID);
   }
 
   const createNewEntry = () => {
