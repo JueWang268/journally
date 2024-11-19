@@ -57,6 +57,7 @@ export default function LoginPage() {
     <div className='auth-page'>
       <div className='auth-container'>
         <div className='auth-content'>
+          <Image src="/journally-logo.png" alt="Logo" width={75} height={75} priority={false} />
           <h1 className='auth-title'>Login</h1>
           <span className='auth-description'>Sign into your account</span>
           <form className='auth-form' onSubmit={handleLogin}>
@@ -87,10 +88,13 @@ export default function LoginPage() {
             onClick={googleSignIn}
           />
           <div className='auth-redirect'>
-            <span>Don't have an account?</span>
+            <div className='auth-redirect-line'>
+              <span>Forgot Password? </span>
+              <button className='auth-redirect-button' onClick={console.log('Password Reset')}>Click here</button>
+              <span> to reset</span>
+            </div>
             <button className='auth-redirect-button' onClick={handleSignUpButtonClick}>Register new account</button>
           </div>
-
         </div >
       </div>
     </div>

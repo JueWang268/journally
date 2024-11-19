@@ -1,9 +1,11 @@
 'use client'
 import '../../styles/Auth.css';
+import Image from 'next/image';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation.js';
 import { createUser } from '../api/usersAPI.tsx';
 import { UserAuth } from '../context/AuthContext.js';
+
 
 export default function SignUpPage() {
   const {
@@ -58,6 +60,7 @@ export default function SignUpPage() {
     <div className='auth-page'>
       <div className='auth-container'>
         <div className='auth-content'>
+          <Image src="/journally-logo.png" alt="Logo" width={75} height={75} priority={false} />
           <h1 className='auth-title'>Sign Up</h1>
           <span className='auth-description'>Register your account</span>
           <form className='auth-form' onSubmit={handleSignUp}>
@@ -90,9 +93,8 @@ export default function SignUpPage() {
             />
             <button className='auth-button' type="submit">Sign Up</button>
           </form>
-
-          <div className='auth-redirect'>
-            <span>Already have an account?</span>
+          <div className='auth-redirect-line'>
+            <span>Already have an account? </span>
             <button className='auth-redirect-button' onClick={handleLoginButtonClick}>Login</button>
           </div>
 
