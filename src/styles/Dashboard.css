@@ -1,0 +1,57 @@
+.app {
+    background: linear-gradient(180deg, #3A6EFF 0%, #CDD791 50%, #C5C8FF 100%);
+}
+
+.icon{
+    width: 50px;
+    height: 50px;
+    flex-shrink: 0;
+}
+
+.brand {
+    display: flex;
+    padding: 0 20px;
+    height: 50px;
+    justify-content: center;
+    align-items: center;
+    flex-shrink: 0;
+    font-size: x-large;
+    color: #FFF;
+}
+
+.top-bar{
+    display: flex;
+    height: 100px;
+    justify-content: space-between;
+    border-bottom: rgba(255, 255, 255, 0.3) solid;
+}
+
+.logo{
+    display: flex;
+    padding: 25px 50px;
+}
+
+.user-icon{
+    margin: auto 50px;
+}
+
+.nav-bar{
+    display: flex;
+    height: 100px;
+    width: 15%;
+    padding-right: 0;
+    margin: auto 0 auto auto;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.nav-pill{
+    padding: 2px 0.6em;
+    border-radius: 10%;
+    color: #FFF;
+}
+
+.nav-pill.selected {
+    background-color: #FFF;
+    color: #000;
+}

@@ -19,6 +19,7 @@
     "react-chartjs-2": "^5.2.0",
     "react-dom": "^18.3.1",
     "react-firebase-hooks": "^5.1.1",
+    "react-primitives": "^0.8.1",
     "react-quill": "^2.0.0",
     "react-scripts": "5.0.1",
     "web-vitals": "^2.1.4"
