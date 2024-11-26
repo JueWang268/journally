@@ -2,6 +2,7 @@
 import React from 'react';
 import '../../styles/Dashboard.css';
 import NavBar from './NavBar.jsx';
+import RecentActivity from '../components/RecentActivityCard.jsx';
 import Image from 'next/image';
 
 export default function page() {
@@ -24,6 +25,11 @@ export default function page() {
 
 
     </nav>
+
+    <div className='contents-container'>
+      <RecentActivity/>
+    </div>
+    
   </div>
   );
 }
