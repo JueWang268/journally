@@ -2,7 +2,7 @@
     background: linear-gradient(180deg, #3A6EFF 0%, #CDD791 50%, #C5C8FF 100%);
 }
 
-.icon{
+.icon {
     width: 50px;
     height: 50px;
     flex-shrink: 0;
@@ -19,23 +19,26 @@
     color: #FFF;
 }
 
-.top-bar{
+.top-bar {
     display: flex;
     height: 100px;
     justify-content: space-between;
     border-bottom: rgba(255, 255, 255, 0.3) solid;
 }
 
-.logo{
+.logo {
     display: flex;
-    padding: 25px 50px;
+    align-items: center;
+    padding: 0.25rem 0.5rem;
+    margin: 0.75rem 1.5rem;
+    cursor: pointer;
 }
 
-.user-icon{
+.user-icon {
     margin: auto 50px;
 }
 
-.nav-bar{
+.nav-bar {
     display: flex;
     height: 100px;
     width: 15%;
@@ -45,7 +48,7 @@
     align-items: center;
 }
 
-.nav-pill{
+.nav-pill {
     padding: 2px 0.6em;
     border-radius: 10%;
     color: #FFF;
@@ -54,4 +57,20 @@
 .nav-pill.selected {
     background-color: #FFF;
     color: #000;
+}
+
+.home-grid {
+    display: grid;
+    grid-template-columns: 1fr 3fr;
+    gap: 2rem;
+    padding: 2rem;
+    height: 100%
+}
+
+.placeholder-box {
+    border: 1px solid #ddd;
+    border-radius: 24px;
+    padding: 24px;
+    background-color: #f9f9f9;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
