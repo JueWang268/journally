@@ -13,6 +13,7 @@ const Calendar = ({ selectedDate, onDateChange }) => {
   return (
     <div className="card">
       <LocalizationProvider dateAdapter={AdapterDayjs}>
+        <span>{dayjs(selectedDate).format("MMMM D, YYYY")}</span>
         <DateCalendar
           value={selectedDate}
           onChange={(newSelectedDate) => {

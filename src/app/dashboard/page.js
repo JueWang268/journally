@@ -57,6 +57,7 @@ export default function page() {
         />
         <div className='placeholder-box'>
           <span>{selectedDate.toString()}</span>
+
         </div>
       </div>
     </div>
