@@ -1,0 +1,70 @@
+.gradient {
+    background: linear-gradient(180deg, #3A6EFF 0%, #CDD791 50%, #C5C8FF 100%);
+}
+
+body{
+    margin: 0;
+}
+
+.icon{
+    width: 50px;
+    height: 50px;
+    flex-shrink: 0;
+}
+
+.brand {
+    display: flex;
+    padding: 0 20px;
+    height: 50px;
+    justify-content: center;
+    align-items: center;
+    flex-shrink: 0;
+    font-size: x-large;
+    font-weight: 400;
+    color: #FFF;
+}
+
+.top-bar{
+    display: flex;
+    height: 70px;
+    justify-content: space-between;
+    background-color: rgba(58,110,255, 1);
+    /* border-bottom: rgba(255, 255, 255, 0.3) solid; */
+}
+
+.logo{
+    display: flex;
+    padding: 15px 50px;
+    margin-right: 40%;
+}
+
+.user-icon{
+    margin: auto 50px;
+}
+
+.nav-bar{
+    display: flex;
+    height: 70px;
+    padding: auto 0;
+    margin: auto 1em;
+    /* border: red 1px solid; */
+    justify-content: center;
+    align-items: center;
+}
+
+.nav-pill{
+    padding: 0.6em;
+    border-radius: 10%;
+    color: #FFF;
+}
+
+.nav-pill:active {
+    background-color: #FFF;
+    color: #000;
+}
+
+.top-bar-wrapper{
+    /* position: fixed; */
+    width: 100%;
+    background: rgba(63, 114, 252, 0);
+}
