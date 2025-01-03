@@ -15,7 +15,7 @@ export default function Page() {
   const demoRef = useRef(null);
   const [canScroll, setCanScroll] = useState(false); // for phone demo page
   const [scrollY, setScrollY] = useState(0); // scroll position for phone demo
-
+  const phoneDemoScrollPosition = 2000;
 
   const handlePhoneDemoScroll = (e) => {
     if (!canScroll) {
@@ -30,31 +30,20 @@ export default function Page() {
 
   useEffect(() => {
     // observe phone demo interaction
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        // Check if the element is fully visible
-        if (entry.isIntersecting && entry.intersectionRatio === 1) {
-          setCanScroll(true);
-        } else {
-          setCanScroll(false);
-        }
-      },
-      {
-        root: null, // Observe within the viewport
-        threshold: 1.0, // Fully visible (100%)
-      }
-    );
     const demoRefCurr = demoRef.current;
 
     if (demoRefCurr) {
-      observer.observe(demoRefCurr);
       demoRefCurr.addEventListener('scroll', handlePhoneDemoScroll);
     }
 
     // handles dynamic transparency
     const handleScroll = () => {
+      
       const elements = document.querySelectorAll('[class^=dynamic-transparency-]');
       setScrollPosition(window.scrollY);
+      setCanScroll(window.scrollY >= phoneDemoScrollPosition);
+      // console.log(window.scrollY);
+      
 
       const viewportHeight = window.innerHeight;
 
@@ -83,7 +72,6 @@ export default function Page() {
     // Cleanup on component unmount
     return () => {
       if (demoRefCurr) {
-        observer.unobserve(demoRefCurr);
         demoRefCurr.removeEventListener('scroll', handlePhoneDemoScroll);
       }
       window.removeEventListener('scroll', handleScroll);
@@ -118,9 +106,9 @@ export default function Page() {
           display: "block",
           position: "flex",
           margin:"auto 0 0 auto",
-          // position: "flex",
           paddingRight: "0",
-          color: "transparent"}} width={1000} height={730} src="/assets/hand-removebg.png" />
+          color: "transparent"}} 
+          width={1000} height={730} src="/assets/hand-removebg.png" />
       
       </div>
 
@@ -249,7 +237,7 @@ export default function Page() {
         style={{
           overflowY: canScroll ? 'auto' : 'hidden',
           pointerEvents: canScroll ? 'auto' : 'none',
-          height: '90vh'
+          height: '110vh'
         }}
       >
 
