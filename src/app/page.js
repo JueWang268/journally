@@ -18,7 +18,6 @@ import debounce from './utils/debounce.js';
 
 // Tony's imports
 import { UserAuth } from './context/AuthContext.js';
-
 import { useRouter } from 'next/navigation';
 import dynamic from 'next/dynamic';
 import 'react-quill/dist/quill.snow.css';
@@ -34,8 +33,6 @@ const App = () => {
     userSignOut
   } = UserAuth();
   const router = useRouter();
-
-
 
   useEffect(() => {
     if (!user) {
@@ -136,6 +133,10 @@ const App = () => {
   const handleJournalClick = (jid) => {
     const j = findJournal(jid)
     setSelectedJournal(j);
+  }
+
+  const handleDashboardClick = () => {
+    router.push('./dashboard');
   }
 
   const toggleJournalBar = () => setShowJournalBar(!showJournalBar);
@@ -261,6 +262,7 @@ const App = () => {
         <div className="nav-item" onClick={toggleJournalBar}>Journals</div>
         <div className="nav-item">Calendar</div>
         <div className="nav-item">Graph</div>
+        <div className="nav-item" onClick={handleDashboardClick}>Dashboard</div>
         <div className="nav-item" >🌏</div>
         <div className="user-icon" onClick={() =>
           // alert('User options')
