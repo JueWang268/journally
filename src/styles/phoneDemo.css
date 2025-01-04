@@ -1,0 +1,36 @@
+.scroll-wrapper {
+    position: flex;
+    height: 4750px;
+    background: white;
+}
+
+
+.phone-container {
+    position: sticky;
+    /* border: 2px red solid; */
+    top: 30%;
+    z-index: 1; 
+    pointer-events: none; 
+    /* Prevent interaction with invisible images */
+}
+
+.phone {
+    display: flex;
+    /* centering */
+    margin-left: auto;
+    margin-right: auto;
+    bottom: 0;
+}
+
+.slogan {
+    position: sticky;
+    font-family: 'SF Pro Display', --apple-system, Arial, Helvetica, sans-serif;
+    margin-left: 18%;
+}
+
+.fancy{
+    background: linear-gradient(93deg, #4073FB 2.45%, #C4CEA0 49.32%, #8F95FB 96.2%);
+background-clip: text;
+-webkit-background-clip: text;
+-webkit-text-fill-color: transparent;
+}
