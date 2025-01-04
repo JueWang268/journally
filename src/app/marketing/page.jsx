@@ -15,7 +15,7 @@ export default function Page() {
   const demoRef = useRef(null);
   const [canScroll, setCanScroll] = useState(false); // for phone demo page
   const [scrollY, setScrollY] = useState(0); // scroll position for phone demo
-  const phoneDemoScrollPosition = 2000;
+  const phoneDemoScrollUnlockPosition = 2000;
 
   const handlePhoneDemoScroll = (e) => {
     if (!canScroll) {
@@ -41,7 +41,7 @@ export default function Page() {
       
       const elements = document.querySelectorAll('[class^=dynamic-transparency-]');
       setScrollPosition(window.scrollY);
-      setCanScroll(window.scrollY >= phoneDemoScrollPosition);
+      setCanScroll(window.scrollY >= phoneDemoScrollUnlockPosition);
       // console.log(window.scrollY);
       
 
@@ -243,6 +243,8 @@ export default function Page() {
 
         <PhoneDemo scrollY = {scrollY} />
       </div>
+
+      
 
       {/*page ends*/}
       </div>
