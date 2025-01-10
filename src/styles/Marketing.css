@@ -30,3 +30,33 @@
     align-content: center;
     text-align: center;
 }
+
+.bottom-page{
+    background: #799DD6;
+    height: 4000px;
+}
+
+.testimonials-emailbox-wrapper{
+    display: flex;
+    justify-content: space-between;
+    gap: 10vw;
+}
+
+.footer-column{
+    width: 262px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    
+}
+
+.side-text{
+    margin: 3em 3em auto;
+    color: white;
+    padding: 1em 3em;
+}
+
+.social-media-icon{
+    cursor:"pointer";
+    padding-right: 2em;
+}

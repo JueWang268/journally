@@ -5,7 +5,7 @@ import '../../styles/Marketing.css';
 import TopBar from '../UI/TopBar.jsx';
 import PhoneDemo from './PhoneDemo.jsx';
 import Image from 'next/image';
-
+import BottomPage from './BottomPage.jsx';
 
 
 export default function Page() {
@@ -145,7 +145,8 @@ export default function Page() {
 
       <div className="page" style={{
         height: "1200vh",
-        background: 'linear-gradient(180deg, #3F72FC 0%, #C9D9A1 50%, #B3E8FE 100%)'
+        background: 'linear-gradient(180deg, #3F72FC 0%, #C9D9A1 50%, #B3E8FE 100%)',
+        border: 'red dashed 2px'
       }}>
 
       <div className="poster-wrapper">
@@ -249,7 +250,7 @@ export default function Page() {
       {/*page ends*/}
       </div>
       
-      
+      <BottomPage />
 
       
     </div>
