@@ -188,11 +188,11 @@ export default function BottomPage() {
         <div style={{display: "flex"}}>
           <Image className='social-media-icon' style={{cursor:"pointer"}} src="/assets/XLogo.svg" alt="twitter-icon" width="20" height="20"/>
 
-          <Image className='social-media-icon' style={{cursor:"pointer"}} src="/assets/logo-instagram.svg" alt="twitter-icon" width="20" height="20"/>
+          <Image className='social-media-icon' style={{cursor:"pointer"}} src="/assets/logo-instagram.svg" alt="instagram-icon" width="20" height="20"/>
 
-          <Image className='social-media-icon' style={{cursor:"pointer"}} src="/assets/logo-you-tube.svg" alt="twitter-icon" width="20" height="20"/>
+          <Image className='social-media-icon' style={{cursor:"pointer"}} src="/assets/logo-you-tube.svg" alt="youtube-icon" width="20" height="20"/>
 
-          <Image className='social-media-icon' style={{cursor:"pointer"}} src="/assets/linked-in.svg" alt="twitter-icon" width="20" height="20"/>
+          <Image className='social-media-icon' style={{cursor:"pointer"}} src="/assets/linked-in.svg" alt="linkedin-icon" width="20" height="20"/>
         </div>
 
         <div>© 2024 Journally</div>
