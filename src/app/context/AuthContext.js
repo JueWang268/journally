@@ -23,7 +23,7 @@ export const AuthContextProvider = ({ children }) => {
       const result = await signInWithEmailAndPassword(email, password);
       return result;
     }
-    catch {
+    catch (e) {
       console.log(e);
     }
   };
