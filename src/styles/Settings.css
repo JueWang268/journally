@@ -91,6 +91,8 @@
     display: flex;
     justify-content: center;
     flex-direction: column;
+    border-right: 1px solid #000;
+    margin-right: 5rem;
 }
 .side-bar p{
     font-size: 2em;
@@ -136,6 +138,7 @@
 .account-content{
     flex: 1;
     padding-left: 2.5rem;
+    padding-right: 10rem;
 }
 .account-content p{
     font-size: 1.5em;

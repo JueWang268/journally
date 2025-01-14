@@ -16,12 +16,25 @@ export default function SettingsPage() {
         email: "john.doe@gmail.com",
         phone: "(123) 456-7890",
     });
+    const ACCOUNT_LABELS = {
+        profileImg: "Profile Image",
+        name: "Name",
+        birth: "Date of Birth",
+        gender: "Gender",
+        email: "Email",
+        phone: "Phone Number",
+    }
 
     const [notifInfo, setNotifInfo] = useState({
         email: false,
         sms: false,
         push: false,
     });
+    const NOTIF_LABELS = {
+        email: "Email",
+        sms: "SMS",
+        push: "Push Notifications",
+    }
 
     const [editingField, setEditingField] = useState(null);
 
@@ -45,29 +58,10 @@ export default function SettingsPage() {
         }
     };
 
-    // const renderAccountFields = () =>
-    //     Object.keys(accountInfo).map((field) => (
-    //         <div className='form-group' key={field}>
-    //             <label>{field.charAt(0).toUpperCase() + field.slice(1)}</label>
-    //             {editingField === field ? (
-    //                 <input
-    //                     type="text"
-    //                     value={accountInfo[field]}
-    //                     onChange={(e) => handleInputChange(field, e.target.value)}
-    //                     onBlur={() => setEditingField(null)}
-    //                     onKeyDown={(e) => handleKeyDown(e, field)}
-    //                 />
-    //             ) : (
-    //                 <span onClick={() => setEditingField(field)} className='editable-text'>
-    //                     {accountInfo[field]}
-    //                 </span>
-    //             )}
-    //         </div>
-    //     )) 
     const renderAccountFields = () =>
         Object.keys(accountInfo).map((field) => (
             <div className="form-group" key={field}>
-                <label>{field === "profileImage" ? "Profile Image" : field.charAt(0).toUpperCase() + field.slice(1)}</label>
+                <label>{ACCOUNT_LABELS[field]}</label>
                 {field === "profileImg" ? (
                     <div className="profile-image-container">
                         <img
@@ -98,7 +92,7 @@ export default function SettingsPage() {
     const renderNotificationSettings = () =>
         Object.keys(notifInfo).map((setting) => (
             <div className="notifications-form-group" key={setting}>
-                <label>{setting.charAt(0).toUpperCase() + setting.slice(1).replace(/([A-Z])/g, ' $1')}</label>
+                <label>{NOTIF_LABELS[setting]}</label>
                 <div className="view-switch">
                     <div
                         className={`slider ${notifInfo[setting] ? 'right' : 'left'}`}
