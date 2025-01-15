@@ -1,0 +1,191 @@
+.lora-p {
+  font-family: var(--lora-font);
+}
+
+.inter-p {
+  font-family: var(--inter-font);
+}
+
+.marketing-page {
+  display: flex;
+  flex-direction: column;
+  font-family: var(--inter-font);
+}
+
+.landing-screen {
+  height: 100vh;
+  background: linear-gradient(#3f72fc 0%, #c9d9a1 50%, #C5C8FF 100%);
+  z-index: 1;
+}
+
+.top-bar-wrapper {
+  position: fixed;
+  z-index: 20;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.top-bar-wrapper.transparent {
+  background-color: transparent;
+  box-shadow: none;
+}
+
+.top-bar-wrapper.opaque {
+  background-color: #587feb;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.main-components {
+  position: relative;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  height: 100%;
+}
+
+.main-heading {
+  position: absolute;
+  bottom: 7vh;
+  left: 5vw;
+  z-index: 3;
+  color: white;
+  width: 50%;
+  font-size: 13vh;
+  font-weight: 800;
+  word-wrap: break-word;
+}
+
+.main-image {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  height: 95%;
+  width: auto;
+  z-index: 2;
+  -webkit-user-drag: none;
+}
+
+
+
+
+
+
+.text-section {
+  display: flex;
+  width: 100%;
+  height: 15vh;
+  padding: 4rem;
+  background: white;
+  flex-direction: column;
+  justify-content: center;
+  box-sizing: border-box;
+  border: none;
+  gap: 1rem;
+}
+
+.text-heading {
+  color: #1e1e1e;
+  font-size: 24px;
+  font-family: "Inter", Arial;
+  font-weight: 600;
+  word-wrap: break-word;
+}
+
+.text-subheading {
+  color: #757575;
+  font-size: 20px;
+  font-family: "Inter", Arial;
+  font-weight: 400;
+  word-wrap: break-word;
+}
+
+
+
+.long-gradient {
+  background: linear-gradient(180deg, #3A6EFF 0%, #CDD791 50%, #C5C8FF 100%);
+}
+
+
+
+
+.poster-wrapper {
+  display: flex;
+  flex-direction: row;
+
+}
+
+.poster {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: baseline;
+  padding: 4rem;
+  gap: 1rem;
+  margin-top: auto;
+}
+
+.poster-heading {
+  font-size: 4rem;
+  font-weight: 700;
+  min-height: 15vh;
+  color: white;
+}
+
+.poster-image {
+  align-self: center;
+  width: 100%;
+  height: auto;
+}
+
+.poster-content {
+  display: flex;
+  flex-direction: column;
+  padding: 0rem 1rem;
+  gap: 0.5rem;
+}
+
+.poster-subheading {
+  color: white;
+  font-size: 1.4rem;
+  font-weight: 600;
+}
+
+.poster-description {
+  color: #090909;
+  font-size: 1.15rem;
+  font-weight: 500;
+}
+
+
+
+
+
+
+.motto-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 20vh;
+}
+
+.motto-text {
+  color: white;
+  font-size: 6rem;
+  font-weight: 900;
+  text-align: center;
+}
+
+
+.phone-demo-container {
+  width: 100%;
+  height: 1300px;
+  overflow-y: 'scroll';
+  background-color: white;
+  position: relative;
+  /* overflow: hidden; */
+}
+
+.demo-placeholder {
+  min-height: 6500px;
+  width: 100%;
+  background: linear-gradient(#3f72fc 0%, #c9d9a1 50%, #C5C8FF 100%);
+}

@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation.js';
 import { createUser } from '../api/usersAPI.tsx';
 import { UserAuth } from '../context/AuthContext.js';
 
-export default function SignUpPage() {
+export default function Page() {
   const {
     user, authLoading, authError,
     userSignIn, userSignUp,
