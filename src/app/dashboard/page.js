@@ -107,7 +107,6 @@ export default function Page() {
               </AccordionSummary>
               <div className="accordion-underline"></div>
             </div>
-
             <AccordionDetails
               sx={{
                 padding: '0'

@@ -29,7 +29,8 @@ const FriendsList = ({ friends, selectedFriends, setSelectedFriends }) => {
         }}
       >
         {friends.map((friend) => (
-          <ListItem key={friend}>
+          <ListItem key={friend}
+            sx={{ padding: '0 16px' }}>
             <Checkbox
               checked={selectedFriends.indexOf(friend) !== -1}
               onChange={() => handleToggle(friend)}
