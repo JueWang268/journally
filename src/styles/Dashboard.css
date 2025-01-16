@@ -1,5 +1,6 @@
 .app {
     background: linear-gradient(180deg, #3A6EFF 0%, #CDD791 50%, #C5C8FF 100%);
+    font-family: var(--inter-font);
 }
 
 .icon {
@@ -64,7 +65,7 @@
     grid-template-columns: 1fr 3fr;
     gap: 2rem;
     padding: 2rem;
-    height: 100%
+    height: 100%;
 }
 
 .placeholder-box {
@@ -73,4 +74,33 @@
     padding: 24px;
     background-color: #f9f9f9;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.card {
+    border: 1px solid #ddd;
+    border-radius: 24px;
+    padding: 24px;
+    background-color: #f9f9f9;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.accordion-heading {
+    font-family: var(--inter-font);
+    font-size: 2rem;
+    font-weight: 500;
+    margin: 0;
+}
+
+.accordion-underline {
+    position: absolute;
+    left: 5%;
+    width: 90%;
+    height: 1px;
+    background: black;
+}
+
+.calendar-selected-date {
+    font-size: 1.5rem;
+    font-weight: 500;
+    margin: 1rem 1rem 0rem 1.25rem;
 }

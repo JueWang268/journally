@@ -1,0 +1,14 @@
+.friends-list-bottom {
+  position: absolute;
+  left: 5%;
+  width: 90%;
+  height: 1px;
+  background: rgb(223, 223, 223);
+}
+
+.friend-name {
+  color: black;
+  font-family: var(--inter-font);
+  font-size: 1rem;
+  /* font-weight: 400; */
+}

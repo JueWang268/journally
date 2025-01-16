@@ -1,11 +1,3 @@
-.lora-p {
-  font-family: var(--lora-font);
-}
-
-.inter-p {
-  font-family: var(--inter-font);
-}
-
 .marketing-page {
   display: flex;
   flex-direction: column;
@@ -49,9 +41,15 @@
   z-index: 3;
   color: white;
   width: 50%;
-  font-size: 13vh;
+  font-size: 8em;
   font-weight: 800;
   word-wrap: break-word;
+}
+
+@media (max-width: 1300px) {
+  .main-heading {
+    font-size: 4em;
+  }
 }
 
 .main-image {
