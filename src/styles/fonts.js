@@ -16,5 +16,4 @@ const lora = Lora({
   variable: '--lora-font'
 })
 
-
 export { inter, lora }

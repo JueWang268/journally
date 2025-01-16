@@ -28,7 +28,7 @@ body {
     display: flex;
     height: 8vh;
     justify-content: space-between;
-    /* background-color: rgba(58, 110, 255, 1); */
+    background-color: rgba(58, 110, 255, 1);
     /* border-bottom: rgba(255, 255, 255, 0.1) solid; */
 }
 
