@@ -1,3 +1,7 @@
+.friends-list {
+  position: relative;
+}
+
 .friends-list-bottom {
   position: absolute;
   left: 5%;

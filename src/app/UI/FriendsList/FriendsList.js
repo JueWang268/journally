@@ -52,7 +52,7 @@ const FriendsList = ({ friends, selectedFriends, setSelectedFriends }) => {
           ))}
         </ul>
       </div> */}
-      <div className="friends-list-bottom"></div>
+      <div className='friends-list-bottom'></div>
     </div >
   );
 };
