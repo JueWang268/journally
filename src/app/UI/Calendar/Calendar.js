@@ -8,20 +8,17 @@ import { DateCalendar } from "@mui/x-date-pickers/DateCalendar";
 
 const Calendar = ({ selectedDate, onDateChange }) => {
 
-
-
   return (
-    <div className="card">
-      <LocalizationProvider dateAdapter={AdapterDayjs}>
-        <span>{dayjs(selectedDate).format("MMMM D, YYYY")}</span>
-        <DateCalendar
-          value={selectedDate}
-          onChange={(newSelectedDate) => {
-            onDateChange(newSelectedDate);
-          }} />
-      </LocalizationProvider>
+    <LocalizationProvider dateAdapter={AdapterDayjs}>
+      <DateCalendar
+        value={selectedDate}
+        onChange={(newSelectedDate) => {
+          onDateChange(newSelectedDate);
+        }}
+        showDaysOutsideCurrentMonth
+      />
 
-    </div>
+    </LocalizationProvider>
   );
 };
 

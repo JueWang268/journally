@@ -22,7 +22,12 @@
       {
         "name": "next"
       }
-    ]
+    ],
+    "paths": {
+      "@/fonts": [
+        "./src/styles/fonts"
+      ]
+    }
   },
   "include": [
     "next-env.d.ts",

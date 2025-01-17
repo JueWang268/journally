@@ -2,7 +2,7 @@
     background: linear-gradient(180deg, #3A6EFF 0%, #CDD791 50%, #C5C8FF 100%);
 }
 
-body{
+body {
     margin: 0;
 }
 
@@ -26,16 +26,17 @@ body{
 
 .top-bar {
     display: flex;
-    height: 70px;
+    height: 8vh;
     justify-content: space-between;
-    background-color: rgba(58,110,255, 1);
-    /* border-bottom: rgba(255, 255, 255, 0.3) solid; */
+    background-color: rgba(58, 110, 255, 1);
+    /* border-bottom: rgba(255, 255, 255, 0.1) solid; */
 }
 
 .logo {
     display: flex;
     padding: 15px 50px;
-    margin-right: 40%;
+    padding: 10px 0 0 15px;
+    margin: 0;
 }
 
 .user-icon {
@@ -52,7 +53,7 @@ body{
     align-items: center;
 }
 
-.nav-pill{
+.nav-pill {
     padding: 0.6em;
     border-radius: 10%;
     color: #FFF;
@@ -63,7 +64,7 @@ body{
     color: #000;
 }
 
-.top-bar-wrapper{
+.top-bar-wrapper {
     /* position: fixed; */
     width: 100%;
     background: rgba(63, 114, 252, 0);
