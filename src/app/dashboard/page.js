@@ -6,7 +6,7 @@ import Image from 'next/image';
 import Calendar from '../UI/Calendar/Calendar'
 import dayjs from "dayjs";
 
-
+import { fetchGoals } from "../api/goalsAPI";
 import { UserAuth } from '../context/AuthContext.js';
 import { useRouter } from 'next/navigation';
 
