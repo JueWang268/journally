@@ -38,3 +38,13 @@ export type GroupedDatapoints = {
     name: string;
     data: Datapoint[];
 };
+
+export type Goal = {
+    id: number;
+    category: string;
+    number: number;
+    unit: string;
+    frequency: number;
+    modified_at: string;
+  };
+  

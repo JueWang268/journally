@@ -1,10 +1,12 @@
-"use client";
-import { React, useState, useEffect, useRef } from "react";
-import "../../styles/BgTopBar.css";
-import "../../styles/Marketing.css";
-import TopBar from "../UI/TopBar.jsx";
-import PhoneDemo from "./PhoneDemo.jsx";
-import Image from "next/image";
+'use client'
+import { React, useState, useEffect, useRef } from 'react';
+import '../../styles/BgTopBar.css';
+import '../../styles/Marketing.css';
+import TopBar from '../UI/TopBar.jsx';
+import PhoneDemo from './PhoneDemo.jsx';
+import Image from 'next/image';
+import BottomPage from './BottomPage.jsx';
+
 
 export default function Page() {
   // dynamic transparency
@@ -327,6 +329,10 @@ export default function Page() {
 
         {/*page ends*/}
       </div>
+      
+      <BottomPage />
+
+      
     </div>
   );
 }

@@ -8,7 +8,7 @@ import Calendar from '../UI/Calendar/Calendar'
 import FriendsList from '../UI/FriendsList/FriendsList'
 import dayjs from "dayjs";
 
-
+import { fetchGoals } from "../api/goalsAPI";
 import { UserAuth } from '../context/AuthContext.js';
 import { useRouter } from 'next/navigation';
 
