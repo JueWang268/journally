@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import '../../styles/Dashboard.css';
 import TopBar from '../UI/TopBar.jsx';
+import RecentActivity from '../components/RecentActivityCard.jsx';
 import Image from 'next/image';
 import Calendar from '../UI/Calendar/Calendar'
 import FriendsList from '../UI/FriendsList/FriendsList'
@@ -126,6 +127,11 @@ export default function Page() {
           id='right-card'
           className='placeholder-box'>
           {/* <span>{selectedDate.toString()}</span> */}
+      
+          <div className='contents-container'>
+            <RecentActivity/>
+          </div>
+          
         </div>
       </div >
     </div >
