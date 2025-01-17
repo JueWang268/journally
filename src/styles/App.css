@@ -1,7 +1,11 @@
+body {
+  margin: 0;
+}
+
 .app {
   display: flex;
   flex-direction: column;
-  font-family: "Inter","Segoe UI", "Roboto", "Oxygen", "Arial", "sans-serif";
+  font-family: "Inter", "Segoe UI", "Roboto", "Oxygen", "Arial", "sans-serif";
   height: 100vh;
 }
 
@@ -24,13 +28,16 @@
   cursor: pointer;
 }
 
-.sidebar, .entries-sidebar {
+.sidebar,
+.entries-sidebar {
   background-color: #f4f4f4;
   padding: 10px;
-  height: calc(100vh - 60px); /* Adjust for navbar height */
+  height: calc(100vh - 60px);
+  /* Adjust for navbar height */
   overflow-y: auto;
   width: 20%;
 }
+
 .entry-path {
   color: gray;
 }
@@ -40,7 +47,7 @@
   border-right: 1px solid #ddd;
 }
 
-.main-layout{
+.main-layout {
   display: flex;
   flex-direction: row;
 }
@@ -49,7 +56,7 @@
   border-right: 1px solid #ddd;
 }
 
-.flex-container{
+.flex-container {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -57,7 +64,7 @@
 }
 
 /* New Entry Button (David) */
-.new-entry-button{
+.new-entry-button {
   /* subject to change */
   font-size: 20px;
   padding: 13px 5px;
@@ -65,7 +72,7 @@
 }
 
 /* Change stats/entries button (David) */
-.toggle-button{
+.toggle-button {
   /* subject to change */
   padding: 0px 5px;
 }
@@ -136,7 +143,8 @@ li {
 }
 
 .right .slider-button {
-  transform: translateX(8em); /* Adjust to fit slider width */
+  transform: translateX(8em);
+  /* Adjust to fit slider width */
 }
 
 .slider.left {
@@ -149,11 +157,16 @@ li {
 
 .slider-text {
   position: absolute;
-  display: flex; /* Flexbox ensures vertical centering */
-  align-items: center; /* Vertically center text */
-  justify-content: center; /* Horizontally center text */
-  height: 2.5em; /* Match the button's height */
-  width: 100%; /* Make the text span the full width of the slider */
+  display: flex;
+  /* Flexbox ensures vertical centering */
+  align-items: center;
+  /* Vertically center text */
+  justify-content: center;
+  /* Horizontally center text */
+  height: 2.5em;
+  /* Match the button's height */
+  width: 100%;
+  /* Make the text span the full width of the slider */
   font-weight: bold;
   color: white;
   pointer-events: none;

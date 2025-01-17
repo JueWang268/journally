@@ -5,7 +5,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation.js';
 import { UserAuth } from '../context/AuthContext.js';
 
-export default function LoginPage() {
+export default function Page() {
   const {
     user, authLoading, authError,
     userSignIn, userSignUp,
@@ -24,6 +24,7 @@ export default function LoginPage() {
     email: '',
     password: '',
   });
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData({
@@ -51,12 +52,17 @@ export default function LoginPage() {
     router.push('../signup');
   };
 
+  const handleRedirectMarketing = () => {
+    router.push('../marketing2');
+  };
+
   if (authLoading) {
     return <div><span>Loading...</span></div>;
   }
 
   return (
     <div className='auth-page'>
+
       <div className='auth-container'>
         <div className='auth-content'>
           <Image src="/journally-logo.png" alt="Logo" width={75} height={75} priority={false} />
@@ -97,6 +103,20 @@ export default function LoginPage() {
             </div>
             <button className='auth-redirect-button' onClick={handleSignUpButtonClick}>Register new account</button>
           </div>
+
+          {/* TODO: DELETE TEMPORARY BUTTON */}
+          <button
+            onClick={handleRedirectMarketing}
+            className='auth-button'
+            style={{
+              marginTop: '1rem',
+              marginBottom: '1rem',
+              fontSize: '1rem'
+            }}
+          >
+            Marketing2
+          </button>
+
         </div >
       </div>
     </div>

@@ -1,0 +1,30 @@
+.page {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    padding-top: 2em;
+    box-sizing: border-box;
+    page-break-after: always;
+}
+
+.poster-wrapper {
+    display: flex;
+    justify-content: space-between;
+    gap: 2em;
+    padding: 0 5vh 9vh;
+
+}
+
+.poster {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2vh;
+}
+
+.motto-wrapper {
+    display: inline-flex;
+    align-content: center;
+    text-align: center;
+}
