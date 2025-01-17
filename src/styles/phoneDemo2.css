@@ -1,0 +1,48 @@
+.phone-demo {
+  position: relative;
+  height: 100vh;
+  /* Full screen height */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.image-wrapper {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.demo-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  transition: opacity 1s ease-in-out;
+}
+
+.demo-image-0 {
+  opacity: 1;
+}
+
+.demo-image-1 {
+  opacity: 0;
+}
+
+.demo-image-2 {
+  opacity: 0;
+}
+
+.demo-image-3 {
+  opacity: 0;
+}
+
+.phone-demo-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  /* Ensures images fit within the container */
+}
