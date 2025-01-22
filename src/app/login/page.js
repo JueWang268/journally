@@ -44,6 +44,10 @@ export default function Page() {
       console.log('Successful login.');
     }
     else {
+      setFormData({
+        ...formData,
+        password: '',
+      });
       setAuthErrorMessage(result.error);
     }
   };
