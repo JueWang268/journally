@@ -2,13 +2,15 @@
 import React, { useState, useEffect } from 'react';
 import '../../styles/Dashboard.css';
 import TopBar from '../UI/TopBar.jsx';
+import Card from "../UI/Card/CardDisplay";
 import RecentActivity from '../components/RecentActivityCard.jsx';
 import Image from 'next/image';
-import Calendar from '../UI/Calendar/Calendar'
-import FriendsList from '../UI/FriendsList/FriendsList'
+import Calendar from '../UI/Calendar/Calendar';
+import FriendsList from '../UI/FriendsList/FriendsList';
 import dayjs from "dayjs";
+import useGoals from "../hooks/useGoals";
 
-import { fetchGoals } from "../api/goalsAPI";
+import { fetchGoals, updateGoal } from "../api/goalsAPI";
 import { UserAuth } from '../context/AuthContext.js';
 import { useRouter } from 'next/navigation';
 
@@ -17,9 +19,10 @@ import AccordionDetails from '@mui/material/AccordionDetails';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
-
+const test_user_id = '410544b2-4001-4271-9855-fec4b6a6442a';
 
 export default function Page() {
+
 
   const {
     user, authLoading, authError,
@@ -29,13 +32,22 @@ export default function Page() {
   } = UserAuth();
   const router = useRouter();
 
-  useEffect(() => {
-    if (!user) {
-      router.push('/login');
-    }
-  }, [user, router]);
-
   const USER_ID = user?.uid;
+  const {
+    goals, 
+    loading, 
+    error,
+    setNewGoal,
+    editGoal,
+    removeGoal,
+    setGoals
+    } = useGoals(USER_ID);
+    
+    useEffect(() => {
+      if (!user) {
+        router.push('/login');
+      }
+    }, [user, router]);
 
   const [selectedDate, setSelectedDate] = useState(dayjs());
 
@@ -52,7 +64,6 @@ export default function Page() {
       <TopBar />
 
       <div className='home-grid'>
-
         <div
           id='left-card'
           className='card'>
@@ -122,19 +133,30 @@ export default function Page() {
 
         </div>
 
+        <div className='contents-container'>
+          <RecentActivity />
 
-        <div
-          id='right-card'
-          className='placeholder-box'>
-          {/* <span>{selectedDate.toString()}</span> */}
-      
-          <div className='contents-container'>
-            <RecentActivity/>
-          </div>
-          
+          <Card 
+            title="Progress on Workout"
+            icons= {[
+              <Image 
+                className='dropdown-icon' style={{cursor:"pointer"}} 
+                src="/assets/icons/dropdown-icon.svg" 
+                alt="dropdown-icon" width="54" height="54"
+              />, 
+              <Image className='menu-icon' style={{cursor:"pointer"}}
+              src="/assets/icons/menu-icon.svg" alt="menu-icon" width="40" height="40"/>
+            ]}
+            content={
+              <div>{/*JSON.stringify(goals)*/}</div>
+            }
+              
+          />
+            
         </div>
-      </div >
-    </div >
+
+      </div>
+    </div>
   );
 }
 

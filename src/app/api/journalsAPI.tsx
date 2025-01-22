@@ -15,7 +15,7 @@ const formattedDate = date.toISOString().split("T")[0];
 
 // print the table to console
 const data = await sql<Journals>`SELECT * FROM journals`;
-console.log("Fetched Journals Data:", data.rows);
+// console.log("Fetched Journals Data:", data.rows);
 
 export async function fetchJournals(userId: string) {
   try {
@@ -23,7 +23,7 @@ export async function fetchJournals(userId: string) {
       SELECT * FROM journals
       WHERE user_id = ${userId}
     `;
-    console.log("Fetched Journals Data:", data.rows);
+    // console.log("Fetched Journals Data:", data.rows);
     return data.rows;
   } catch (error) {
     console.error("Fetching Error:", error);

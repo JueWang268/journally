@@ -9,7 +9,7 @@ export const useDataPointsContext = () => {
 
 export const DataPointsProvider = ({ userId, children }) => {
     const datapointsData = useDatapoints(userId);
-    console.log(datapointsData.datapoints);
+    // console.log(datapointsData.datapoints);
     
 
     return (
