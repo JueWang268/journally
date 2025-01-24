@@ -1,40 +1,54 @@
 "use client";
 import { useContext, createContext, useState, useEffect } from "react";
 import {
+  signInWithEmailAndPassword, createUserWithEmailAndPassword,
   signInWithPopup,
   signOut,
   GoogleAuthProvider,
 } from "firebase/auth";
-import { useAuthState, useSignInWithEmailAndPassword, useCreateUserWithEmailAndPassword } from 'react-firebase-hooks/auth';
+
+import { useAuthState } from 'react-firebase-hooks/auth';
+
 import { auth } from "../firebase/config.js";
 import { useRouter } from 'next/navigation.js';
 
 const AuthContext = createContext();
 
 export const AuthContextProvider = ({ children }) => {
-  const [user, authLoading, authError] = useAuthState(auth);
+
+  const [user, authLoading] = useAuthState(auth);
+
   const router = useRouter();
 
-  const [signInWithEmailAndPassword] = useSignInWithEmailAndPassword(auth);
-  const [createUserWithEmailAndPassword] = useCreateUserWithEmailAndPassword(auth);
+  // Error codes: https://firebase.google.com/docs/auth/admin/errors
+  const getErrorMessage = (errorCode) => {
+    switch (errorCode) {
+      case "auth/invalid-credential":
+        return "The email or password is incorrect.";
+      case "auth/too-many-requests":
+        return "Too many requests. Try again later. "
+      default:
+        return "An unknown error occurred. Please try again.";
+    }
+  };
 
   const userSignIn = async (email, password) => {
     try {
-      const result = await signInWithEmailAndPassword(email, password);
+      const result = await signInWithEmailAndPassword(auth, email, password);
       return result;
     }
     catch (e) {
-      console.log(e);
+      return { error: getErrorMessage(e.code) };
     }
   };
 
   const userSignUp = async (email, password) => {
     try {
-      const result = await createUserWithEmailAndPassword(email, password);
+      const result = await createUserWithEmailAndPassword(auth, email, password);
       return result;
     }
     catch (e) {
-      console.log(e);
+      return { error: getErrorMessage(e.code) };
     }
   };
 
@@ -54,7 +68,7 @@ export const AuthContextProvider = ({ children }) => {
 
   return (
     <AuthContext.Provider value={{
-      user, authLoading, authError,
+      user, authLoading,
       userSignIn, userSignUp,
       googleSignIn,
       userSignOut

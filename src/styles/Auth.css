@@ -6,6 +6,8 @@
   height: 98vh;
 
   background-color: white;
+
+  font-family: var(--inter-font);
 }
 
 .auth-container {
@@ -46,6 +48,13 @@
 
 .auth-description {
   font-weight: 100;
+}
+
+.auth-error-message {
+  color: red;
+  font-size: 1rem;
+  margin-top: 1vh;
+  font-weight: 500;
 }
 
 .auth-form {

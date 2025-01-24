@@ -7,12 +7,14 @@ import { UserAuth } from '../context/AuthContext.js';
 
 export default function Page() {
   const {
-    user, authLoading, authError,
+    user, authLoading,
     userSignIn, userSignUp,
     googleSignIn,
     userSignOut
   } = UserAuth();
   const router = useRouter();
+
+  const [authErrorMessage, setAuthErrorMessage] = useState('');
 
   useEffect(() => {
     if (user) {
@@ -33,18 +35,20 @@ export default function Page() {
     });
   };
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-    try {
-      const result = userSignIn(formData.email, formData.password);
-      console.log({ result })
-      if (result) {
-        router.push('../');
-        console.log('pushed from login to page');
-      }
+    const result = await userSignIn(formData.email, formData.password);
+
+    if (result.user) {
+      router.push('../');
+      console.log('Successful login.');
     }
-    catch {
-      console.log(e);
+    else {
+      setFormData({
+        ...formData,
+        password: '',
+      });
+      setAuthErrorMessage(result.error);
     }
   };
 
@@ -53,21 +57,37 @@ export default function Page() {
   };
 
   const handleRedirectMarketing = () => {
-    router.push('../marketing2');
+    router.push('../marketing');
   };
 
   if (authLoading) {
-    return <div><span>Loading...</span></div>;
+    return (
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          height: '100vh',
+          width: '100vw'
+        }}
+      >
+        <Image src="/assets/loading.gif" alt="Logo" width={50} height={50} priority draggable='false' unselectable='true' />
+      </div>
+    );
   }
+
+
 
   return (
     <div className='auth-page'>
-
       <div className='auth-container'>
         <div className='auth-content'>
-          <Image src="/journally-logo.png" alt="Logo" width={75} height={75} priority={false} />
+          <Image src="/journally-logo.png" alt="Logo" width={75} height={75} priority />
           <h1 className='auth-title'>Login</h1>
           <span className='auth-description'>Sign into your account</span>
+
+          {authErrorMessage && <span className="auth-error-message">{authErrorMessage}</span>}
+
           <form className='auth-form' onSubmit={handleLogin}>
             <input
               className='auth-input'
@@ -104,8 +124,7 @@ export default function Page() {
             <button className='auth-redirect-button' onClick={handleSignUpButtonClick}>Register new account</button>
           </div>
 
-          {/* TODO: DELETE TEMPORARY BUTTON */}
-          <button
+          {/* <button
             onClick={handleRedirectMarketing}
             className='auth-button'
             style={{
@@ -114,8 +133,8 @@ export default function Page() {
               fontSize: '1rem'
             }}
           >
-            Marketing2
-          </button>
+            Marketing
+          </button> */}
 
         </div >
       </div>
