@@ -44,14 +44,14 @@ export async function readGroupedDp (userId: string) {
       GROUP BY
          name;
     `;
-    console.log(`api data looks like ${data.rows}!`);
+    // console.log(`api data looks like ${data.rows}!`);
 
     const grouped = data.rows.reduce((acc, { name, data }) => {
       acc[name] = data; // Assigning the data array to the key of the name
       return acc; // Returning the accumulator for the next iteration
     }, {});
     
-    console.log(JSON.stringify(grouped));
+    // console.log(JSON.stringify(grouped));
     return grouped; 
 
     } catch (error) {
