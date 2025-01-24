@@ -29,13 +29,11 @@ body {
     height: 8vh;
     justify-content: space-between;
     background-color: rgba(58, 110, 255, 1);
-    /* border-bottom: rgba(255, 255, 255, 0.1) solid; */
 }
 
 .logo {
     display: flex;
-    padding: 15px 50px;
-    padding: 10px 0 0 15px;
+    padding: 10px 0 10px 15px;
     margin: 0;
 }
 

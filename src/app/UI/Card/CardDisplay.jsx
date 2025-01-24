@@ -4,12 +4,12 @@ import '../../../styles/CardDisplay.css';
 import Image from 'next/image';
 
 
-export default function Card({ title, icons, content }) {
+export default function Card({ title, icons, content , width}) {
   // title: string
   // icons: [<Image/>]
   // content: <div>
 	return (
-		<div className='card-container'>
+		<div className='card-container' style={{"width": width}}>
 				<div className='card-content'>
 				
           <div className='card-header'>

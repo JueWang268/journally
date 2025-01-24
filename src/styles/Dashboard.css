@@ -1,6 +1,12 @@
+body {
+    /* border: red solid 1px; */
+    margin: 0;
+    /* height: 90vh; */
+}
+
 .app {
     background: linear-gradient(180deg, #3A6EFF 0%, #CDD791 50%, #C5C8FF 100%);
-    font-family: var(--inter-font);
+    font-family: --apple-system, var(--inter-font);
 }
 
 .icon {
@@ -22,7 +28,7 @@
 
 .top-bar {
     display: flex;
-    height: 100px;
+    height: 8vh;
     justify-content: space-between;
     border-bottom: rgba(255, 255, 255, 0.3) solid;
 }
@@ -41,7 +47,6 @@
 
 .nav-bar {
     display: flex;
-    height: 100px;
     width: 15%;
     padding-right: 0;
     margin: auto 0 auto auto;
@@ -64,8 +69,8 @@
     display: grid;
     grid-template-columns: 1fr 3fr;
     gap: 2rem;
-    padding: 2rem;
-    height: 100%;
+    padding: 2rem 2rem 0;
+    height: calc(95vh - 8vh);
 }
 
 .placeholder-box {
@@ -85,6 +90,7 @@
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
+    /* border: red solid 1px; */
 }
 
 .accordion-heading {
@@ -111,9 +117,93 @@
 .contents-container{
     display: flex;
     flex-direction: column;
+    margin: 0 0 2em;
+    justify-content: space-between;
+    gap: 1em;
+    /* border: red solid 1px; */
 }
 
-.progress-card {
-    margin: 20px auto auto 20px;
-    height: 100%;
+#left-card{
+    margin-bottom: 2em;
+    overflow: hidden;
 }
+
+.flex-container{
+    display: flex;
+    margin: auto auto 0;
+    gap: 1em;
+    /* border: red solid 1px; */
+}
+
+/* .progress-card-wrapper{
+    margin: 2vh auto;
+}
+
+.journal-card-wrapper{
+    margin: 2vh auto;
+} */
+
+.progress-container {
+    display: flex;
+    justify-content: space-between;
+    margin: 2vh auto;
+    padding: 2vh 1vw;
+    gap: 1em;
+}
+
+.progress-container-center{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.progress-goal {
+    display:inline-flex;
+    gap: 1em;
+    /* align-items: center; */
+}
+
+.goals-list{
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+    height: 20vh;
+    width: 10vw;
+    overflow: scroll;
+}
+
+
+.progress-block {
+    width: 1.4em;
+    height: 1.4em;
+    border-radius: 10%;
+    background-color: #C5C8FF;
+    margin-left: 0;
+    text-align: center;
+}
+
+.progress-name{
+    width: 6em;
+}
+
+.card-dates{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 20vh;
+    row-gap: 1em;
+}
+.date-title{
+    font-size: 15px;
+    color: #706E6E;
+    font-weight: normal;
+    margin: 0;
+}
+.date{
+    font-size: 15px;
+    margin: 0;
+}
+/* 
+div {
+    border: red dashed 1px;
+} */

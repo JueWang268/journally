@@ -1,7 +1,8 @@
 .card-container{
     background-color: #FFFFFF;
-    width: 848px;
-    height: 371px;
+    width: 68vw;
+    margin: 2vh auto;
+    height: 30vh;
     padding: 30px;
     border-radius: 20px;
 }
@@ -65,10 +66,6 @@
 .date{
     font-size: 21px;
     margin: 0;
-}
-
-.goal-container{
-    
 }
 
 .graph-container{
