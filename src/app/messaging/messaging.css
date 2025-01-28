@@ -1,0 +1,28 @@
+.container {
+  display: flex;
+  height: 100vh;
+  justify-content: center;
+  align-items: center;
+  background-color: #f3f4f6;
+}
+
+.notification-button {
+  padding: 16px 32px;
+  font-size: 18px;
+  font-weight: bold;
+  color: white;
+  background-color: #1d4ed8;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+.notification-button:hover {
+  background-color: #2563eb;
+}
+
+.notification-button:active {
+  transform: scale(0.95);
+}
