@@ -34,7 +34,7 @@
     ".next/types/**/*.ts",
     "**/*.ts",
     "**/*.tsx"
-  ],
+, "src/app/api/tokensAPI"  ],
   "exclude": [
     "node_modules"
   ]

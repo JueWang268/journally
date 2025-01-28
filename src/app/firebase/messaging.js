@@ -1,22 +1,24 @@
 import { messaging, firebaseMessagingUrl } from "./firebase";
 import { getToken, onMessage } from 'firebase/messaging';
-import { upsertToken } from "../api/tokensAPI";
+import { useTokens } from '../hooks/useTokens';
 
 const VAPID_KEY = process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_VAPID_KEY;
 
-async function requestNotificationsPermissions(uid) {
+const { saveToken } = useTokens();
+
+async function requestNotificationsPermissions(user_id) {
   console.log('Requesting notifications permission...');
   const permission = await Notification.requestPermission();
 
   if (permission === 'granted') {
     console.log('Notification permission granted.');
-    await saveMessagingDeviceToken(uid);
+    await saveMessagingDeviceToken(user_id);
   } else {
     console.log('Unable to get permission to notify.');
   }
 }
 
-export async function saveMessagingDeviceToken(uid) {
+export async function saveMessagingDeviceToken(user_id) {
   console.log('running saveMessagingDeviceToken');
   try {
     const msg = await messaging();
@@ -27,13 +29,11 @@ export async function saveMessagingDeviceToken(uid) {
     });
     if (fcmToken) {
       console.log('Got FCM device token:', fcmToken);
-      const result = await upsertToken(uid, fcmToken); // Save device token in DB
-      if (result.success) {
-        console.log('upsert success')
-        console.log('inserted token\n', fcmToken, '\ninto user_id', uid);
-      } else {
-        console.log('upsert failed')
-      }
+      await saveToken(user_id, fcmToken); // Save device token in DB
+      console.log('inserted token');
+      console.log(fcmToken);
+      console.log('into user_id');
+      console.log(user_id);
       // firebase-messaging-sw.js will receive the message if app is in background
       onMessage(msg, (message) => {
         console.log(
@@ -44,7 +44,7 @@ export async function saveMessagingDeviceToken(uid) {
       });
     } else {
       console.log('need to request notification permissions')
-      requestNotificationsPermissions(uid);
+      requestNotificationsPermissions(user_id);
     }
   } catch (error) {
     console.error('Unable to get messaging token.', error);

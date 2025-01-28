@@ -16,7 +16,7 @@ export default function Page() {
   const USER_ID = user?.uid;
 
   const handleTestNotification = () => {
-    // Temporary fix for redirect to login if use router
+    // FIXME: Temporary fix for redirect to login if use router
     if (USER_ID) {
       saveMessagingDeviceToken(USER_ID);
     }
