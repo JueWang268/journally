@@ -1,7 +1,8 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "./messaging.css";
 import { UserAuth } from '../context/AuthContext.js';
+import { useRouter } from 'next/navigation';
 import { saveMessagingDeviceToken } from '../firebase/messaging'
 
 export default function Page() {
@@ -15,7 +16,10 @@ export default function Page() {
   const USER_ID = user?.uid;
 
   const handleTestNotification = () => {
-    saveMessagingDeviceToken(USER_ID);
+    // Temporary fix for redirect to login if use router
+    if (USER_ID) {
+      saveMessagingDeviceToken(USER_ID);
+    }
     // TODO: add send notification function
   };
 
