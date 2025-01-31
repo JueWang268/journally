@@ -12,14 +12,3 @@
 
 ## Docs
 
-### Goals
-A user's goals are stored as a list of objects in the following format
-
-```
-[
-    {
-        id: string,
-        
-    }
-]
-```
