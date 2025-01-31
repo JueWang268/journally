@@ -114,6 +114,60 @@ body {
     margin: 1rem 1rem 0rem 1.25rem;
 }
 
+/* recent activity styles */ 
+.graph-container{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+    width: 90%;
+}
+.top-graph{
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    padding-bottom: 7px;
+    padding-bottom: 0px;
+}
+.checkbox-container{
+    display: flex;
+    justify-content: space-between;
+    flex-direction: row;
+    align-items: flex-end;
+    padding-left: 33px;
+    height: 2em;
+    width: 100%;
+    max-width: 80%;
+    /* border: 1px red solid; */
+}
+.progress-block-recent-activities {
+    height: 2em;
+    width: 2em;
+    border-radius: 10%;
+
+    align-content: center;
+    text-align: center;
+    font-size: 16pt;
+}
+.y-axis{
+    border-left: 2px solid black;
+}
+.bottom-graph{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    border-top: 2px solid black;
+    padding-top: 10px;
+    padding-left: 33px;
+    max-width: 80%;
+}
+.day {
+    text-align: center;
+    width: 2.5em;
+    font-size: 16px;
+}
+
+
 .contents-container{
     display: flex;
     flex-direction: column;
@@ -128,18 +182,21 @@ body {
     overflow: hidden;
 }
 
-.flex-container{
+
+.bottom-flex-container{
     display: flex;
+    width: 100%;
     margin: auto auto 0;
     gap: 1em;
     /* border: red solid 1px; */
 }
 
-/* .progress-card-wrapper{
-    margin: 2vh auto;
+.progress-card{
+    flex: 3;
+    /* margin: 2vh auto; */
 }
 
-.journal-card-wrapper{
+/* .journal-card-wrapper{
     margin: 2vh auto;
 } */
 
@@ -149,6 +206,10 @@ body {
     margin: 2vh auto;
     padding: 2vh 1vw;
     gap: 1em;
+}
+
+.new-entry-card{
+    flex: 1;
 }
 
 .progress-container-center{
@@ -190,9 +251,16 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    height: 20vh;
+    height: 5vh;
     row-gap: 1em;
 }
+
+.horizontal{
+    gap: 3em;
+    flex-direction: row;
+    margin-bottom: 0;
+}
+
 .date-title{
     font-size: 15px;
     color: #706E6E;

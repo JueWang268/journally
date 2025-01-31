@@ -4,13 +4,14 @@ import '../../styles/Dashboard.css';
 import TopBar from '../UI/TopBar.jsx';
 import '../../styles/BgTopBar.css';
 import Card from "../UI/Card/CardDisplay.jsx";
-import RecentActivity from '../components/RecentActivityCard.jsx';
+import RecentActivity from './RecentActivityCard.jsx';
 import Image from 'next/image';
 import Calendar from '../UI/Calendar/Calendar';
 import FriendsList from '../UI/FriendsList/FriendsList';
 import dayjs from "dayjs";
 import useGoals from "../hooks/useGoals";
 import useDatapoints from "../hooks/useDataPoints";
+import dayAbbreviationToNumber from "../utils/daysNums";
 
 import { UserAuth } from '../context/AuthContext.js';
 import { useRouter } from 'next/navigation';
@@ -95,6 +96,11 @@ export default function Page() {
   
   const colorPalette = ["#C8EFB8","#E1E2FF","#F2C595"];
   const friends = ['Alice', 'Bob', 'Charlie', 'David', 'Eve'];
+
+  const daysOfWeek = Array.from({ length: 7 }, (_, index) =>
+    selectedDate?.subtract(6 - index, 'day')
+  );
+
   const goalsIn = (cat) => {
     return goals.filter(g => g.category === cat);
   }
@@ -178,12 +184,70 @@ export default function Page() {
         </div>
 
         <div className='contents-container'>
-          <RecentActivity />
+          <Card title="Recent Acvitities" 
+          icons={[
+            [
+              <Image 
+                className='dropdown-icon' style={{cursor:"pointer"}} 
+                src="/assets/icons/dropdown-icon.svg" 
+                alt="dropdown-icon" width="54" height="54"
+              />,
+              <Image className='menu-icon' style={{cursor:"pointer"}}
+                src="/assets/icons/menu-icon.svg" alt="menu-icon" width="40" height="40"/>
+            ]
+          ]} 
+          content={
+            <div className='graph-container'>
+            <div className='card-dates horizontal'>
+              <div className='last-week'>
+                <h2 className='date-title'>From</h2>
+                <p className='date'>
+                  {selectedDate.subtract(1, "week").format("ddd MMM DD")}
+                </p>
+              </div>
+                
+              <div className='yesterday'>
+                <h2 className='date-title'>To</h2>
+                <p className='date'>
+                  {selectedDate.format("ddd MMM DD")}
+                </p>
+              </div>
+            </div>
+            
+            <div style={{display: "flex", height: 100, paddingBottom: "5px"}}>
+              <div>
+                <Gauge value={20} height={100} width={100} margin="auto" />
+              </div>
+              <p style={{alignContent: "center"}}>Goal Completed</p>
+            </div>
+            <div>
+              <div className='top-graph'>
+                <div className='y-axis'></div>
+                <div className='checkbox-container'>
+                  {daysOfWeek.map((day, index) => (
+                    <div key={index}
+                    style={{backgroundColor: colorPalette[day.diff('1980-01-01', 'day') % 3]}}
+                    className="progress-block-recent-activities">
+                      {index % 2 === 1? "✔️": ""}
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <div className='bottom-graph'>
+                {daysOfWeek.map((day, index) => (
+                  <div key={index} className="day">{day.format("ddd")}</div>
+                ))}
+              </div>
+            </div>
+          </div>
+          }
+          
+          />
 
           <div className="bottom-flex-container">
               <div className = "progress-card">
                 <Card
-                  title={`progress on ${selectedGoal?.category}`}
+                  title={`Progress on ${selectedGoal?.category}`}
                   icons={[
                     <Image className='menu-icon' style={{cursor:"pointer"}}
                     src="/assets/icons/menu-icon.svg" alt="menu-icon" width="40" height="40"/>
@@ -210,7 +274,7 @@ export default function Page() {
                         </div>
                       </div>
                       <div className='progress-container-center'>
-                        <Gauge className='progress-chart'
+                        <Gauge
                         value={
                           datapoints[selectedGoal?.name]?.reduce(
                             (accumulator, currentItem) => {
@@ -276,7 +340,7 @@ export default function Page() {
                   ]}
                   content={
                     <div style={{height: "30vh", 
-                      width: "20vw",
+                      width: "200px",
                       wordWrap: "break-word",
                       overflow:"scroll", 
                       fontFamily:"monospace"}}>
