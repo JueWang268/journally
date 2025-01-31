@@ -1,6 +1,8 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 import { getAuth } from 'firebase/auth'
+import { getMessaging, isSupported } from "firebase/messaging";
+
 // import { getAnalytics } from "firebase/analytics";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -20,7 +22,17 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 // const analytics = getAnalytics(app);
+const auth = getAuth(app);
+// const messaging = getMessaging(app);
 
-const auth = getAuth(app)
+export function firebaseMessagingUrl() {
+  let url = '/firebase-messaging-sw.js';
+  Object.entries(firebaseConfig).forEach(([key, value], index) => {
+    url += `${index === 0 ? '?' : '&'}${key}=${value}`;
+  });
+  return url;
+}
 
-export { app, auth }
+const messaging = async () => await isSupported() && getMessaging(app);
+
+export { app, auth, messaging }
