@@ -119,6 +119,18 @@
 .content{
     flex: 1;
     display: flex;
+    flex-direction: column;
+}
+
+.button-container{
+    display: flex;
+    justify-content: end;
+    height: 6%;
+    margin-right: 10rem;
+}
+
+.update-button{
+    width: 20%;
 }
 
 
