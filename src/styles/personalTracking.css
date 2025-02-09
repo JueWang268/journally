@@ -69,9 +69,29 @@
 }
 
 .right-side {
+    display: flex;
+    /* padding: 6rem; */
+}
+
+.graph-container {
+    display: flex;
+    flex: 1;
+    max-width: 100%;
+}
+
+
+.graph{
+    display: flex;
+    flex: 1;
+    /* justify-content: center;
+    height: 90%; */
+}
+
+.graph-content{
     flex: 1;
     display: flex;
-    padding: 6rem;
+    flex-direction: column;
+    /* background-color: #3A6EFF; */
 }
 
 .graph-box {
@@ -83,8 +103,8 @@
     padding: 24px;
     background-color: #f9f9f9;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    gap: 2rem;
 }
+
 
 .left-side {
     display: grid;

@@ -81,16 +81,22 @@ export default function PersonalTrackingPage() {
         </div>
 
         <div className='right-side'>
-          <div className='graph-box'>
-            <div className="header">
-              <p>Daily Data</p>
-              <Image src="/assets/plusButton.svg" alt="icon" width="38" height="37"/>
-              <Image src="/assets/chevron-down.svg" alt="icon" width="54" height="54"/>
-              <Image src="/assets/menuButton.svg" alt="icon" width="38" height="37"/>
+          <div className='graph-container'>
+            <div className='graph-box'>
+              <div className='graph-content'>
+                <div className="header">
+                  <p>Daily Data</p>
+                  <Image src="/assets/plusButton.svg" alt="icon" width="38" height="37"/>
+                  <Image src="/assets/chevron-down.svg" alt="icon" width="54" height="54"/>
+                  <Image src="/assets/menuButton.svg" alt="icon" width="38" height="37"/>
+                </div>
+                <div className='graph'>
+                  <DataPointsProvider userId={userId}>
+                    <DataPointGraph />
+                  </DataPointsProvider>
+                </div>
+              </div>
             </div>
-            <DataPointsProvider userId={userId}>
-              <DataPointGraph />
-            </DataPointsProvider>
           </div>
         </div>
       </div>

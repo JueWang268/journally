@@ -124,7 +124,7 @@
 
 .button-container{
     display: flex;
-    justify-content: end;
+    justify-content: flex-end;
     height: 6%;
     margin-right: 10rem;
 }

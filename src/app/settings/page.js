@@ -155,6 +155,22 @@ export default function SettingsPage() {
                         </div>
                     </div>
                 );
+            case "Privacy":
+                return (
+                    <h1>Privacy</h1>
+                );
+            case "Appearance":
+                return (
+                    <h1>Appearance</h1>
+                );
+            case "Preferences":
+                return (
+                    <h1>Preferences</h1>
+                );
+            case "Subscription":
+                return (
+                    <h1>Subscription</h1>
+                );
             default:
                 return <div>Select a tab to view its settings</div>;
         }
