@@ -1,6 +1,12 @@
+body {
+    /* border: red solid 1px; */
+    margin: 0;
+    /* height: 90vh; */
+}
+
 .app {
     background: linear-gradient(180deg, #3A6EFF 0%, #CDD791 50%, #C5C8FF 100%);
-    font-family: var(--inter-font);
+    font-family: --apple-system, var(--inter-font);
 }
 
 .icon {
@@ -41,7 +47,6 @@
 
 .nav-bar {
     display: flex;
-    height: 100px;
     width: 15%;
     padding-right: 0;
     margin: auto 0 auto auto;
@@ -65,13 +70,15 @@
     grid-template-columns: 1fr 3fr;
     gap: 2rem;
     padding: 2rem;
-    height: 100%;
+    height: calc(95vh - 8vh);
 }
 
 .right-side {
     display: flex;
-    /* padding: 6rem; */
+    flex-direction: column;
+    flex: 1;
 }
+
 
 .graph-container {
     display: flex;
@@ -80,12 +87,13 @@
 }
 
 
-.graph{
+.graph {
     display: flex;
-    flex: 1;
-    /* justify-content: center;
-    height: 90%; */
+    height: 70vh;
+    max-height: 100%;
+    width: 100%;
 }
+
 
 .graph-content{
     flex: 1;
@@ -107,10 +115,12 @@
 
 
 .left-side {
+    flex: 1;
     display: grid;
     grid-template-rows: 1fr 1fr 1fr;
-    gap: 2rem;
+    gap: 2em;
 }
+
 
 .content-box {
     border: 1px solid #ddd;
