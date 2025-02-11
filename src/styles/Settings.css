@@ -68,9 +68,7 @@ body {
 .home-container {
     flex: 1;
     display: flex;
-    padding: 2rem;
-    padding-right: 5rem;
-    padding-left: 5rem;
+    padding: 2rem 5rem;
     height: 100%;
 }
 

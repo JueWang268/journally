@@ -49,18 +49,20 @@ export default function PersonalTrackingPage() {
             <div className="header">
               <p>My Week</p>
             </div>
-            <h4 className='calendar-selected-date'>{currentDate}</h4>
-            <div className="calendar-days">
-              {weekDays.map((day, index) => (
-                <div
-                  key={index}
-                  className={`calendar-day ${selectedDate.isSame(day, 'day') ? 'selected' : ''}`}
-                  onClick={() => setSelectedDate(day)}
-                >
-                  <p>{day.format('ddd')}</p>
-                  <p>{day.format('MM/DD')}</p>
-                </div>
-              ))}
+            <div className='calendar-content'>
+              <h4 className='calendar-selected-date'>{currentDate}</h4>
+              <div className="calendar-days">
+                {weekDays.map((day, index) => (
+                  <div
+                    key={index}
+                    className={`calendar-day ${selectedDate.isSame(day, 'day') ? 'selected' : ''}`}
+                    onClick={() => setSelectedDate(day)}
+                  >
+                    <p>{day.format('ddd')}</p>
+                    <p>{day.format('MM/DD')}</p>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
           
