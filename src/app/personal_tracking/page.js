@@ -49,18 +49,20 @@ export default function PersonalTrackingPage() {
             <div className="header">
               <p>My Week</p>
             </div>
-            <h4 className='calendar-selected-date'>{currentDate}</h4>
-            <div className="calendar-days">
-              {weekDays.map((day, index) => (
-                <div
-                  key={index}
-                  className={`calendar-day ${selectedDate.isSame(day, 'day') ? 'selected' : ''}`}
-                  onClick={() => setSelectedDate(day)}
-                >
-                  <p>{day.format('ddd')}</p>
-                  <p>{day.format('MM/DD')}</p>
-                </div>
-              ))}
+            <div className='calendar-content'>
+              <h4 className='calendar-selected-date'>{currentDate}</h4>
+              <div className="calendar-days">
+                {weekDays.map((day, index) => (
+                  <div
+                    key={index}
+                    className={`calendar-day ${selectedDate.isSame(day, 'day') ? 'selected' : ''}`}
+                    onClick={() => setSelectedDate(day)}
+                  >
+                    <p>{day.format('ddd')}</p>
+                    <p>{day.format('MM/DD')}</p>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
           
@@ -81,16 +83,22 @@ export default function PersonalTrackingPage() {
         </div>
 
         <div className='right-side'>
-          <div className='graph-box'>
-            <div className="header">
-              <p>Daily Data</p>
-              <Image src="/assets/plusButton.svg" alt="icon" width="38" height="37"/>
-              <Image src="/assets/chevron-down.svg" alt="icon" width="54" height="54"/>
-              <Image src="/assets/menuButton.svg" alt="icon" width="38" height="37"/>
+          <div className='graph-container'>
+            <div className='graph-box'>
+              <div className='graph-content'>
+                <div className="header">
+                  <p>Daily Data</p>
+                  <Image src="/assets/plusButton.svg" alt="icon" width="38" height="37"/>
+                  <Image src="/assets/chevron-down.svg" alt="icon" width="54" height="54"/>
+                  <Image src="/assets/menuButton.svg" alt="icon" width="38" height="37"/>
+                </div>
+                <div className='graph'>
+                  <DataPointsProvider userId={userId}>
+                    <DataPointGraph />
+                  </DataPointsProvider>
+                </div>
+              </div>
             </div>
-            <DataPointsProvider userId={userId}>
-              <DataPointGraph />
-            </DataPointsProvider>
           </div>
         </div>
       </div>

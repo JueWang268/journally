@@ -1,6 +1,12 @@
+body {
+    /* border: red solid 1px; */
+    margin: 0;
+    /* height: 90vh; */
+}
+
 .app {
     background: linear-gradient(180deg, #3A6EFF 0%, #CDD791 50%, #C5C8FF 100%);
-    /* gap: 2rem; */
+    font-family: --apple-system, var(--inter-font);
 }
 
 .icon {
@@ -41,7 +47,6 @@
 
 .nav-bar {
     display: flex;
-    height: 100px;
     width: 15%;
     padding-right: 0;
     margin: auto 0 auto auto;
@@ -63,9 +68,7 @@
 .home-container {
     flex: 1;
     display: flex;
-    padding: 2rem;
-    padding-right: 5rem;
-    padding-left: 5rem;
+    padding: 2rem 5rem;
     height: 100%;
 }
 
@@ -124,7 +127,7 @@
 
 .button-container{
     display: flex;
-    justify-content: end;
+    justify-content: flex-end;
     height: 6%;
     margin-right: 10rem;
 }

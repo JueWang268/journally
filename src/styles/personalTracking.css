@@ -1,6 +1,12 @@
+body {
+    /* border: red solid 1px; */
+    margin: 0;
+    /* height: 90vh; */
+}
+
 .app {
     background: linear-gradient(180deg, #3A6EFF 0%, #CDD791 50%, #C5C8FF 100%);
-    font-family: var(--inter-font);
+    font-family: --apple-system, var(--inter-font);
 }
 
 .icon {
@@ -41,7 +47,6 @@
 
 .nav-bar {
     display: flex;
-    height: 100px;
     width: 15%;
     padding-right: 0;
     margin: auto 0 auto auto;
@@ -64,14 +69,42 @@
     display: grid;
     grid-template-columns: 1fr 3fr;
     gap: 2rem;
-    padding: 2rem;
-    height: 100%;
+    /* padding: 2rem 2rem; */
+    padding: 2% 2%;
+    height: calc(95vh - 8vh);
 }
 
 .right-side {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+
+.graph-container {
+    display: flex;
+    flex: 1;
+    max-width: 100%;
+    /* background-color: #3A6EFF; */
+    /* padding: 6%; */
+}
+
+
+.graph {
     flex: 1;
     display: flex;
-    padding: 6rem;
+    align-items: center;
+    /* height: 70vh;
+    max-height: 100%;
+    width: 100%; */
+}
+
+
+.graph-content{
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    /* background-color: #3A6EFF; */
 }
 
 .graph-box {
@@ -83,14 +116,16 @@
     padding: 24px;
     background-color: #f9f9f9;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    gap: 2rem;
 }
 
+
 .left-side {
+    flex: 1;
     display: grid;
     grid-template-rows: 1fr 1fr 1fr;
-    gap: 2rem;
+    gap: 2em;
 }
+
 
 .content-box {
     border: 1px solid #ddd;
@@ -100,7 +135,7 @@
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     display: flex;
     flex-direction: column;
-    align-items: center;
+    /* align-items: center; */
     gap: 1rem;
 }
 
@@ -119,6 +154,15 @@
     font-size: 2rem;
     font-weight: 500;
     width: 100%;
+}
+
+.calendar-content{
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    flex-wrap: wrap;
+    /* background-color: green; */
 }
 
 .calendar-days {
@@ -160,7 +204,37 @@
 }
 
 .calendar-selected-date {
+    display: flex;
+    justify-content: center;
     font-size: 1.25rem;
     font-weight: 500;
-    margin: 1rem 1rem 0rem 1.25rem;
+    /* margin: 1rem 1rem 0rem 1.25rem; */
+    margin-top: 0rem;
+}
+
+@media screen and (max-width: 1746px){
+    .header p {
+        font-size: 1.8rem;
+    }
+    
+    .calendar-day p{
+        font-size: 0.8rem;
+    }
+
+    .calendar-selected-date {
+        font-size: 1.05rem;
+    }
+}
+@media screen and (max-width: 1651px){
+    .header p {
+        font-size: 1.5rem;
+    }
+    
+    .calendar-day p{
+        font-size: 0.5rem;
+    }
+
+    .calendar-selected-date {
+        font-size: 0.75rem;
+    }
 }
