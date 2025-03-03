@@ -5,7 +5,6 @@ import { ISODate } from "../utils/ISODate";
 export default function useDatapoints(userId) {
   
   const [datapoints, setDatapoints] = useState({});
-  const [selectedDp, setSelectedDp] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 

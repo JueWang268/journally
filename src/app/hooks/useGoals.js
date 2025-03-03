@@ -30,23 +30,26 @@ export default function useGoals(userId) {
   fetchGoals(userId);
   }, [userId]);
     
-  const setNewGoal = async (userId, name, category, freq, value) => {
+  const setNewGoal = async (
+    userId, name, category, freq, value,
+    start_date=null, end_date=null, unit=null) => {
     try {
-      const newGoal = await createGoal(userId, name, category, value, freq);
+      const newGoal = await createGoal(userId, name, category, 
+        value, freq, start_date, end_date, unit);
       const {"user_id": excluded, ...goalState} = newGoal;
       setGoals(
         [...goals, goalState]
       );
       // console.log(newGoal);
-      
     }
     catch (err) {
       setError(err);
     }
   }
 
-  const editGoal = async (id, newName, newCat, newVal, newFreq) => {
-    const updatedGoal = await updateGoal(id, newName, newCat, newVal, newFreq);
+  const editGoal = async (id, newName, newCat, 
+    newVal, newFreq, new_start=null, new_end=null, nunit=null) => {
+    const updatedGoal = await updateGoal(id, newName, newCat, newVal, newFreq, new_start, new_end, nunit);
     setGoals(
       oldGoals => {
         const updatedGoals = oldGoals.map(
@@ -54,10 +57,11 @@ export default function useGoals(userId) {
             (g.id === id) ? 
           {"id": id, "category":newCat, 
             "name":newName, "value":newVal, 
-            "frequency": newFreq, "modified_at": (new Date()).toISOString()} : g
+            "frequency": newFreq, "modified_at": (new Date()).toISOString(),
+            'start_date': new_start, 'end_date': new_end, 'unit':nunit} : g
         ); 
+        updatedGoals.sort((a,b) => new Date(a.modified_at) - new Date(b.modified_at));
         return updatedGoals;
-        // updatedGoals.sort((a,b) => new Date(a.modified_at) - new Date(b.modified_at));
       }
     );
     return updatedGoal;

@@ -25,26 +25,62 @@ export async function readGoals(userId: string): Promise<Goal[]> {
 
 
 export async function createGoal(
-    userId: string, 
-    name: string, 
-    category: string,
-    value: number, 
-    frequency: number) {
-    try {
-      const data = await sql<Goal>`
-        INSERT INTO goals (id, category, name, user_id, value, frequency)
-        VALUES (gen_random_uuid(), ${category}, ${name}, ${userId}, ${value}, ${frequency})
-        RETURNING *
-      `;
-      return data.rows[0];
-    } catch (error) {
-        console.error('Error creating and inserting goal:', error);
-        throw new Error(`Failed to insert goal with "${category}, ${name}, ${userId}, ${value}, ${frequency}".`);
-    }
+  userId: string,
+  name: string,
+  category: string,
+  value: number,
+  frequency: number,
+  start_date?: Date | null,
+  end_date?: Date | null,
+  unit?: string | null
+) {
+  try {
+    // Construct the SQL query dynamically based on 
+    // whether start_date and end_date are provided
+    const query = sql<Goal>`
+      INSERT INTO goals (
+        id,
+        category,
+        name,
+        user_id,
+        value,
+        frequency,
+        ${start_date !== undefined && start_date !== null ? `start_date` : ``},
+        ${end_date !== undefined && end_date !== null ? `end_date` : ``},
+        ${unit !== undefined && unit !== null ? `unit` : ``}
+      )
+      VALUES (
+        gen_random_uuid(),
+        ${category},
+        ${name},
+        ${userId},
+        ${value},
+        ${frequency},
+        ${start_date !== undefined && start_date !== null ? `${start_date}` : ``},
+        ${end_date !== undefined && end_date !== null ? `${end_date}` : ``},
+        ${unit !== undefined && unit !== null ? `${unit}` : ``}
+      )
+      RETURNING *
+    `;
+
+    const data = await query;
+    return data.rows[0];
+  } catch (error) {
+    console.error('Error creating and inserting goal:', error);
+    throw new Error(`Failed to insert goal with "
+      ${category}, ${name}, ${userId}, ${value}, ${frequency}".`);
+  }
 }
 
 export async function updateGoal(
-  id: string, newName: string, newCat:string, newVal: number, newFreq: number
+  id: string, 
+  newName: string, 
+  newCat:string, 
+  newVal: number,
+  newFreq: number,
+  newStart?: Date | null,
+  newEnd? : Date | null,
+  nunit? : string | null
 ) 
   {
   try {
@@ -55,7 +91,10 @@ export async function updateGoal(
           category =${newCat},
           value = ${newVal}, 
           frequency = ${newFreq},
-          modified_at = ${(new Date()).toISOString()}
+          modified_at = ${(new Date()).toISOString()},
+          ${newStart !== undefined && newStart !== null ? `start_date = ${newStart}` : ``},
+          ${newEnd !== undefined && newEnd !== null ? `end_date = ${newEnd}` : ``},
+          ${nunit !== undefined && nunit !== null ? `unit = ${nunit}` : ``}
         WHERE id = ${id}
         RETURNING *;
         `;

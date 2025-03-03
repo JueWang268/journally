@@ -43,7 +43,6 @@ export default function PersonalTrackingPage() {
 
       <div className='home-grid'>
         <div className='left-side'>
-
           {/* calendar */}
           <div className='content-box'>
             <div className="header">
