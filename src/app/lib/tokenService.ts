@@ -1,5 +1,4 @@
 import { sql } from "@vercel/postgres";
-import { Tokens } from "./definitions";
 
 export async function upsertToken(user_id: string, token: string) {
   try {
@@ -26,5 +25,22 @@ export async function upsertToken(user_id: string, token: string) {
   } catch (error) {
     console.error("Error upserting token:", error);
     return { success: false, message: "Failed to upsert token" };
+  }
+}
+
+export async function retrieveToken(user_id: string) {
+  try {
+    const res = await sql`
+      SELECT token FROM tokens WHERE user_id = ${user_id}
+    `;
+
+    if (res.rows.length > 0) {
+      return { success: true, token: res.rows[0].token };
+    } else {
+      return { success: false, message: "Token not found" };
+    }
+  } catch (error) {
+    console.error("Error retrieving token:", error);
+    return { success: false, message: "Failed to retrieve token" };
   }
 }
