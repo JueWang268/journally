@@ -7,7 +7,7 @@ import { useTokens } from "../hooks/useTokens";
 import TopBar from '../UI/TopBar.jsx';
 import Image from "next/image.js";
 import '../../styles/BgTopBar.css';
-import "./messaging.css"; // Import CSS
+import "./messaging.css";
 
 export default function ChatPage() {
   const {
