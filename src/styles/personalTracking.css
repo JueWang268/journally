@@ -28,7 +28,7 @@ body {
 
 .top-bar {
     display: flex;
-    height: 100px;
+    height: 8vh;
     justify-content: space-between;
     border-bottom: rgba(255, 255, 255, 0.3) solid;
 }
