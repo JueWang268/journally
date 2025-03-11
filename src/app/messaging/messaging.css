@@ -1,28 +1,234 @@
-.container {
-  display: flex;
-  height: 100vh;
-  justify-content: center;
-  align-items: center;
-  background-color: #f3f4f6;
+body {
+  overflow: hidden;
+}
+
+.app {
+  background: linear-gradient(180deg, #3A6EFF 0%, #CDD791 50%, #C5C8FF 100%);
+  font-family: --apple-system, var(--inter-font);
 }
 
 .notification-button {
-  padding: 16px 32px;
-  font-size: 18px;
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background-color: #4a90e2;
+  color: white;
+  padding: 15px 20px;
+  border-radius: 10px;
+  border: none;
+  font-size: 1rem;
+  cursor: pointer;
+  box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+.notification-button:disabled {
+  background-color: gray;
+  cursor: not-allowed;
+}
+
+
+.grid-container {
+  display: grid;
+  grid-template-columns: 1fr 4fr 12fr;
+  height: 100%;
+  padding: 2rem;
+  gap: 15px;
+}
+
+.grid-item {
+  padding: 20px;
+  background-color: rgba(255, 255, 255, 0.2);
+  border-radius: 20px;
+}
+
+.icon-column {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-evenly;
+  padding: 20px 0;
+}
+
+.profile-icon {
+  width: 50px;
+  height: 50px;
+}
+
+.profile-icon:hover {
+  cursor: pointer;
+}
+
+.channel-column {
+  display: block;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  text-align: center;
+}
+
+.friend-groups-image-container {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+}
+
+.friend-groups-image {
+  width: 100%;
+  border-radius: 30px;
+  margin-bottom: 10px;
+  pointer-events: none;
+  user-select: none;
+}
+
+.friend-groups-title {
+  position: absolute;
+  bottom: 10px;
+  left: 15px;
+  color: white;
+  font-size: 1.5rem;
+  font-weight: bold;
+  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+  user-select: none;
+}
+
+.search-bar {
+  width: 80%;
+  padding: 15px;
+  margin: 5px auto;
+  border-radius: 30px;
+  border: none;
+  font-size: 1rem;
+  text-align: left;
+  outline: none;
+  background-color: white;
+  box-shadow: 0px 5px 5px rgba(137, 137, 137, 0.5);
+}
+
+.search-bar:focus {
+  background-color: #f8f8ff;
+}
+
+.channel-list {
+  margin: 30px auto;
+}
+
+.channel-button {
+  width: 75%;
+  padding: 10px 25px;
+  margin: 5px auto;
+  border: none;
+  border-radius: 25px;
+  font-size: 1rem;
+  text-align: left;
+  cursor: pointer;
+  background: white;
+  color: black;
+  box-shadow: 0px 3px 5px rgba(137, 137, 137, 0.5);
+  transition: all 0.2s ease-in-out;
+}
+
+.channel-button:hover {
+  background: #e0e0e0;
+  transform: scale(1.02);
+}
+
+.channel-button:active {
+  background: #d0d0d0;
+  transform: scale(0.98);
+}
+
+
+
+.chat-column {
+  background-color: rgba(255, 255, 255, 0.0);
+  border-radius: 0px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  padding-bottom: 0;
+  margin: 0 10vw 0 0;
+}
+
+.chat-header {
+  text-align: center;
+  font-size: 2rem;
   font-weight: bold;
   color: white;
-  background-color: #1d4ed8;
+}
+
+.chat-messages {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  overflow-y: auto;
+  max-height: 60vh;
+  flex-grow: 1;
+  padding: 20px;
+  border-top: 3px solid rgba(255, 255, 255, 0.1);
+  border-bottom: 3px solid rgba(255, 255, 255, 0.1);
+}
+
+.chat-messages::-webkit-scrollbar {
+  width: 6px;
+}
+
+.chat-messages::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.5);
+  border-radius: 10px;
+}
+
+.message {
+  max-width: 60%;
+  padding: 12px;
+  border-radius: 15px;
+  font-size: 1rem;
+  word-wrap: break-word;
+}
+
+.my-message {
+  align-self: flex-end;
+  background: rgba(255, 255, 255, 0.4);
+  color: black;
+}
+
+.other-message {
+  align-self: flex-start;
+  background: rgba(255, 255, 255, 0.3);
+  color: black;
+}
+
+
+
+.message-input-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 10px;
+}
+
+.message-input {
+  width: 100%;
+  padding: 12px 20px;
+  border-radius: 30px;
   border: none;
-  border-radius: 8px;
+  font-size: 1rem;
+  background: white;
+  box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.send-button {
+  padding: 12px 20px;
+  border: none;
+  border-radius: 30px;
+  background: #4a90e2;
+  color: white;
+  font-size: 1rem;
   cursor: pointer;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  transition: background-color 0.3s, transform 0.2s;
 }
 
-.notification-button:hover {
-  background-color: #2563eb;
-}
-
-.notification-button:active {
-  transform: scale(0.95);
+.send-button:hover {
+  background: #357ac8;
 }
