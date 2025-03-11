@@ -203,13 +203,11 @@ body {
 }
 .quill-editor .ql-container {
     border-radius: 24px;
-    overflow: hidden;
-    /* border: none !important; */
+    border: none !important;
 }
 .quill-editor .ql-toolbar {
     border-radius: 24px;
-    overflow: hidden;
-    /* border: none !important; */
+    border: none !important;
 }
 
 
