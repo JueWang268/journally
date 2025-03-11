@@ -1,6 +1,6 @@
 .home-grid {
     display: grid;
-    grid-template-columns: 1fr 4fr;
+    grid-template-columns: 1fr 5fr;
     gap: 2rem;
     padding: 2rem 2rem 0;
     height: calc(95vh - 8vh);
@@ -8,13 +8,15 @@
 
 .left-container{
     border: 1px solid #f00;
-    
     display: flex;
     flex-direction: column;
-
     gap: 0.5rem;
     justify-content: space-between;
     margin-bottom: 2em;
     overflow: hidden;
 }
 
+.top-flex-container{
+    display: flex;
+    justify-content: space-between;
+}

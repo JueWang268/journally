@@ -203,7 +203,23 @@ export default function Page() {
         </div>
 
         <div className='contents-container'>
-          
+
+          <div className="top-flex-container">
+            {
+              Array.from({ length: 3 }, (_, index) => 
+                <Card
+                  title={"Placeholder"}
+                  icons={[]}
+                  content={
+                    <div>
+                      graph goes here
+                    </div>
+                  }
+
+                />
+              )
+            }
+          </div>
 
           <div className="bottom-flex-container">
               <div className = "progress-card">
@@ -215,7 +231,7 @@ export default function Page() {
                   ]}
                   content={
                   <div>
-                    
+                  * GRAPH GOES HERE*
                   </div>
                   }
 
