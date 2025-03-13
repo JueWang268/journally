@@ -26,6 +26,9 @@
     "paths": {
       "@/fonts": [
         "./src/styles/fonts"
+      ],
+      "@/serviceAccountKey.json": [
+        "./serviceAccountkey.json"
       ]
     }
   },
@@ -33,8 +36,9 @@
     "next-env.d.ts",
     ".next/types/**/*.ts",
     "**/*.ts",
-    "**/*.tsx"
-, "src/app/api/tokensAPI"  ],
+    "**/*.tsx",
+    "src/app/api/tokensAPI"
+  ],
   "exclude": [
     "node_modules"
   ]

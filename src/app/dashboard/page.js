@@ -41,26 +41,26 @@ export default function Page() {
   }, [user, router]);
 
   const USER_ID = user?.uid;
-  const {datapoints, 
-    loading_d, 
+  const { datapoints,
+    loading_d,
     error_d,
     createDatapoint,
     editDp,
     removeDp,
     setDatapoints } = useDatapoints(USER_ID);
   const {
-    goals, 
-    loading_g, 
+    goals,
+    loading_g,
     error_g,
     setNewGoal,
     editGoal,
     removeGoal,
     setGoals
-    } = useGoals(USER_ID);
-  
+  } = useGoals(USER_ID);
+
 
   const [isLoading, setIsLoading] = useState(true);
-  const [selectedGoal, setSelectedGoal] = useState({name:"1"});
+  const [selectedGoal, setSelectedGoal] = useState({ name: "1" });
 
   // Monitor loading states
   useEffect(() => {
@@ -77,7 +77,7 @@ export default function Page() {
   }, [loading_g, loading_d, goals, setGoals]);
   const [selectedDate, setSelectedDate] = useState(dayjs());
   const [selectedFriends, setSelectedFriends] = useState([]);
-  
+
   // Show loading spinner or message
   if (isLoading) {
     return <div>LOADING</div>;
@@ -93,8 +93,8 @@ export default function Page() {
       </div>
     );
   }
-  
-  const colorPalette = ["#C8EFB8","#E1E2FF","#F2C595"];
+
+  const colorPalette = ["#C8EFB8", "#E1E2FF", "#F2C595"];
   const friends = ['Alice', 'Bob', 'Charlie', 'David', 'Eve'];
 
   const daysOfWeek = Array.from({ length: 7 }, (_, index) =>
@@ -107,7 +107,7 @@ export default function Page() {
 
   return (
     <div className='app'>
-      <TopBar loggedIn = {Boolean(user)} onProfileClick={userSignOut}/>
+      <TopBar loggedIn={Boolean(user)} onProfileClick={userSignOut} />
 
       <div className='home-grid'>
         <div
@@ -184,75 +184,75 @@ export default function Page() {
         </div>
 
         <div className='contents-container'>
-          <Card title="Recent Acvitities" 
-          icons={[
-            [
-              <Image 
-                className='dropdown-icon' style={{cursor:"pointer"}} 
-                src="/assets/icons/dropdown-icon.svg" 
-                alt="dropdown-icon" width="54" height="54"
-              />,
-              <Image className='menu-icon' style={{cursor:"pointer"}}
-                src="/assets/icons/menu-icon.svg" alt="menu-icon" width="40" height="40"/>
-            ]
-          ]} 
-          content={
-            <div className='graph-container'>
-            <div className='card-dates horizontal'>
-              <div className='last-week'>
-                <h2 className='date-title'>From</h2>
-                <p className='date'>
-                  {selectedDate.subtract(1, "week").format("ddd MMM DD")}
-                </p>
-              </div>
-                
-              <div className='yesterday'>
-                <h2 className='date-title'>To</h2>
-                <p className='date'>
-                  {selectedDate.format("ddd MMM DD")}
-                </p>
-              </div>
-            </div>
-            
-            <div style={{display: "flex", height: 100, paddingBottom: "5px"}}>
-              <div>
-                <Gauge value={20} height={100} width={100} margin="auto" />
-              </div>
-              <p style={{alignContent: "center"}}>Goal Completed</p>
-            </div>
-            <div>
-              <div className='top-graph'>
-                <div className='y-axis'></div>
-                <div className='checkbox-container'>
-                  {daysOfWeek.map((day, index) => (
-                    <div key={index}
-                    style={{backgroundColor: colorPalette[day.diff('1980-01-01', 'day') % 3]}}
-                    className="progress-block-recent-activities">
-                      {index % 2 === 1? "✔️": ""}
+          <Card title="Recent Acvitities"
+            icons={[
+              [
+                <Image
+                  className='dropdown-icon' style={{ cursor: "pointer" }}
+                  src="/assets/icons/dropdown-icon.svg"
+                  alt="dropdown-icon" width="54" height="54"
+                />,
+                <Image className='menu-icon' style={{ cursor: "pointer" }}
+                  src="/assets/icons/menu-icon.svg" alt="menu-icon" width="40" height="40" />
+              ]
+            ]}
+            content={
+              <div className='graph-container'>
+                <div className='card-dates horizontal'>
+                  <div className='last-week'>
+                    <h2 className='date-title'>From</h2>
+                    <p className='date'>
+                      {selectedDate.subtract(1, "week").format("ddd MMM DD")}
+                    </p>
+                  </div>
+
+                  <div className='yesterday'>
+                    <h2 className='date-title'>To</h2>
+                    <p className='date'>
+                      {selectedDate.format("ddd MMM DD")}
+                    </p>
+                  </div>
+                </div>
+
+                <div style={{ display: "flex", height: 100, paddingBottom: "5px" }}>
+                  <div>
+                    <Gauge value={20} height={100} width={100} margin="auto" />
+                  </div>
+                  <p style={{ alignContent: "center" }}>Goal Completed</p>
+                </div>
+                <div>
+                  <div className='top-graph'>
+                    <div className='y-axis'></div>
+                    <div className='checkbox-container'>
+                      {daysOfWeek.map((day, index) => (
+                        <div key={index}
+                          style={{ backgroundColor: colorPalette[day.diff('1980-01-01', 'day') % 3] }}
+                          className="progress-block-recent-activities">
+                          {index % 2 === 1 ? "✔️" : ""}
+                        </div>
+                      ))}
                     </div>
-                  ))}
+                  </div>
+                  <div className='bottom-graph'>
+                    {daysOfWeek.map((day, index) => (
+                      <div key={index} className="day">{day.format("ddd")}</div>
+                    ))}
+                  </div>
                 </div>
               </div>
-              <div className='bottom-graph'>
-                {daysOfWeek.map((day, index) => (
-                  <div key={index} className="day">{day.format("ddd")}</div>
-                ))}
-              </div>
-            </div>
-          </div>
-          }
-          
+            }
+
           />
 
           <div className="bottom-flex-container">
-              <div className = "progress-card">
-                <Card
-                  title={`Progress on ${selectedGoal?.category}`}
-                  icons={[
-                    <Image className='menu-icon' style={{cursor:"pointer"}}
-                    src="/assets/icons/menu-icon.svg" alt="menu-icon" width="40" height="40"/>
-                  ]}
-                  content={
+            <div className="progress-card">
+              <Card
+                title={`Progress on ${selectedGoal?.category}`}
+                icons={[
+                  <Image className='menu-icon' style={{ cursor: "pointer" }}
+                    src="/assets/icons/menu-icon.svg" alt="menu-icon" width="40" height="40" />
+                ]}
+                content={
                   <div>
                     <div className='progress-container'>
                       <div className='card-dates'>
@@ -275,27 +275,27 @@ export default function Page() {
                       </div>
                       <div className='progress-container-center'>
                         <Gauge
-                        value={
-                          datapoints[selectedGoal?.name]?.reduce(
-                            (accumulator, currentItem) => {
-                              if (
-                                selectedDate.subtract(selectedGoal?.frequency + 1, "day")
-                                  .isBefore(
-                                    dayjs(currentItem.date)) &&
-                                dayjs(currentItem.date).isBefore(
-                                  selectedDate + 1
-                                )
-                              ){
-                                return accumulator + currentItem.value;
-                              }
-                              return accumulator;
-                            }, 0)
-                        }
-                        valueMax={selectedGoal?.value}
-                        width={130}
-                        height={130}
-                        text={
-                          ({ value, valueMax }) => `${value} / ${valueMax}`
+                          value={
+                            datapoints[selectedGoal?.name]?.reduce(
+                              (accumulator, currentItem) => {
+                                if (
+                                  selectedDate.subtract(selectedGoal?.frequency + 1, "day")
+                                    .isBefore(
+                                      dayjs(currentItem.date)) &&
+                                  dayjs(currentItem.date).isBefore(
+                                    selectedDate + 1
+                                  )
+                                ) {
+                                  return accumulator + currentItem.value;
+                                }
+                                return accumulator;
+                              }, 0)
+                          }
+                          valueMax={selectedGoal?.value}
+                          width={130}
+                          height={130}
+                          text={
+                            ({ value, valueMax }) => `${value} / ${valueMax}`
                           }
                         />
                         <div className='progress-goal'>
@@ -307,15 +307,15 @@ export default function Page() {
                       </div>
                       <div className="goals-list">
                         {goalsIn("workout").map(
-                          (g, i) => 
+                          (g, i) =>
                             <div className="progress-goal" onClick={
                               () => {
                                 console.log(g);
                                 setSelectedGoal(g);
                               }
-                              }>
-                              <div className='progress-block' 
-                              style= {{backgroundColor:colorPalette[i % 3]}}>
+                            }>
+                              <div className='progress-block'
+                                style={{ backgroundColor: colorPalette[i % 3] }}>
                                 {g.name === selectedGoal.name ? "✔️" : ""}
                               </div>
                               <div className='progress-name'> {g.name} </div>
@@ -324,38 +324,40 @@ export default function Page() {
                       </div>
                     </div>
                   </div>
-                  }
+                }
 
-                />
-              </div>
-              <div className = "new-entry-card">
-                <Card
-                  title="New Entry"
-                  icons= {[
-                    <Image
-                      className='dropdown-icon' style={{cursor:"pointer"}}
-                      src="/assets/icons/dropdown-icon.svg"
-                      alt="dropdown-icon" width="34" height="34"
-                    />
-                  ]}
-                  content={
-                    <div style={{height: "30vh", 
-                      width: "200px",
-                      wordWrap: "break-word",
-                      overflow:"scroll", 
-                      fontFamily:"monospace"}}>
-                      {/*JSON.stringify(goals)*/}
-                      {
-                        JSON.stringify(goals)
-                      }
-                    </div>
-                  }
+              />
+            </div>
+            <div className="new-entry-card">
+              <Card
+                title="New Entry"
+                icons={[
+                  <Image
+                    className='dropdown-icon' style={{ cursor: "pointer" }}
+                    src="/assets/icons/dropdown-icon.svg"
+                    alt="dropdown-icon" width="34" height="34"
+                  />
+                ]}
+                content={
+                  <div style={{
+                    height: "30vh",
+                    width: "200px",
+                    wordWrap: "break-word",
+                    overflow: "scroll",
+                    fontFamily: "monospace"
+                  }}>
+                    {/*JSON.stringify(goals)*/}
+                    {
+                      JSON.stringify(goals)
+                    }
+                  </div>
+                }
 
-                />
-              </div>
+              />
+            </div>
 
           </div>
-            
+
         </div>
 
       </div>
