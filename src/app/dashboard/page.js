@@ -285,10 +285,10 @@ export default function Page() {
             <Image 
               className='dropdown-icon' style={{cursor:"pointer"}} 
               src="/assets/icons/dropdown-icon.svg" 
-              alt="dropdown-icon" width="54" height="54"
+              alt="dropdown-icon" width="30" height="30"
             />,
             <Image className='menu-icon' style={{cursor:"pointer"}}
-              src="/assets/icons/menu-icon.svg" alt="menu-icon" width="40" height="40"/>
+              src="/assets/icons/menu-icon.svg" alt="menu-icon" width="30" height="30"/>
           ]}
           onClick={
             () => {
@@ -372,7 +372,7 @@ export default function Page() {
                   title={`Progress on ${selectedGoal?.category}`}
                   icons={[
                     <Image className='menu-icon' style={{cursor:"pointer"}}
-                    src="/assets/icons/menu-icon.svg" alt="menu-icon" width="40" height="40"/>
+                    src="/assets/icons/menu-icon.svg" alt="menu-icon" width="30" height="30"/>
                   ]}
                   content={
                   <div>
@@ -455,7 +455,7 @@ export default function Page() {
                     <Image
                       className='add-icon' style={{cursor:"pointer"}}
                       src="/assets/icons/add-icon.svg"
-                      alt="add-icon" width="34" height="34"
+                      alt="add-icon" width="30" height="30"
                     />
                   ]}
                   content={

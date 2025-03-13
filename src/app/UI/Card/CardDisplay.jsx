@@ -17,12 +17,9 @@ export default function Card({ title, icons, content, width, height, fontSize, o
             <h1 className='title' style={{"fontSize":fontSize || "auto"}}>
               {title}
             </h1>
-            
-            <div className='icons'>
+            <div className='icons-holder'>
               {...icons}
-
             </div>
-            
           </div>
 
           <div className="content-wrapper">

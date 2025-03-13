@@ -1,9 +1,14 @@
 .home-grid {
     display: grid;
-    grid-template-columns: 1fr 5fr;
+    grid-template-columns: minmax(0,1fr) minmax(0,5fr);
     gap: 2rem;
     padding: 2rem 2rem 0;
     height: calc(95vh - 8vh);
+}
+
+.home-grid > *{
+    overflow: hidden;
+    min-width: 0;
 }
 
 .left-container{
@@ -16,7 +21,23 @@
     overflow: hidden;
 }
 
-.top-flex-container{
+.top-flex-container {
+    display: flex;
+    flex-wrap: nowrap; /* Prevents wrapping */
+    overflow-x: auto; /* Enables horizontal scrolling */
+    gap: 1rem; /* Adds spacing between cards */
+    width: 100%; /* Ensure it doesn't shrink */
+    height: 250px; /* Adjust based on your needs */
+    white-space: nowrap; /* Prevents internal wrapping */
+  }
+
+.checkbox-container{
+    gap: 1em;
+    border: 1px solid #f00;
     display: flex;
     justify-content: space-between;
+    flex-direction: row;
+    align-items: flex-end;
+    height: 2em;
+    width: 100%;
 }

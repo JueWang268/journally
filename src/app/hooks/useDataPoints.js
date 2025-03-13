@@ -70,8 +70,6 @@ export default function useDatapoints(userId) {
 
   const editDp = async (dpId, name, value, date) => {
     try {
-      // console.log("is calling editDp");
-      
       const updatedDp = await updateDp(dpId, name, value, date);
 
       setDatapoints(prevDatapoints => {

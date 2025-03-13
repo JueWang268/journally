@@ -32,12 +32,6 @@ export default function Page() {
   } = UserAuth();
   const router = useRouter();
 
-  // useEffect(() => {
-  //   if (!user) {
-  //     router.push('/login');
-  //   }
-  // }, [user, router]);
-
   const USER_ID = user?.uid;
   const {datapoints, 
     loading_d, 
@@ -47,8 +41,8 @@ export default function Page() {
     removeDp,
     setDatapoints } = useDatapoints(USER_ID);
   const {
-    goals, 
-    loading_g, 
+    goals,
+    loading_g,
     error_g,
     setNewGoal,
     editGoal,
@@ -184,40 +178,71 @@ export default function Page() {
             title="Calendar"
             icons={[]}
             content={<div></div>}
+            fontSize={"15pt"}
             height={"20vh"}
-          />
-          <Card 
+            />
+            <Card 
             title="Monthly View"
             icons={[]}
             content={<div></div>}
-            fontSize={"10pt"}
+            fontSize={"15pt"}
             height={"20vh"}
-          />
-          <Card 
-            title="New Goal"
+            />
+            <Card 
+            title="New"
             icons={[]}
-            content={<div></div>}
+            fontSize={"15pt"}
+            content={
+              <div>
+
+              </div>
+            }
             height={"20vh"}
           />
-
         </div>
 
         <div className='contents-container'>
-
           <div className="top-flex-container">
             {
-              Array.from({ length: 3 }, (_, index) => 
+              Array.from({length: 6}, (i, k) => 
                 <Card
-                  title={"Placeholder"}
+                  title={"name"}
                   icons={[]}
                   content={
-                    <div>
-                      graph goes here
+                    <div className='checkbox-container'>
+                      {
+                        daysOfWeek.map((day, index) => (
+                        <div key={index}
+                        style={{
+                          backgroundColor: 
+                            isDateInActivities(datapoints, day.format("YYYY-MM-DD"))?
+                            colorPalette[day.diff('1980-01-01', 'day') % 3] :
+                            '#D9D9D9'
+                        }}
+                        className="progress-block-recent-activities">
+                          {
+                          goals.some( g => isGoalMet(day, g))? "✔️" : ""
+                          }
+                        </div>
+                      ))
+                      }
                     </div>
                   }
-
+                  width={400}
                 />
               )
+              // Object.entries(datapoints).map(([name, dps]) => 
+              //   <Card
+              //     title={name}
+              //     icons={[]}
+              //     content={
+              //       <div>
+              //         graph goes here
+              //       </div>
+              //     }
+              //     width={"20vw"}
+              //   />
+              // )
             }
           </div>
 
@@ -253,20 +278,20 @@ export default function Page() {
                       wordWrap: "break-word",
                       overflow:"scroll", 
                       fontFamily:"monospace"}}>
-                      {JSON.stringify(goals)}
                       {
                         /*
-                        JSON.stringify(datapoints)
+                        JSON.stringify(goals)
                         */
+                      }
+                      {
+                        JSON.stringify(datapoints)
                       }
                     </div>
                   }
 
                 />
               </div>
-
           </div>
-            
         </div>
 
       </div>
