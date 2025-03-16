@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import '../../styles/personalTracking.css';
 import TopBar from '../UI/TopBar.jsx';
+import '../../styles/BgTopBar.css';
 import { DataPointsProvider } from '../context/DatapointsContext';
 import DataPointGraph from '../UI/DataPointGraph';
 import dayjs from "dayjs";
@@ -11,7 +12,12 @@ import { UserAuth } from '../context/AuthContext';
 dayjs.extend(weekday);
 
 export default function PersonalTrackingPage() {
-  const { user } = UserAuth();
+  const {
+      user, authLoading, authError,
+      userSignIn, userSignUp,
+      googleSignIn,
+      userSignOut
+    } = UserAuth();
   const userId = user?.uid; 
 
   const [selectedDate, setSelectedDate] = useState(dayjs());
@@ -39,7 +45,7 @@ export default function PersonalTrackingPage() {
 
   return (
     <div className='app'>
-      <TopBar />
+      <TopBar loggedIn = {Boolean(user)} onProfileClick={userSignOut}/>
 
       <div className='home-grid'>
         <div className='left-side'>

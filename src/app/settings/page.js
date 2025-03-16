@@ -3,12 +3,18 @@ import React, { useState, useEffect } from "react";
 import "../../styles/Settings.css";
 import useUsers from "../hooks/useUsers.js";
 import TopBar from "../UI/TopBar.jsx";
+import '../../styles/BgTopBar.css';
 import { UserAuth } from '../context/AuthContext';
 
 const TABS = ["Account", "Notifications", "Privacy", "Appearance", "Preferences", "Subscription"];
 
 export default function SettingsPage() {
-    const { user } = UserAuth();
+    const {
+            user, authLoading, authError,
+            userSignIn, userSignUp,
+            googleSignIn,
+            userSignOut
+          } = UserAuth();
     const userId = user?.uid;
     const { getUserByID, editUser } = useUsers();
 
@@ -178,7 +184,7 @@ export default function SettingsPage() {
 
     return (
         <div className="app">
-            <TopBar />
+            <TopBar loggedIn = {Boolean(user)} onProfileClick={userSignOut}/>
             <div className="home-container">
                 <div className="content-box">
                     <div className="content-grid">
