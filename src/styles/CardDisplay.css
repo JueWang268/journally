@@ -45,7 +45,7 @@
     flex-direction: row;
     align-items: center;
     height: 18pt;
-    border: 1px red solid;
+    /* border: 1px red solid; */
     gap: 7px;
 }
 

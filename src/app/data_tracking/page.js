@@ -1,12 +1,11 @@
 "use client"
 import React, { useState, useEffect } from 'react';
-import '../../styles/Dashboard.css';
+import '../../styles/BgTopBar.css';
 import '../../styles/DataTracking.css';
 import TopBar from '../UI/TopBar.jsx';
-import '../../styles/BgTopBar.css';
 import Card from "../UI/Card/CardDisplay.jsx";
 import Image from 'next/image';
-import Calendar from '../UI/Calendar/Calendar';
+import WeekCalendar from '../UI/Calendar/WeekCalendar';
 import FriendsList from '../UI/FriendsList/FriendsList';
 import dayjs from "dayjs";
 import useGoals from "../hooks/useGoals";
@@ -20,8 +19,6 @@ import AccordionDetails from '@mui/material/AccordionDetails';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { Gauge, PieChart } from '@mui/x-charts/';
-
-const test_user_id = '410544b2-4001-4271-9855-fec4b6a6442a';
 
 export default function Page() {
   const {
@@ -157,16 +154,96 @@ export default function Page() {
 
     // Calculate the cumulative value of the filtered datapoints
     const cumulativeValue = relevantDatapoints?.reduce(
-      (sum, dp) => sum + dp.value,
-      0
-    );
-    console.log(`${cumulativeValue} for ${targetDate}. 
-      period: ${periodStart.format("MMM D")} - ${periodEnd.format("MMM D")}`);
+      (sum, dp) => sum + dp.value, 0);
+    // console.log(`${cumulativeValue} for ${targetDate}. 
+    //   period: ${periodStart.format("MMM D")} - ${periodEnd.format("MMM D")}`);
     return cumulativeValue >= goal?.value;
   }
 
+  const isGoalMetForDate = (targetDate, goal) => {
+    if (!goal || !goal.name || !datapoints[goal.name])
+      return false;
+  
+    const startDate = dayjs(goal.start_date);
+    const daysSinceStart = targetDate.diff(startDate, "day");
+    const periodNumber = Math.floor(daysSinceStart / goal.frequency);
+    const periodStart = startDate.add(periodNumber * goal.frequency, "day");
+    const periodEnd = periodStart.add(goal.frequency, "day");
+  
+    // Get all datapoints within the current goal period
+    const relevantDatapoints = datapoints[goal.name]?.filter((dp) => {
+      const dpDate = dayjs(dp.date);
+      return (
+        (dpDate.isAfter(periodStart) || dpDate.isSame(periodStart)) &&
+        dpDate.isBefore(periodEnd)
+      );
+    }) || [];
+  
+    // Compute the cumulative value from relevant datapoints
+    const cumulativeValue = relevantDatapoints.reduce((sum, dp) => sum + dp.value, 0);
+  
+    // Calculate remaining days including targetDate but excluding periodEnd
+    const remainingDays = periodEnd.diff(targetDate, "day");
+  
+    // Find the datapoint for the exact targetDate
+    const targetDataPoint = relevantDatapoints.find(dp => dayjs(dp.date).isSame(targetDate));
+
+    if (remainingDays <= 0) {
+      return targetDataPoint?.value >= goal.value - cumulativeValue;
+    } 
+  
+    // Compute the required amount needed for targetDate
+    const requiredAmount = (goal.value - cumulativeValue) / remainingDays;
+
+    return targetDataPoint?.value >= requiredAmount;
+  };
+
+  // const cards = Array.from({length: 3}, (i, k) => (
+  //   <Card
+  //     title={""}
+  //     icons={[]}
+  //     content={
+  //       <div className='checkbox-container'>
+  //       </div>
+  //     }
+  //     width={
+  //       "100%"
+  //     }
+  //   />
+  // ));
+ 
+  const cards = Object.entries(datapoints).map(([name, dps]) => 
+    <Card
+      title={name}
+      icons={[]}
+      content={
+        <div className='checkbox-container'>
+          {
+            daysOfWeek.map((day, index) => (
+              <div key={index}
+              style={{
+                backgroundColor: 
+                  isDateInActivities(Object.entries(datapoints).filter(([key]) => key === name), day.format("YYYY-MM-DD"))?
+                  colorPalette[day.diff('1980-01-01', 'day') % 3] :
+                  '#D9D9D9'
+              }}
+              className="progress-block-recent-activities">
+                {
+                  isGoalMetForDate(day, goals.filter( g => g.name === name))? "✔️" : ""
+                }
+              </div>
+            ))
+          }
+        </div>
+      }
+      width={
+        Object.entries(datapoints).length <= 3? "100%": "auto"
+      }
+    />
+  );
+
   return (
-    <div className='app'>
+    <div className='app gradient'>
       <TopBar loggedIn = {Boolean(user)} onProfileClick={userSignOut}/>
 
       <div className='home-grid'>
@@ -177,16 +254,19 @@ export default function Page() {
           <Card 
             title="Calendar"
             icons={[]}
-            content={<div></div>}
+            content={
+              <WeekCalendar
+                chosenDate={selectedDate}
+                onDateChange={(newSelectedDate) => setSelectedDate(newSelectedDate)}
+              />
+            }
             fontSize={"15pt"}
-            height={"20vh"}
             />
             <Card 
             title="Monthly View"
             icons={[]}
             content={<div></div>}
             fontSize={"15pt"}
-            height={"20vh"}
             />
             <Card 
             title="New"
@@ -197,53 +277,18 @@ export default function Page() {
 
               </div>
             }
-            height={"20vh"}
           />
         </div>
 
         <div className='contents-container'>
           <div className="top-flex-container">
+    
             {
-              Array.from({length: 6}, (i, k) => 
-                <Card
-                  title={"name"}
-                  icons={[]}
-                  content={
-                    <div className='checkbox-container'>
-                      {
-                        daysOfWeek.map((day, index) => (
-                        <div key={index}
-                        style={{
-                          backgroundColor: 
-                            isDateInActivities(datapoints, day.format("YYYY-MM-DD"))?
-                            colorPalette[day.diff('1980-01-01', 'day') % 3] :
-                            '#D9D9D9'
-                        }}
-                        className="progress-block-recent-activities">
-                          {
-                          goals.some( g => isGoalMet(day, g))? "✔️" : ""
-                          }
-                        </div>
-                      ))
-                      }
-                    </div>
-                  }
-                  width={400}
-                />
-              )
-              // Object.entries(datapoints).map(([name, dps]) => 
-              //   <Card
-              //     title={name}
-              //     icons={[]}
-              //     content={
-              //       <div>
-              //         graph goes here
-              //       </div>
-              //     }
-              //     width={"20vw"}
-              //   />
-              // )
+              cards.map((card, index) => (
+                {...card, index:index}
+              ))
             }
+            
           </div>
 
           <div className="bottom-flex-container">

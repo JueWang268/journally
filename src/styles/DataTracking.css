@@ -12,10 +12,8 @@
 }
 
 .left-container{
-    border: 1px solid #f00;
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
     justify-content: space-between;
     margin-bottom: 2em;
     overflow: hidden;
@@ -25,11 +23,12 @@
     display: flex;
     flex-wrap: nowrap; /* Prevents wrapping */
     overflow-x: auto; /* Enables horizontal scrolling */
-    gap: 1rem; /* Adds spacing between cards */
+    /* gap: 1rem; */
     width: 100%; /* Ensure it doesn't shrink */
     height: 250px; /* Adjust based on your needs */
     white-space: nowrap; /* Prevents internal wrapping */
-  }
+    border: 1px solid green;
+}
 
 .checkbox-container{
     gap: 1em;
@@ -40,4 +39,42 @@
     align-items: flex-end;
     height: 2em;
     width: 100%;
+}
+
+.contents-container{
+    display: flex;
+    flex-direction: column;
+    margin: 0 0 2em;
+    justify-content: space-between;
+    gap: 1em;
+    /* border: red solid 1px; */
+}
+
+.bottom-flex-container{
+    display: flex;
+    width: 100%;
+    margin: auto auto 0;
+    gap: 1em;
+    /* border: red solid 1px; */
+}
+
+.progress-card{
+    flex: 3;
+    /* margin: 2vh auto; */
+}
+
+/* .journal-card-wrapper{
+    margin: 2vh auto;
+} */
+
+.progress-container {
+    display: flex;
+    justify-content: space-between;
+    margin: 2vh auto;
+    padding: 2vh 1vw;
+    gap: 1em;
+}
+
+.new-entry-card{
+    flex: 1;
 }
