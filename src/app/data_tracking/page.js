@@ -19,6 +19,7 @@ import AccordionDetails from '@mui/material/AccordionDetails';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { Gauge, PieChart } from '@mui/x-charts/';
+import { WrapText } from '@mui/icons-material';
 
 export default function Page() {
   const {
@@ -69,27 +70,27 @@ export default function Page() {
   const [selectedDate, setSelectedDate] = useState(dayjs());
   const [selectedFriends, setSelectedFriends] = useState([]);
 
-    // useEffect to update periodStart and periodEnd when selectedGoal changes
-    useEffect(() => {
-      if (selectedGoal) {
-        const startDate = dayjs(selectedGoal.start_date);
-        const currentDate = selectedDate; 
-  
-        // Calculate the current period based on the goal's frequency
-        const daysSinceStart = currentDate.diff(startDate, "day");
-        const periodNumber = Math.floor(daysSinceStart / selectedGoal.frequency);
-        const newPeriodStart = startDate.add(periodNumber * selectedGoal.frequency, "day");
-        const newPeriodEnd = newPeriodStart.add(selectedGoal.frequency, "day");
-  
-        // Update periodStart and periodEnd
-        setPeriodStart(newPeriodStart);
-        setPeriodEnd(newPeriodEnd);
-      } else {
-        // If no goal is selected, reset periodStart and periodEnd
-        setPeriodStart(null);
-        setPeriodEnd(null);
-      }
-    }, [selectedGoal, selectedDate]);
+  // useEffect to update periodStart and periodEnd when selectedGoal changes
+  useEffect(() => {
+    if (selectedGoal) {
+      const startDate = dayjs(selectedGoal.start_date);
+      const currentDate = selectedDate; 
+
+      // Calculate the current period based on the goal's frequency
+      const daysSinceStart = currentDate.diff(startDate, "day");
+      const periodNumber = Math.floor(daysSinceStart / selectedGoal.frequency);
+      const newPeriodStart = startDate.add(periodNumber * selectedGoal.frequency, "day");
+      const newPeriodEnd = newPeriodStart.add(selectedGoal.frequency, "day");
+
+      // Update periodStart and periodEnd
+      setPeriodStart(newPeriodStart);
+      setPeriodEnd(newPeriodEnd);
+    } else {
+      // If no goal is selected, reset periodStart and periodEnd
+      setPeriodStart(null);
+      setPeriodEnd(null);
+    }
+  }, [selectedGoal, selectedDate]);
   
   // Show loading spinner or message
   if (isLoading) {
@@ -108,7 +109,6 @@ export default function Page() {
   }
   
   const colorPalette = ["#C8EFB8","#E1E2FF","#F2C595"];
-  const friends = ['Alice', 'Bob', 'Charlie', 'David', 'Eve'];
 
   // functions
   const daysOfWeek = Array.from({ length: 7 }, (_, index) =>
@@ -119,18 +119,16 @@ export default function Page() {
     return goals.filter(g => g.category === cat);
   }
 
-  const isDateInActivities = (activities, targetDate) => {
-    // activities is object in datapoints format
-    for (const activityType in activities) {
-      if (Array.isArray(activities[activityType])) {
-        for (const entry of activities[activityType]) {
+  const isDayActive = (activity, targetDate) => {
+    // activity is object in datapoints format
+      if (Array.isArray(activity)) {
+        for (const entry of activity) {
           if (entry.date === targetDate) {
-            return true; // Date found
+            return true;
           }
         }
       }
-    }
-    return false; // Date not found
+    return false;
   }
 
   const isGoalMet = (targetDate, goal) => {
@@ -190,7 +188,7 @@ export default function Page() {
 
     if (remainingDays <= 0) {
       return targetDataPoint?.value >= goal.value - cumulativeValue;
-    } 
+    }
   
     // Compute the required amount needed for targetDate
     const requiredAmount = (goal.value - cumulativeValue) / remainingDays;
@@ -211,69 +209,119 @@ export default function Page() {
   //     }
   //   />
   // ));
- 
+
   const cards = Object.entries(datapoints).map(([name, dps]) => 
     <Card
       title={name}
-      icons={[]}
+      icons={[
+        <div className='graph-view-switch'>
+        📈
+        </div>
+      ]}
       content={
-        <div className='checkbox-container'>
-          {
-            daysOfWeek.map((day, index) => (
-              <div key={index}
-              style={{
-                backgroundColor: 
-                  isDateInActivities(Object.entries(datapoints).filter(([key]) => key === name), day.format("YYYY-MM-DD"))?
-                  colorPalette[day.diff('1980-01-01', 'day') % 3] :
-                  '#D9D9D9'
-              }}
-              className="progress-block-recent-activities">
-                {
-                  isGoalMetForDate(day, goals.filter( g => g.name === name))? "✔️" : ""
+        <div>
+
+           <div className='progress-container-center'>
+              <Gauge
+              value={
+                datapoints[selectedGoal?.name]?.reduce(
+                  (accumulator, currentItem) => {
+                    if (
+                      (dayjs(currentItem.date).isAfter(periodStart)
+                      || dayjs(currentItem.date).isSame(periodStart)) &&
+                      dayjs(currentItem.date).isBefore(periodEnd)
+                    ){
+                      return accumulator + currentItem.value;
+                    }
+                    return accumulator;
+                  }, 0)
+              }
+              valueMax={selectedGoal?.value}
+              width={130}
+              height={130}
+              text={
+                ({ value, valueMax }) => `${value} / ${valueMax}`
                 }
-              </div>
-            ))
-          }
+              />
+          </div>
+
+          <div className='top-graph'>
+            <div className='checkbox-container'>
+              {
+                daysOfWeek.map((day, index) => (
+                  <div key={index}
+                  style={{
+                    backgroundColor: 
+                      isDayActive(dps, day.format("YYYY-MM-DD"))?
+                      colorPalette[day.diff('1980-01-01', 'day') % 3] :
+                      '#D9D9D9'
+                  }}
+                  className="progress-block-recent-activities">
+                    {
+                      isGoalMetForDate(day, goals.find(g => g.name === name))? "✔️" : ""
+                    }
+                  </div>
+                ))
+              }
+            </div>
+          </div>
+          <div className='bottom-graph'>
+            {daysOfWeek.map((day, index) => (
+              <div key={index} className="day"> {day.format("ddd")} </div>
+            ))}
+          </div>
         </div>
       }
-      width={
-        Object.entries(datapoints).length <= 3? "100%": "auto"
+
+      sx={
+        Object.entries(datapoints).length <= 3 ? { flex: 1, minWidth: 0 } : { width: "calc(100% / 3)", flexShrink: 0 }
       }
     />
   );
 
+    // Function to navigate weeks
+    const handlePrevWeek = () => setSelectedDate(selectedDate.subtract(1, "week"));
+    const handleNextWeek = () => setSelectedDate(selectedDate.add(1, "week"));
+
   return (
     <div className='app gradient'>
       <TopBar loggedIn = {Boolean(user)} onProfileClick={userSignOut}/>
-
       <div className='home-grid'>
         <div
           id='left-card'
           className='left-container'
         >
           <Card 
-            title="Calendar"
-            icons={[]}
+            title={selectedDate.format('MMM YYYY').toString()}
+            icons={[
+              <div onClick={handlePrevWeek}>⬅️</div>,
+              <div onClick={handleNextWeek}>➡️</div>
+            ]}
             content={
-              <WeekCalendar
-                chosenDate={selectedDate}
-                onDateChange={(newSelectedDate) => setSelectedDate(newSelectedDate)}
-              />
+              <div className='card-cont week-cal'>
+                <WeekCalendar
+                  chosenDate={selectedDate}
+                  onDateChange={(newSelectedDate) => setSelectedDate(newSelectedDate)}
+                />
+              </div>
             }
             fontSize={"15pt"}
             />
             <Card 
             title="Monthly View"
             icons={[]}
-            content={<div></div>}
+            content={
+              <div className='card-cont'>
+              </div>
+            }
             fontSize={"15pt"}
             />
             <Card 
-            title="New"
+            title="Current Goals"
             icons={[]}
             fontSize={"15pt"}
             content={
-              <div>
+              <div className='card-cont goal-list'>
 
               </div>
             }
@@ -301,7 +349,7 @@ export default function Page() {
                   ]}
                   content={
                   <div>
-                  * GRAPH GOES HERE*
+                    * GRAPH GOES HERE*
                   </div>
                   }
 

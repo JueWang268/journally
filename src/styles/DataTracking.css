@@ -16,7 +16,19 @@
     flex-direction: column;
     justify-content: space-between;
     margin-bottom: 2em;
-    overflow: hidden;
+    overflow: scroll;
+}
+
+.card-cont{
+    height: 15vh;
+}
+
+.week-cal{
+
+}
+
+.goal-list{
+    height: 20vh;
 }
 
 .top-flex-container {
@@ -30,15 +42,48 @@
     border: 1px solid green;
 }
 
+.graph-view-switch{
+    border: 1px black solid;
+    border-radius: 20%;
+}
+
+.top-graph{
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    padding-bottom: 0px;
+}
+
+.progress-block-recent-activities {
+    height: 2em;
+    width: 2em;
+    border-radius: 10%;
+    align-content: center;
+    text-align: center;
+    font-size: 16pt;
+}
+
 .checkbox-container{
     gap: 1em;
-    border: 1px solid #f00;
+    /* border: 1px solid #f00; */
     display: flex;
     justify-content: space-between;
     flex-direction: row;
     align-items: flex-end;
     height: 2em;
     width: 100%;
+}
+
+.bottom-graph{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding-top: 10px;
+}
+.day {
+    text-align: center;
+    width: 2.5em;
+    font-size: 16px;
 }
 
 .contents-container{
@@ -63,10 +108,6 @@
     /* margin: 2vh auto; */
 }
 
-/* .journal-card-wrapper{
-    margin: 2vh auto;
-} */
-
 .progress-container {
     display: flex;
     justify-content: space-between;
@@ -78,3 +119,4 @@
 .new-entry-card{
     flex: 1;
 }
+
