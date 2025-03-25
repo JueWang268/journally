@@ -22,6 +22,7 @@ const WeekCalendar = ({ chosenDate, onDateChange, height = "100%", width = "100%
           value={chosenDate}
           onChange={onDateChange}
           views={["day"]}
+          showDaysOutsideCurrentMonth={true}
           slots={{
             day: (props) => {
               const { day } = props;

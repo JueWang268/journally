@@ -4,11 +4,11 @@ import { Datapoints, GroupedDatapoints } from "../lib/definitions";
 import { ISODate } from "../utils/ISODate";
 
 
-export async function createDp(userId: string, name: string, value: number) {
+export async function createDp(userId: string, name: string, value: number, date: string) {
     try {
       const data = await sql<Datapoints>`
         INSERT INTO datapoints (id, user_id, name, value, date)
-        VALUES (gen_random_uuid(), ${userId}, ${name}, ${value}, ${ISODate})
+        VALUES (gen_random_uuid(), ${userId}, ${name}, ${value}, ${date})
         RETURNING *
       `;
       return data.rows[0]; // return the created entry

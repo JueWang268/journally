@@ -49,10 +49,7 @@ export default function Page() {
     } = useGoals(USER_ID);
 
   const [isLoading, setIsLoading] = useState(true);
-  const [selectedGoal, setSelectedGoal] = useState(null);
-
-  const [periodStart, setPeriodStart] = useState(null);
-  const [periodEnd, setPeriodEnd] = useState(null);
+  // const [selectedGoal, setSelectedGoal] = useState(null);
 
   // Monitor loading states
   useEffect(() => {
@@ -60,9 +57,6 @@ export default function Page() {
       setIsLoading(false); // Both hooks have finished loading
       // Set selectedGoal only if goals is not empty
       // setGoals(goals);
-      if (goals && goals.length > 0) {
-        setSelectedGoal(goals[0]);
-      }
     } else {
       setIsLoading(true);
     }
@@ -70,27 +64,46 @@ export default function Page() {
   const [selectedDate, setSelectedDate] = useState(dayjs());
   const [selectedFriends, setSelectedFriends] = useState([]);
 
-  // useEffect to update periodStart and periodEnd when selectedGoal changes
-  useEffect(() => {
-    if (selectedGoal) {
-      const startDate = dayjs(selectedGoal.start_date);
-      const currentDate = selectedDate; 
+  const [editingDate, setEditingDate] = useState(null);
+  const [editingGoal, setEditingGoal] = useState(null);
+  const [inputValue, setInputValue] = useState("");
 
-      // Calculate the current period based on the goal's frequency
-      const daysSinceStart = currentDate.diff(startDate, "day");
-      const periodNumber = Math.floor(daysSinceStart / selectedGoal.frequency);
-      const newPeriodStart = startDate.add(periodNumber * selectedGoal.frequency, "day");
-      const newPeriodEnd = newPeriodStart.add(selectedGoal.frequency, "day");
+  const handleEdit = (day, goalname, prefill) => {
+    setEditingDate(day.format("YYYY-MM-DD"));
+    setEditingGoal(goalname);
+    setInputValue(prefill); // Prefill with current value
+  };
 
-      // Update periodStart and periodEnd
-      setPeriodStart(newPeriodStart);
-      setPeriodEnd(newPeriodEnd);
-    } else {
-      // If no goal is selected, reset periodStart and periodEnd
-      setPeriodStart(null);
-      setPeriodEnd(null);
+  const handleSubmitEdit = (day, goalname, dps) => {
+    const goal = goals.find(g => g.name === goalname);
+    const existingDp = dps.find(d => d.date === day.format("YYYY-MM-DD"));
+
+    if (!goal || !existingDp || isNaN(inputValue)) return;
+
+    if (parseFloat(inputValue) <= 0) {
+      removeDp(existingDp.id);
     }
-  }, [selectedGoal, selectedDate]);
+    else {
+      editDp(existingDp.id, goalname, parseFloat(inputValue), day.format("YYYY-MM-DD"));
+    }
+
+    setEditingDate(null); // Exit edit mode
+    setInputValue(""); // Reset input
+  };
+
+  // useEffect to update periodStart and periodEnd when selectedGoal changes
+  // useEffect(() => {
+  //   if (selectedGoal) {
+  //     const startDate = dayjs(selectedGoal.start_date);
+  //     const currentDate = selectedDate; 
+
+  //     // Calculate the current period based on the goal's frequency
+  //     const daysSinceStart = currentDate.diff(startDate, "day");
+  //     const periodNumber = Math.floor(daysSinceStart / selectedGoal.frequency);
+  //     const newPeriodStart = startDate.add(periodNumber * selectedGoal.frequency, "day");
+  //     const newPeriodEnd = newPeriodStart.add(selectedGoal.frequency, "day");
+  //   }
+  // }, [selectedGoal, selectedDate]);
   
   // Show loading spinner or message
   if (isLoading) {
@@ -158,108 +171,138 @@ export default function Page() {
     return cumulativeValue >= goal?.value;
   }
 
-  const isGoalMetForDate = (targetDate, goal) => {
-    if (!goal || !goal.name || !datapoints[goal.name])
-      return false;
-  
+  const getGoalPeriod = (targetDate, goal) => {
+    if (!goal || !goal.start_date || !goal.frequency) return [null, null];
     const startDate = dayjs(goal.start_date);
     const daysSinceStart = targetDate.diff(startDate, "day");
     const periodNumber = Math.floor(daysSinceStart / goal.frequency);
     const periodStart = startDate.add(periodNumber * goal.frequency, "day");
     const periodEnd = periodStart.add(goal.frequency, "day");
+    return [periodStart, periodEnd];
+  };
   
-    // Get all datapoints within the current goal period
-    const relevantDatapoints = datapoints[goal.name]?.filter((dp) => {
-      const dpDate = dayjs(dp.date);
-      return (
-        (dpDate.isAfter(periodStart) || dpDate.isSame(periodStart)) &&
-        dpDate.isBefore(periodEnd)
-      );
-    }) || [];
+  const isGoalMetForDate = (targetDate, goal) => {
+    if (!goal || !goal.name || !datapoints[goal.name])
+      return false;
   
-    // Compute the cumulative value from relevant datapoints
-    const cumulativeValue = relevantDatapoints.reduce((sum, dp) => sum + dp.value, 0);
-  
-    // Calculate remaining days including targetDate but excluding periodEnd
-    const remainingDays = periodEnd.diff(targetDate, "day");
-  
-    // Find the datapoint for the exact targetDate
-    const targetDataPoint = relevantDatapoints.find(dp => dayjs(dp.date).isSame(targetDate));
+    const targetDataPoint = datapoints[goal.name].find(dp => dp.date === targetDate);
 
-    if (remainingDays <= 0) {
-      return targetDataPoint?.value >= goal.value - cumulativeValue;
-    }
-  
-    // Compute the required amount needed for targetDate
-    const requiredAmount = (goal.value - cumulativeValue) / remainingDays;
-
-    return targetDataPoint?.value >= requiredAmount;
+    return targetDataPoint?.value >= goal.value/goal.frequency;
   };
 
-  // const cards = Array.from({length: 3}, (i, k) => (
-  //   <Card
-  //     title={""}
-  //     icons={[]}
-  //     content={
-  //       <div className='checkbox-container'>
-  //       </div>
-  //     }
-  //     width={
-  //       "100%"
-  //     }
-  //   />
-  // ));
+  
 
   const cards = Object.entries(datapoints).map(([name, dps]) => 
     <Card
       title={name}
       icons={[
         <div className='graph-view-switch'>
+        ➖
+        </div>,
+        <div className='graph-view-switch'>
+        ➕
+        </div>,
+        <div className='graph-view-switch'>
         📈
         </div>
       ]}
       content={
         <div>
-
-           <div className='progress-container-center'>
-              <Gauge
-              value={
-                datapoints[selectedGoal?.name]?.reduce(
-                  (accumulator, currentItem) => {
-                    if (
-                      (dayjs(currentItem.date).isAfter(periodStart)
-                      || dayjs(currentItem.date).isSame(periodStart)) &&
-                      dayjs(currentItem.date).isBefore(periodEnd)
-                    ){
-                      return accumulator + currentItem.value;
+          <div className='progress-container-center'>
+            {
+              goals.find(g => g.name === name)? 
+                <div className='card-goal-display'>
+                  <div style={{flex: 1}}>
+                  <Gauge
+                    value={
+                      dps.reduce(
+                        (accumulator, currentItem) => {
+                          if (
+                            (dayjs(currentItem.date).isAfter(getGoalPeriod(selectedDate, goals.find(g => g.name === name))[0])
+                            || dayjs(currentItem.date).isSame(getGoalPeriod(selectedDate, goals.find(g => g.name === name))[0])) &&
+                            dayjs(currentItem.date).isBefore(getGoalPeriod(selectedDate, goals.find(g => g.name === name))[1])
+                          ){
+                            return accumulator + Number(currentItem.value);
+                          }
+                          return accumulator;
+                        }, 0)
                     }
-                    return accumulator;
-                  }, 0)
-              }
-              valueMax={selectedGoal?.value}
-              width={130}
-              height={130}
-              text={
-                ({ value, valueMax }) => `${value} / ${valueMax}`
-                }
-              />
-          </div>
+                    valueMax={goals.find(g => g.name === name)?.value}
+                    height={120}
+                    text={
+                      ({ value, valueMax }) => `${value} / ${valueMax}`
+                    }
+                  />
+                  </div>
+                  <div style={{alignContent: "center", flex: 2}}>
+                    <div>
+                      Goal: {goals.find(g => g.name === name).value} {goals.find(g => g.name === name).unit || "units"} every {goals.find(g=>g.name === name).frequency === 1? "day": goals.find(g=>g.name === name).frequency + " days"}
+                    </div>
 
-          <div className='top-graph'>
+                    <div>
+                      From {
+                        getGoalPeriod(selectedDate, goals.find(g => g.name === name))[0]
+                          .format("ddd MMM DD")} to {
+                        getGoalPeriod(selectedDate, goals.find(g => g.name === name))[1].subtract(1, "day").format("ddd MMM DD")
+                      }
+                    </div>
+                  </div>
+                
+                </div>: 
+                <div style={{height: 120}}>
+                  No goals set yet. 
+                  <div>
+                    <button>
+                      Start one now!
+                    </button>
+                  </div>
+                </div>
+            }
+            
+            </div>
+
+          <div className='day-graph'>
             <div className='checkbox-container'>
               {
                 daysOfWeek.map((day, index) => (
                   <div key={index}
-                  style={{
-                    backgroundColor: 
-                      isDayActive(dps, day.format("YYYY-MM-DD"))?
-                      colorPalette[day.diff('1980-01-01', 'day') % 3] :
-                      '#D9D9D9'
-                  }}
-                  className="progress-block-recent-activities">
-                    {
-                      isGoalMetForDate(day, goals.find(g => g.name === name))? "✔️" : ""
-                    }
+                    onClick={() => {
+                      if (isDayActive(dps, day.format("YYYY-MM-DD"))){
+                        if (isGoalMetForDate(day.format("YYYY-MM-DD"), goals.find(g => g.name === name))){
+                          handleEdit(day, name, dps.find(d => d.date === day.format("YYYY-MM-DD"))?.value || "");
+                        }
+                        else{
+                          editDp(dps.find(d => d.date === day.format("YYYY-MM-DD")).id,name, 
+                          goals.find(g => g.name === name).value / goals.find(g => g.name === name).frequency, day.format("YYYY-MM-DD"))
+                        }
+                      }
+                      else {
+                        createDatapoint(USER_ID, name, goals.find(g => g.name === name).value / goals.find(g => g.name === name).frequency, day.format("YYYY-MM-DD"))
+                      }
+                    }}
+                    style={{
+                      backgroundColor: 
+                        isDayActive(dps, day.format("YYYY-MM-DD"))?
+                        colorPalette[day.diff('1980-01-01', 'day') % 3] :
+                        '#D9D9D9',
+                    }}
+                    className="progress-block-recent-activities">
+                      {(editingDate === day.format("YYYY-MM-DD") & editingGoal === name) ? (
+                        <input
+                          type="number"
+                          value={inputValue}
+                          onChange={(e) => setInputValue(e.target.value)}
+                          onBlur={() => handleSubmitEdit(day, name, dps)}
+                          onKeyDown={(e) => {
+                            if (e.key === "Enter") handleSubmitEdit(day, name, dps);
+                          }}
+                          autoFocus
+                        />
+                      ) : isGoalMetForDate(day.format("YYYY-MM-DD"), goals.find(g => g.name === name)) ? (
+                        "✔️"
+                      ) : (
+                        ""
+                      )}
                   </div>
                 ))
               }
@@ -291,7 +334,7 @@ export default function Page() {
           id='left-card'
           className='left-container'
         >
-          <Card 
+          <Card
             title={selectedDate.format('MMM YYYY').toString()}
             icons={[
               <div onClick={handlePrevWeek}>⬅️</div>,
@@ -306,6 +349,7 @@ export default function Page() {
               </div>
             }
             fontSize={"15pt"}
+            height={"15vh"}
             />
             <Card 
             title="Monthly View"
@@ -322,7 +366,6 @@ export default function Page() {
             fontSize={"15pt"}
             content={
               <div className='card-cont goal-list'>
-
               </div>
             }
           />
@@ -330,13 +373,11 @@ export default function Page() {
 
         <div className='contents-container'>
           <div className="top-flex-container">
-    
             {
               cards.map((card, index) => (
                 {...card, index:index}
               ))
             }
-            
           </div>
 
           <div className="bottom-flex-container">
@@ -372,9 +413,7 @@ export default function Page() {
                       overflow:"scroll", 
                       fontFamily:"monospace"}}>
                       {
-                        /*
                         JSON.stringify(goals)
-                        */
                       }
                       {
                         JSON.stringify(datapoints)

@@ -35,12 +35,12 @@ export default function useDatapoints(userId) {
   fetchDp(userId);
   }, [userId]);
     
-  const createDatapoint = async (userId, name, value) => {
+  const createDatapoint = async (userId, name, value, date) => {
     // datapoints are ALWAYS GROUPED
     // console.log(`new dp created`);
     try {
-      const newDp = await createDp(userId, name, value);
-      console.log(newDp);
+      const newDp = await createDp(userId, name, value, date);
+      // console.log(newDp);
       
       const newTLDP = {
         "id": newDp.id,
@@ -96,11 +96,11 @@ export default function useDatapoints(userId) {
     try {
       const removed = await deleteDp(dpId);
       setDatapoints(prevDatapoints => {
-      const updatedDps = { ...prevDatapoints };
-      
-      updatedDps[removed.name] = updatedDps[removed.name].filter(dp => dp.id !== dpId);
-      
-      return updatedDps;
+        const updatedDps = { ...prevDatapoints };
+        
+        updatedDps[removed.name] = updatedDps[removed.name].filter(dp => dp.id !== dpId);
+        
+        return updatedDps;
       });
 
     } catch (err) {

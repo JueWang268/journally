@@ -47,20 +47,27 @@
     border-radius: 20%;
 }
 
-.top-graph{
+.card-goal-display{
+    display: flex;
+}
+
+.day-graph{
     display: flex;
     flex-direction: row;
     justify-content: flex-start;
-    padding-bottom: 0px;
 }
 
 .progress-block-recent-activities {
-    height: 2em;
-    width: 2em;
+    height: 1.5em;
+    width: 1.5em;
     border-radius: 10%;
     align-content: center;
     text-align: center;
     font-size: 16pt;
+}
+
+.progress-block-recent-activities:hover{
+    background-color: blue;
 }
 
 .checkbox-container{
