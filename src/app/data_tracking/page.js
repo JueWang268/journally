@@ -19,6 +19,7 @@ import AccordionDetails from '@mui/material/AccordionDetails';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { Gauge, PieChart } from '@mui/x-charts/';
+import { LineChart } from '@mui/x-charts/LineChart';
 import { WrapText } from '@mui/icons-material';
 
 export default function Page() {
@@ -68,6 +69,19 @@ export default function Page() {
   const [editingGoal, setEditingGoal] = useState(null);
   const [inputValue, setInputValue] = useState("");
 
+  const [selectedCategory, setSelectedCategory] = useState(
+    Object.keys(datapoints)[0] || "running"
+  );
+  
+  const categoryData = datapoints[selectedCategory] || [];
+  
+  // Sort data by date
+  const sortedData = [...categoryData].sort((a, b) => new Date(a.date) - new Date(b.date));
+  
+  // Extract x-axis (dates) and y-axis (values)
+  const xAxisData = sortedData.map(dp => dayjs(dp.date));
+  const yAxisData = sortedData.map(dp => dp.value);
+  
   const handleEdit = (day, goalname, prefill) => {
     setEditingDate(day.format("YYYY-MM-DD"));
     setEditingGoal(goalname);
@@ -189,8 +203,6 @@ export default function Page() {
 
     return targetDataPoint?.value >= goal.value/goal.frequency;
   };
-
-  
 
   const cards = Object.entries(datapoints).map(([name, dps]) => 
     <Card
@@ -317,7 +329,7 @@ export default function Page() {
       }
 
       sx={
-        Object.entries(datapoints).length <= 3 ? { flex: 1, minWidth: 0 } : { width: "calc(100% / 3)", flexShrink: 0 }
+        Object.entries(datapoints).length <= 3 ? { flex: 1, minWidth: 0, maxWidth: "40%" } : { width: "calc(100% / 3)", flexShrink: 0 }
       }
     />
   );
@@ -389,9 +401,13 @@ export default function Page() {
                     src="/assets/icons/menu-icon.svg" alt="menu-icon" width="40" height="40"/>
                   ]}
                   content={
-                  <div>
-                    * GRAPH GOES HERE*
-                  </div>
+                    <div style={ {height:"30vh"} }>
+                    
+                      <LineChart
+                        xAxis={[{ data: xAxisData }]}
+                        series={[{ data: yAxisData }]}
+                      />
+                    </div>
                   }
 
                 />

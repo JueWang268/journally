@@ -35,7 +35,7 @@
     display: flex;
     flex-wrap: nowrap; /* Prevents wrapping */
     overflow-x: auto; /* Enables horizontal scrolling */
-    /* gap: 1rem; */
+    gap: 1rem;
     width: 100%; /* Ensure it doesn't shrink */
     height: 250px; /* Adjust based on your needs */
     white-space: nowrap; /* Prevents internal wrapping */
