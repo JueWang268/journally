@@ -1,24 +1,20 @@
-'use client'
+"use client";
 import { useState } from "react";
+import TopBar from "../UI/TopBar.jsx";
+import MobileNavBar from "../UI/MobileNavBar.jsx";
+import Image from "next/image";
 import { UserAuth } from "../context/AuthContext.js";
 import { saveMessagingDeviceToken } from "../firebase/messaging";
 import { useNotifications } from "../hooks/useNotifications";
 import { useTokens } from "../hooks/useTokens";
-import TopBar from '../UI/TopBar.jsx';
-import Image from "next/image.js";
-import '../../styles/BgTopBar.css';
-import "./messaging.css";
+import "../../styles/BgTopBar.css";
+import "./Messaging.css";
 
 export default function ChatPage() {
-  const {
-    user, authLoading, authError,
-    userSignIn, userSignUp,
-    googleSignIn,
-    userSignOut
-  } = UserAuth();
+  const { user, userSignOut } = UserAuth();
   const USER_ID = user?.uid;
 
-  const { saveToken, fetchToken } = useTokens();
+  const { fetchToken } = useTokens();
   const { sendNotification } = useNotifications();
 
   const [messages, setMessages] = useState([
@@ -43,6 +39,24 @@ export default function ChatPage() {
     { id: 19, text: "Legs.", sender: "user1" },
   ]);
 
+  const [profiles, setProfiles] = useState([
+    { id: 1, src: "/assets/UserProfile.png", alt: "Profile" },
+    { id: 2, src: "/assets/UserProfile.png", alt: "Profile" },
+    { id: 3, src: "/assets/UserProfile.png", alt: "Profile" },
+    { id: 4, src: "/assets/UserProfile.png", alt: "Profile" },
+  ]);
+
+  const [channels, setChannels] = useState([
+    { id: 1, name: "The Homies" },
+    { id: 2, name: "Daily Chat" },
+    { id: 3, name: "Discussion" },
+    { id: 4, name: "Airdrops" },
+    { id: 5, name: "Gym Bros" },
+    { id: 6, name: "Bowling Lads" },
+  ]);
+
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
   const handleTestNotification = async () => {
     const permission = await saveMessagingDeviceToken(USER_ID);
     if (permission) {
@@ -51,83 +65,135 @@ export default function ChatPage() {
     }
   };
 
+  const toggleSidebar = () => {
+    setIsSidebarOpen(!isSidebarOpen);
+  };
+
+  const SidebarContent = () => (
+    <div className="sidebar-content">
+      <MobileNavBar loggedIn={Boolean(user)} onProfileClick={userSignOut} />
+      <div className="sidebar-section horizontal-list">
+        {profiles.map((profile) => (
+          <div className="profile-icon-container" key={profile.id}>
+            <Image
+              className="profile-icon"
+              src={profile.src}
+              width={40}
+              height={40}
+              alt={profile.alt}
+            />
+          </div>
+        ))}
+      </div>
+      <div className="sidebar-section">
+        <div className="channel-list">
+          {channels.map((channel) => (
+            <button key={channel.id} className="channel-button">
+              {channel.name}
+            </button>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+
   return (
     <div className="app">
-      <TopBar loggedIn={Boolean(user)} onProfileClick={userSignOut} />
+      {/* TopBar */}
+      <div className="desktop-topbar">
+        <TopBar loggedIn={Boolean(user)} onProfileClick={userSignOut} />
+      </div>
 
-      <div className="grid-container">
+      {/* Sidebar Access */}
+      <div className="mobile-hamburger" onClick={toggleSidebar}>
+        &#9776;
+      </div>
 
-        {/* Icons */}
-        <div className="grid-item icon-column">
-          <Image className="profile-icon"
-            src="/assets/UserProfile.png"
-            height="50" width="50" alt='Profile' />
-          <Image className="profile-icon"
-            src="/assets/UserProfile.png"
-            height="50" width="50" alt='Profile' />
-          <Image className="profile-icon"
-            src="/assets/UserProfile.png"
-            height="50" width="50" alt='Profile' />
-          <Image className="profile-icon"
-            src="/assets/UserProfile.png"
-            height="50" width="50" alt='Profile' />
-        </div>
-
-        {/* Friend Groups */}
-        <div className="grid-item channel-column">
-
-          <div className="friend-groups-image-container">
-            <Image className='friend-groups-image'
-              src="/assets/friend-groups.png" alt="menu-icon"
-              width="300" height="175" />
-            <h2 className="friend-groups-title">Friend Groups</h2>
-          </div>
-
-          <input type="text" placeholder="Search..." className="search-bar" />
-
-
-          <div className="channel-list">
-            <h2>Channels</h2>
-            <button className="channel-button">The Homies</button>
-            <button className="channel-button">Daily Chat</button>
-            <button className="channel-button">Discussion</button>
-            <button className="channel-button">Airdrops</button>
-            <button className="channel-button">Gym Bros</button>
-            <button className="channel-button">Bowling Lads</button>
-          </div>
-
-        </div>
-
-        {/* Chat Area */}
-        <div className="grid-item chat-column">
-          <span className="chat-header">Gymrat Group Chat</span>
-
-          <div className="chat-messages">
-            {messages.map((msg) => (
-              <div key={msg.id} className={`message ${msg.sender === "user1" ? 'my-message' : 'other-message'}`}>
-                {msg.text}
+      {/* Desktop */}
+      <div className="main-content">
+        <div className="grid-container">
+          {/* Profile icons */}
+          <div className="grid-item icon-column">
+            {profiles.map((profile) => (
+              <div className="profile-icon-container" key={profile.id}>
+                <Image
+                  className="profile-icon"
+                  src={profile.src}
+                  width={50}
+                  height={50}
+                  alt={profile.alt}
+                />
               </div>
             ))}
           </div>
 
-          {/* Message Input */}
-          <div className="message-input-container">
-            <input type="text" placeholder="Message..." className="message-input" />
-            <button className="send-button">Send</button>
+          {/* Friend groups & channels */}
+          <div className="grid-item channel-column">
+            <div className="friend-groups-image-container">
+              <Image
+                className="friend-groups-image"
+                src="/assets/friend-groups.png"
+                alt="menu-icon"
+                draggable="false"
+                width={300}
+                height={200}
+              />
+            </div>
+            <input type="text" placeholder="Search..." className="search-bar" />
+            <div className="channel-list">
+              {channels.map((channel) => (
+                <button key={channel.id} className="channel-button">
+                  {channel.name}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Chat Column */}
+          <div className="grid-item chat-column">
+            <div className="chat-header-container">
+              <span className="chat-header">Gymrat Group Chat</span>
+              <button
+                onClick={handleTestNotification}
+                className="notification-button"
+              >
+                🔔
+              </button>
+            </div>
+
+            <div className="chat-messages">
+              {messages.map((msg) => (
+                <div
+                  key={msg.id}
+                  className={`message ${msg.sender === "user1" ? "my-message" : "other-message"
+                    }`}
+                >
+                  {msg.text}
+                </div>
+              ))}
+            </div>
+
+            <div className="message-input-container">
+              <input
+                type="text"
+                placeholder="Message..."
+                className="message-input"
+              />
+              <button className="send-button">Send</button>
+            </div>
           </div>
         </div>
-
-        {/* Notification Button */}
-        <button
-          onClick={handleTestNotification}
-          className="notification-button"
-          disabled={!USER_ID}
-        >
-          Test Notification
-        </button>
-
       </div>
 
+      {/* Mobile Sidebar */}
+      <div className={`mobile-sidebar ${isSidebarOpen ? "open" : "closed"}`}>
+        <div className="sidebar-header">
+          <button className="close-sidebar" onClick={toggleSidebar}>
+            &times;
+          </button>
+        </div>
+        <SidebarContent />
+      </div>
     </div>
   );
 }
