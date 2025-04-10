@@ -45,9 +45,9 @@ export async function createGoal(
         user_id,
         value,
         frequency,
-        ${start_date !== undefined && start_date !== null ? `start_date` : ``},
-        ${end_date !== undefined && end_date !== null ? `end_date` : ``},
-        ${unit !== undefined && unit !== null ? `unit` : ``}
+        start_date,
+        end_date,
+        unit
       )
       VALUES (
         gen_random_uuid(),

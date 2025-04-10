@@ -1,6 +1,11 @@
 import { useState, useEffect, useCallback } from 'react';
-import { readDp, createDp, readGroupedDp, updateDp, deleteDp } from '../api/datapointsAPI.tsx';
-import { ISODate } from "../utils/ISODate";
+import {
+  readDp, 
+  createDp, 
+  readGroupedDp, 
+  updateDp, 
+  updateDpGroupName, 
+  deleteDp } from '../api/datapointsAPI.tsx';
 
 export default function useDatapoints(userId) {
   
@@ -61,7 +66,6 @@ export default function useDatapoints(userId) {
           return updatedDps;
         }
       );
-      // console.log(`new dps ${datapoints}`);
     }
     catch (err) {
       setError(err);
@@ -91,6 +95,33 @@ export default function useDatapoints(userId) {
       setError(err);
     }
   };
+
+  const editDpGroupName = async (oldName, newName) => {
+    try {
+      const updatedDps = await updateDpGroupName(oldName, newName);
+  
+      setDatapoints(prevDatapoints => {
+        const existingDatapoints = prevDatapoints[oldName] || [];
+  
+        // Update the name field in each dp
+        const renamedDps = existingDatapoints.map(dp => ({
+          ...dp,
+          name: newName
+        }));
+  
+        return {
+          ...prevDatapoints,
+          [oldName]: undefined,  // remove old group
+          [newName]: renamedDps, // add new group
+        };
+      });
+  
+      return updatedDps;
+    } catch (err) {
+      setError(err);
+    }
+  };
+  
   
   const removeDp = async (dpId) => {
     try {
@@ -99,6 +130,11 @@ export default function useDatapoints(userId) {
         const updatedDps = { ...prevDatapoints };
         
         updatedDps[removed.name] = updatedDps[removed.name].filter(dp => dp.id !== dpId);
+
+        if (updatedDps[removed.name].length === 0 ){
+          const { [removed.name]: _, ...newDps } = updatedDps;
+          return newDps;
+        }
         
         return updatedDps;
       });
@@ -106,7 +142,20 @@ export default function useDatapoints(userId) {
     } catch (err) {
       setError(err);
     }
-    
+  }
+
+  const removeCategory = async (name) => {
+    try {
+      if (Object.keys(datapoints).includes(name)) {
+        const pts = datapoints[name];
+        pts.forEach(dp => {
+          removeDp(dp.id);
+        });
+      }
+
+    } catch (err) {
+      setError(err);
+    }
   }
 
 
@@ -116,7 +165,9 @@ export default function useDatapoints(userId) {
     error,
     createDatapoint,
     editDp,
+    editDpGroupName,
     removeDp,
+    removeCategory,
     setDatapoints
   };
 }

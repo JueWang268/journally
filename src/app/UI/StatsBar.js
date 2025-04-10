@@ -7,8 +7,7 @@ import DataPointItem from './DataPointItem.js';
 export default function StatsBar( { userId } ) {
   const { datapoints, loading, error, createDatapoint, editDp, removeDp } = useDataPointsContext();
   console.log(JSON.stringify(datapoints), "is the datapoints");
-  
-  
+
   return (
     <div className="stats-bar">
       {

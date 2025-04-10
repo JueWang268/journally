@@ -10,17 +10,15 @@ import FriendsList from '../UI/FriendsList/FriendsList';
 import dayjs from "dayjs";
 import useGoals from "../hooks/useGoals";
 import useDatapoints from "../hooks/useDataPoints";
+import NewGoalModal from './NewGoalModal';
 
 import { UserAuth } from '../context/AuthContext.js';
 import { useRouter } from 'next/navigation';
 
-import Accordion from '@mui/material/Accordion';
-import AccordionDetails from '@mui/material/AccordionDetails';
-import AccordionSummary from '@mui/material/AccordionSummary';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+
 import { Gauge, PieChart } from '@mui/x-charts/';
 import { LineChart } from '@mui/x-charts/LineChart';
-import { WrapText } from '@mui/icons-material';
+
 
 export default function Page() {
   const {
@@ -30,6 +28,7 @@ export default function Page() {
     userSignOut
   } = UserAuth();
   const router = useRouter();
+  let newNameCounter = 0;
 
   const USER_ID = user?.uid;
   const {datapoints, 
@@ -37,7 +36,9 @@ export default function Page() {
     error_d,
     createDatapoint,
     editDp,
+    editDpGroupName,
     removeDp,
+    removeCategory,
     setDatapoints } = useDatapoints(USER_ID);
   const {
     goals,
@@ -62,25 +63,34 @@ export default function Page() {
       setIsLoading(true);
     }
   }, [loading_g, loading_d, goals, setGoals]);
+
   const [selectedDate, setSelectedDate] = useState(dayjs());
   const [selectedFriends, setSelectedFriends] = useState([]);
-
   const [editingDate, setEditingDate] = useState(null);
   const [editingGoal, setEditingGoal] = useState(null);
   const [inputValue, setInputValue] = useState("");
-
-  const [selectedCategory, setSelectedCategory] = useState(
-    Object.keys(datapoints)[0] || "running"
-  );
+  const [showGoalModal, setShowGoalModal] = useState(false);
   
-  const categoryData = datapoints[selectedCategory] || [];
+  const getChartData = (categories) => {
+    
+    const last7Days = Array.from({ length: 7 }, (_, i) => selectedDate.subtract(6, "day").add(i, "day"));
+    const y = [];
+    for (let category of categories) {
+      const categoryData = datapoints[category] || [];
+      const dataMap = categoryData.reduce((acc, dp) => {
+        acc[dp.date] = dp.value;
+        return acc;
+      }, {});
+      y.push({label: category, data: last7Days.map(date => dataMap[date.format("YYYY-MM-DD")] || 0)});
+    }
   
-  // Sort data by date
-  const sortedData = [...categoryData].sort((a, b) => new Date(a.date) - new Date(b.date));
+    return {
+      xAxisData: last7Days,
+      yAxisData: y
+    };
+  };
   
-  // Extract x-axis (dates) and y-axis (values)
-  const xAxisData = sortedData.map(dp => dayjs(dp.date));
-  const yAxisData = sortedData.map(dp => dp.value);
+  const { xAxisData, yAxisData } = getChartData(Object.keys(datapoints));
   
   const handleEdit = (day, goalname, prefill) => {
     setEditingDate(day.format("YYYY-MM-DD"));
@@ -88,36 +98,21 @@ export default function Page() {
     setInputValue(prefill); // Prefill with current value
   };
 
-  const handleSubmitEdit = (day, goalname, dps) => {
-    const goal = goals.find(g => g.name === goalname);
+  const handleSubmitEdit = (day, dpname, dps) => {
     const existingDp = dps.find(d => d.date === day.format("YYYY-MM-DD"));
 
-    if (!goal || !existingDp || isNaN(inputValue)) return;
+    if (!existingDp || isNaN(inputValue)) return;
 
     if (parseFloat(inputValue) <= 0) {
       removeDp(existingDp.id);
     }
     else {
-      editDp(existingDp.id, goalname, parseFloat(inputValue), day.format("YYYY-MM-DD"));
+      editDp(existingDp.id, dpname, parseFloat(inputValue), day.format("YYYY-MM-DD"));
     }
-
     setEditingDate(null); // Exit edit mode
     setInputValue(""); // Reset input
   };
 
-  // useEffect to update periodStart and periodEnd when selectedGoal changes
-  // useEffect(() => {
-  //   if (selectedGoal) {
-  //     const startDate = dayjs(selectedGoal.start_date);
-  //     const currentDate = selectedDate; 
-
-  //     // Calculate the current period based on the goal's frequency
-  //     const daysSinceStart = currentDate.diff(startDate, "day");
-  //     const periodNumber = Math.floor(daysSinceStart / selectedGoal.frequency);
-  //     const newPeriodStart = startDate.add(periodNumber * selectedGoal.frequency, "day");
-  //     const newPeriodEnd = newPeriodStart.add(selectedGoal.frequency, "day");
-  //   }
-  // }, [selectedGoal, selectedDate]);
   
   // Show loading spinner or message
   if (isLoading) {
@@ -204,137 +199,7 @@ export default function Page() {
     return targetDataPoint?.value >= goal.value/goal.frequency;
   };
 
-  const cards = Object.entries(datapoints).map(([name, dps]) => 
-    <Card
-      title={name}
-      icons={[
-        <div className='graph-view-switch'>
-        ➖
-        </div>,
-        <div className='graph-view-switch'>
-        ➕
-        </div>,
-        <div className='graph-view-switch'>
-        📈
-        </div>
-      ]}
-      content={
-        <div>
-          <div className='progress-container-center'>
-            {
-              goals.find(g => g.name === name)? 
-                <div className='card-goal-display'>
-                  <div style={{flex: 1}}>
-                  <Gauge
-                    value={
-                      dps.reduce(
-                        (accumulator, currentItem) => {
-                          if (
-                            (dayjs(currentItem.date).isAfter(getGoalPeriod(selectedDate, goals.find(g => g.name === name))[0])
-                            || dayjs(currentItem.date).isSame(getGoalPeriod(selectedDate, goals.find(g => g.name === name))[0])) &&
-                            dayjs(currentItem.date).isBefore(getGoalPeriod(selectedDate, goals.find(g => g.name === name))[1])
-                          ){
-                            return accumulator + Number(currentItem.value);
-                          }
-                          return accumulator;
-                        }, 0)
-                    }
-                    valueMax={goals.find(g => g.name === name)?.value}
-                    height={120}
-                    text={
-                      ({ value, valueMax }) => `${value} / ${valueMax}`
-                    }
-                  />
-                  </div>
-                  <div style={{alignContent: "center", flex: 2}}>
-                    <div>
-                      Goal: {goals.find(g => g.name === name).value} {goals.find(g => g.name === name).unit || "units"} every {goals.find(g=>g.name === name).frequency === 1? "day": goals.find(g=>g.name === name).frequency + " days"}
-                    </div>
-
-                    <div>
-                      From {
-                        getGoalPeriod(selectedDate, goals.find(g => g.name === name))[0]
-                          .format("ddd MMM DD")} to {
-                        getGoalPeriod(selectedDate, goals.find(g => g.name === name))[1].subtract(1, "day").format("ddd MMM DD")
-                      }
-                    </div>
-                  </div>
-                
-                </div>: 
-                <div style={{height: 120}}>
-                  No goals set yet. 
-                  <div>
-                    <button>
-                      Start one now!
-                    </button>
-                  </div>
-                </div>
-            }
-            
-            </div>
-
-          <div className='day-graph'>
-            <div className='checkbox-container'>
-              {
-                daysOfWeek.map((day, index) => (
-                  <div key={index}
-                    onClick={() => {
-                      if (isDayActive(dps, day.format("YYYY-MM-DD"))){
-                        if (isGoalMetForDate(day.format("YYYY-MM-DD"), goals.find(g => g.name === name))){
-                          handleEdit(day, name, dps.find(d => d.date === day.format("YYYY-MM-DD"))?.value || "");
-                        }
-                        else{
-                          editDp(dps.find(d => d.date === day.format("YYYY-MM-DD")).id,name, 
-                          goals.find(g => g.name === name).value / goals.find(g => g.name === name).frequency, day.format("YYYY-MM-DD"))
-                        }
-                      }
-                      else {
-                        createDatapoint(USER_ID, name, goals.find(g => g.name === name).value / goals.find(g => g.name === name).frequency, day.format("YYYY-MM-DD"))
-                      }
-                    }}
-                    style={{
-                      backgroundColor: 
-                        isDayActive(dps, day.format("YYYY-MM-DD"))?
-                        colorPalette[day.diff('1980-01-01', 'day') % 3] :
-                        '#D9D9D9',
-                    }}
-                    className="progress-block-recent-activities">
-                      {(editingDate === day.format("YYYY-MM-DD") & editingGoal === name) ? (
-                        <input
-                          type="number"
-                          value={inputValue}
-                          onChange={(e) => setInputValue(e.target.value)}
-                          onBlur={() => handleSubmitEdit(day, name, dps)}
-                          onKeyDown={(e) => {
-                            if (e.key === "Enter") handleSubmitEdit(day, name, dps);
-                          }}
-                          autoFocus
-                        />
-                      ) : isGoalMetForDate(day.format("YYYY-MM-DD"), goals.find(g => g.name === name)) ? (
-                        "✔️"
-                      ) : (
-                        ""
-                      )}
-                  </div>
-                ))
-              }
-            </div>
-          </div>
-          <div className='bottom-graph'>
-            {daysOfWeek.map((day, index) => (
-              <div key={index} className="day"> {day.format("ddd")} </div>
-            ))}
-          </div>
-        </div>
-      }
-
-      sx={
-        Object.entries(datapoints).length <= 3 ? { flex: 1, minWidth: 0, maxWidth: "40%" } : { width: "calc(100% / 3)", flexShrink: 0 }
-      }
-    />
-  );
-
-    // Function to navigate weeks
+    // Functions to navigate weeks
     const handlePrevWeek = () => setSelectedDate(selectedDate.subtract(1, "week"));
     const handleNextWeek = () => setSelectedDate(selectedDate.add(1, "week"));
 
@@ -374,42 +239,217 @@ export default function Page() {
             />
             <Card 
             title="Current Goals"
-            icons={[]}
+            icons={[
+              <Image
+                onClick={() => setShowGoalModal(true)}
+                className='add-icon'
+                src="/assets/icons/add-icon.svg"
+                alt="add-icon" width="34" height="34"
+              />
+            ]}
             fontSize={"15pt"}
             content={
               <div className='card-cont goal-list'>
+                {
+                  goals ? 
+                  goals.map(g =>
+                    <div style={{padding: "1em"}}>
+                      {g.name}: {g.value} {g.unit || "units"} every {g.frequency === 1? "day": g.frequency + " days"}
+                    <button style={{float: "right"}}>
+                     Edit
+                    </button>
+                    </div>
+                  ) :
+                  <div>
+                    No goals set yet.
+                    <div>
+                      <button>
+                        Start one now!
+                      </button>
+                    </div>
+                  </div>
+                }
               </div>
             }
           />
         </div>
 
         <div className='contents-container'>
-          <div className="top-flex-container">
-            {
-              cards.map((card, index) => (
-                {...card, index:index}
-              ))
+        <div className="card-wrapper">
+        {Object.entries(datapoints).map(([name, dps]) => (
+          <Card
+            title={name}
+            icons={[
+              <div className='graph-view-switch'>➖</div>,
+              <div className='graph-view-switch'>➕</div>,
+              <div className='graph-view-switch' onClick={() => removeCategory(name)}>🗑️</div>
+            ]}
+            content={
+              <div>
+                <div className='progress-container-center'>
+                  {
+                    goals.find(g => g.name === name)? 
+                      <div className='card-goal-display'>
+                        <div style={{flex: 1}}>
+                        <Gauge
+                          value={
+                            dps.reduce(
+                              (accumulator, currentItem) => {
+                                if (
+                                  (dayjs(currentItem.date).isAfter(getGoalPeriod(selectedDate, goals.find(g => g.name === name))[0])
+                                  || dayjs(currentItem.date).isSame(getGoalPeriod(selectedDate, goals.find(g => g.name === name))[0])) &&
+                                  dayjs(currentItem.date).isBefore(getGoalPeriod(selectedDate, goals.find(g => g.name === name))[1])
+                                ){
+                                  return accumulator + Number(currentItem.value);
+                                }
+                                return accumulator;
+                              }, 0)
+                          }
+                          valueMax={goals.find(g => g.name === name)?.value}
+                          height={120}
+                          text={
+                            ({ value, valueMax }) => `${value} / ${valueMax}`
+                          }
+                        />
+                        </div>
+                        <div style={{alignContent: "center", flex: 2}}>
+                          <div>
+                            Goal: {goals.find(g => g.name === name).value} {goals.find(g => g.name === name).unit || "units"} every {goals.find(g=>g.name === name).frequency === 1? "day": goals.find(g=>g.name === name).frequency + " days"}
+                          </div>
+                          <div>
+                            From {
+                              getGoalPeriod(selectedDate, goals.find(g => g.name === name))[0]
+                                .format("ddd MMM DD")} to {
+                              getGoalPeriod(selectedDate, goals.find(g => g.name === name))[1].subtract(1, "day").format("ddd MMM DD")
+                            }
+                          </div>
+                        </div>
+                      
+                      </div>: 
+                      <div style={{height: 120}}>
+                        No goals set yet. 
+                        <div>
+                          <button>
+                            Start one now!
+                          </button>
+                        </div>
+                      </div>
+                  }
+                  
+                  </div>
+      
+                <div className='day-graph'>
+                  <div className='checkbox-container'>
+                    {
+                      daysOfWeek.map((day, index) => (
+                        <div key={index}
+                          onClick={() => {
+                            if (!goals.find(g => g.name === name)){
+                              if (!isDayActive(dps, day.format("YYYY-MM-DD"))){
+                                createDatapoint(USER_ID, name, 0, day.format("YYYY-MM-DD"));
+                              }
+                              handleEdit(day, name, dps.find(d => d.date === day.format("YYYY-MM-DD"))?.value || "");
+                            }
+                            else if (isDayActive(dps, day.format("YYYY-MM-DD"))){
+                              if (isGoalMetForDate(day.format("YYYY-MM-DD"), goals.find(g => g.name === name))){
+                                handleEdit(day, name, dps.find(d => d.date === day.format("YYYY-MM-DD"))?.value || "");
+                              }
+                              else{
+                                editDp(dps.find(d => d.date === day.format("YYYY-MM-DD")).id,name, 
+                                goals.find(g => g.name === name).value / goals.find(g => g.name === name).frequency, day.format("YYYY-MM-DD"));
+                              }
+                            }
+                            else {
+                              createDatapoint(USER_ID, name, goals.find(g => g.name === name).value / goals.find(g => g.name === name).frequency, day.format("YYYY-MM-DD"));
+                            }
+                          }}
+                          style={{
+                            backgroundColor: 
+                              isDayActive(dps, day.format("YYYY-MM-DD"))?
+                              colorPalette[day.diff('1980-01-01', 'day') % 3] :
+                              '#D9D9D9',
+                          }}
+                          className="progress-block-recent-activities">
+                            {(editingDate === day.format("YYYY-MM-DD") & editingGoal === name) ? (
+                              <input
+                                type="number"
+                                value={inputValue}
+                                onChange={(e) => setInputValue(e.target.value)}
+                                onBlur={() => handleSubmitEdit(day, name, dps)}
+                                onKeyDown={(e) => {
+                                  if (e.key === "Enter") handleSubmitEdit(day, name, dps);
+                                }}
+                                autoFocus
+                              />
+                            ) : isGoalMetForDate(day.format("YYYY-MM-DD"), goals.find(g => g.name === name)) ? (
+                              "✔️"
+                            ) : (
+                              ""
+                            )}
+                        </div>
+                      ))
+                    }
+                  </div>
+                </div>
+                <div className='bottom-graph'>
+                  {daysOfWeek.map((day, index) => (
+                    <div key={index} className="day"> {day.format("ddd")} </div>
+                  ))}
+                </div>
+              </div>
             }
-          </div>
+            sx={
+              Object.entries(datapoints).length <= 3
+                ? { flex: 1, minWidth: 0, maxWidth: "40%" }
+                : { width: "calc(100% / 3)", flexShrink: 0 }
+            }
 
+            onTitleClick={editDpGroupName}
+          />
+        ))}
+      
+        <div
+          className='add-activity-button'
+          onClick={() => {
+            createDatapoint(
+              USER_ID,
+              (() => {
+                let i = 0, base = "New Category";
+                while (Object.keys(datapoints).includes(i ? `${base} ${i}` : base)) i++;
+                return i ? `${base} ${i}` : base;
+              })(),
+              0,
+              dayjs().format("YYYY-MM-DD")
+            );
+          }}
+        >
+          <Image
+            className='add-icon'
+            src="/assets/icons/add-icon.svg"
+            alt="add-icon"
+            width="34"
+            height="34"
+          />
+        </div>
+      </div>
           <div className="bottom-flex-container">
               <div className = "progress-card">
                 <Card
                   title={`Daily Data Overview`}
                   icons={[
+                    <div className='graph-view-switch'>📈</div>
+                    ,
                     <Image className='menu-icon' style={{cursor:"pointer"}}
                     src="/assets/icons/menu-icon.svg" alt="menu-icon" width="40" height="40"/>
                   ]}
                   content={
                     <div style={ {height:"30vh"} }>
-                    
                       <LineChart
-                        xAxis={[{ data: xAxisData }]}
-                        series={[{ data: yAxisData }]}
+                        xAxis={[{ data: xAxisData, valueFormatter: d => dayjs(d).format("MMM DD"),scaleType: "point" }]}
+                        series={yAxisData}
                       />
                     </div>
                   }
-
                 />
               </div>
               <div className = "new-entry-card">
@@ -417,14 +457,14 @@ export default function Page() {
                   title="New Entry"
                   icons= {[
                     <Image
-                      className='add-icon' style={{cursor:"pointer"}}
+                      className='add-icon' style={ {cursor:"pointer"} }
                       src="/assets/icons/add-icon.svg"
                       alt="add-icon" width="34" height="34"
                     />
                   ]}
                   content={
-                    <div style={{height: "30vh", 
-                      width: "200px",
+                    <div style={{height: "30vh",
+                      width: "240px",
                       wordWrap: "break-word",
                       overflow:"scroll", 
                       fontFamily:"monospace"}}>
@@ -436,13 +476,19 @@ export default function Page() {
                       }
                     </div>
                   }
-
                 />
               </div>
           </div>
         </div>
-
       </div>
+
+      <NewGoalModal
+        userId = {USER_ID}
+        isOpen={showGoalModal}
+        onClose={() => setShowGoalModal(false)}
+        onCreateGoal={setNewGoal}
+        categories={[...new Set(goals.map(goal => goal.category).filter(Boolean))]}
+      />
     </div>
   );
 }

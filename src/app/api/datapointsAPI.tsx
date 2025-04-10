@@ -76,6 +76,23 @@ export async function updateDp (dpId: string, name: string, value: string, date:
   }
 }
 
+export async function updateDpGroupName (oldName: string, newName: string) {
+  try {
+    const data = await sql<Datapoints>`
+    UPDATE datapoints
+    SET name = ${newName}
+    WHERE name = ${oldName}
+    RETURNING *;
+    `;
+    
+    return data.rows;  // array of updated datapoints
+  }
+  catch (e) {
+    console.error(`Error renaming datapoint group: ${e}`);
+    throw new Error(`Error renaming datapoint group: ${e}`);
+  }
+}
+
 export async function deleteDp(dpId: string) {
   try {
     const data = await sql<Datapoints>`

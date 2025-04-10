@@ -15,9 +15,8 @@ const WeekCalendar = ({ chosenDate, onDateChange, height = "100%", width = "100%
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <Box style={{ height, width, textAlign: "center" }}>
-
-        {/* Render the calendar */}
         <DateCalendar
+          disableFuture
           style={{ height: "100%", width: "100%" }}
           value={chosenDate}
           onChange={onDateChange}
