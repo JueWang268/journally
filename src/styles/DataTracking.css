@@ -103,6 +103,15 @@
     justify-content: space-between;
     padding-top: 10px;
 }
+
+.change-val-input {
+    border: none;
+    background: transparent;
+    caret-color: black; /* Or any visible color for the blinking cursor */
+    outline: none;
+    width: 2em;
+}  
+
 .day {
     text-align: center;
     width: 2.5em;

@@ -189,6 +189,15 @@ export default function Page() {
     const periodEnd = periodStart.add(goal.frequency, "day");
     return [periodStart, periodEnd];
   };
+
+  const changeCatName = (oldname, newname) => {
+    editDpGroupName(oldname, newname);
+    const g = goals.find(g => g.name === oldname);
+    if (g){
+      editGoal(g.id, newname, g.category, g.value, g.frequency, g.start_date, g.end_date, g.unit);
+    }
+    return;
+  }
   
   const isGoalMetForDate = (targetDate, goal) => {
     if (!goal || !goal.name || !datapoints[goal.name])
@@ -372,7 +381,7 @@ export default function Page() {
                           className="progress-block-recent-activities">
                             {(editingDate === day.format("YYYY-MM-DD") & editingGoal === name) ? (
                               <input
-                                type="number"
+                                class="change-val-input"
                                 value={inputValue}
                                 onChange={(e) => setInputValue(e.target.value)}
                                 onBlur={() => handleSubmitEdit(day, name, dps)}
@@ -403,8 +412,7 @@ export default function Page() {
                 ? { flex: 1, minWidth: 0, maxWidth: "40%" }
                 : { width: "calc(100% / 3)", flexShrink: 0 }
             }
-
-            onTitleClick={editDpGroupName}
+            onTitleClick={changeCatName}
           />
         ))}
       
@@ -437,8 +445,7 @@ export default function Page() {
                 <Card
                   title={`Daily Data Overview`}
                   icons={[
-                    <div className='graph-view-switch'>📈</div>
-                    ,
+                    <div className='graph-view-switch'>📈</div>,
                     <Image className='menu-icon' style={{cursor:"pointer"}}
                     src="/assets/icons/menu-icon.svg" alt="menu-icon" width="40" height="40"/>
                   ]}

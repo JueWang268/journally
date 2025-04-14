@@ -108,10 +108,12 @@ export default function useDatapoints(userId) {
           ...dp,
           name: newName
         }));
-  
+
+        const { [oldName]: excluded, ...newdps } = prevDatapoints;
+
+        // delete prevDatapoints.oldName;
         return {
-          ...prevDatapoints,
-          [oldName]: undefined,  // remove old group
+          ...newdps,
           [newName]: renamedDps, // add new group
         };
       });

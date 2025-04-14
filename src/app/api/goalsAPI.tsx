@@ -81,7 +81,7 @@ export async function updateGoal(
   newStart?: Date | null,
   newEnd? : Date | null,
   nunit? : string | null
-) 
+)
   {
   try {
     const data = await sql<Goal>`
@@ -92,8 +92,8 @@ export async function updateGoal(
           value = ${newVal}, 
           frequency = ${newFreq},
           modified_at = ${(new Date()).toISOString()},
-          ${newStart !== undefined && newStart !== null ? `start_date = ${newStart}` : ``},
-          ${newEnd !== undefined && newEnd !== null ? `end_date = ${newEnd}` : ``},
+          ${newStart !== undefined && newStart !== null ? `start_date = ${newStart},` : `,`}
+          ${newEnd !== undefined && newEnd !== null ? `end_date = ${newEnd},` : `,`}
           ${nunit !== undefined && nunit !== null ? `unit = ${nunit}` : ``}
         WHERE id = ${id}
         RETURNING *;
@@ -102,7 +102,7 @@ export async function updateGoal(
     return data.rows[0];
   } catch (error) {
     console.error("Database Error:", error);
-    throw new Error(`Failed to update goal for ${newCat}`);
+    throw new Error(`Failed to update goal for ${newName}`);
   }
 }
 
