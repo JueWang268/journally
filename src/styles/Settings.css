@@ -68,7 +68,7 @@ body {
 .home-container {
     flex: 1;
     display: flex;
-    padding: 2rem 5rem;
+    padding: 3vh 5vw;
     height: 100%;
 }
 
@@ -186,6 +186,8 @@ body {
 .profile-image{
     width: 100%;
     height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
 }
 
 /* Notifications */
@@ -230,4 +232,227 @@ body {
     flex: 1;
     display: flex;
     flex-direction: column;
+}
+
+/* Responsive Sidebar and Mobile UI */
+.sidebar-toggle {
+    display: none;
+    position: fixed;
+    top: 1rem;
+    left: 1rem;
+    background-color: #fff;
+    border: none;
+    font-size: 2rem;
+    z-index: 999;
+    cursor: pointer;
+    border-radius: 4px;
+    padding: 0.5rem;
+}
+
+/* Width Reponsiveness */
+
+@media screen and (max-width: 1400px) {
+
+    .content-grid {
+        grid-template-columns: 1fr 3fr;
+    }
+
+    .account-content,
+    .notifications-content {
+        padding-right: 2rem;
+    }
+
+    .button-container {
+        margin-right: 2rem;
+    }
+
+    .profile-image-container {
+        width: 60px;
+        height: 60px;
+    }
+
+    /* .update-button{
+        font-size: 0.5rem;
+    } */
+}
+
+@media screen and (max-width: 1200px) {
+
+    .side-bar p{
+        font-size: 1.5em;
+    }
+    .side-bar ul{
+        font-size: 0.8em;
+    }
+
+    /* .content-grid {
+        grid-template-columns: 1fr 3fr;
+    } */
+
+    .account-container p,
+    .notifications-container p {
+        font-size: 1.5em;
+    }
+
+    .account-content p,
+    .notifications-content p {
+        font-size: 1.2em;
+    }
+
+    .form-group,
+    .notifications-form-group {
+        font-size: 0.9em;
+    }
+
+    .form-group input,
+    .notifications-form-group input,
+    .notifications-form-group label,
+    .form-group label {
+        font-size: 0.9em;
+    }
+
+    .button-container {
+        margin-right: 2rem;
+    }
+
+    .profile-image-container {
+        width: 55px;
+        height: 55px;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .form-group,
+    .notifications-form-group {
+        grid-template-columns: 1fr;
+        text-align: left;
+    }
+
+    .form-group label,
+    .notifications-form-group label {
+        margin-bottom: 1rem;
+    }
+
+    .profile-image-container {
+        width: 50px;
+        height: 50px;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .form-group,
+    .notifications-form-group {
+        font-size: 0.8em;
+    }
+
+    .form-group input,
+    .notifications-form-group input,
+    .form-group label,
+    .notifications-form-group label {
+        font-size: 0.8em;
+    }
+
+    .profile-image-container {
+        width: 45px;
+        height: 45px;
+    }
+}
+
+
+/* Height Responsiveness */
+
+@media screen and (max-height: 900px) {
+    .content-box {
+        font-size: 0.95rem;
+        padding: 3vh 4vw;
+    }
+    .form-group,
+    .notifications-form-group {
+        font-size: 0.95em;
+        gap: 0.75rem;
+    }
+    .form-group label,
+    .notifications-form-group label,
+    .form-group input,
+    .notifications-form-group input {
+        font-size: 0.95em;
+    }
+
+    .account-container {
+        padding: 2vh 2vw;
+    }
+
+    .profile-image-container {
+        width: 60px;
+        height: 60px;
+    }
+}
+
+@media screen and (max-height: 850px) {
+    .content-box {
+        font-size: 0.9rem;
+        padding: 2.5vh 4vw;
+    }
+    .form-group,
+    .notifications-form-group {
+        font-size: 0.9em;
+        gap: 0.5rem;
+    }
+    .form-group label,
+    .notifications-form-group label,
+    .form-group input,
+    .notifications-form-group input {
+        font-size: 0.9em;
+    }
+
+    .profile-image-container {
+        width: 55px;
+        height: 55px;
+    }
+}
+
+@media screen and (max-height: 790px) {
+    .content-box {
+        font-size: 0.85rem;
+        padding: 2vh 4vw;
+    }
+    .form-group,
+    .notifications-form-group {
+        font-size: 0.85em;
+        gap: 0.5rem;
+    }
+    .form-group label,
+    .notifications-form-group label,
+    .form-group input,
+    .notifications-form-group input {
+        font-size: 0.85em;
+    }
+
+    .profile-image-container {
+        width: 50px;
+        height: 50px;
+    }
+}
+
+@media screen and (max-height: 690px) {
+    .content-box {
+        font-size: 0.8rem;
+        padding: 1.5vh 4vw;
+    }
+    .form-group,
+    .notifications-form-group {
+        font-size: 0.8em;
+        gap: 0.4rem;
+    }
+    .form-group label,
+    .notifications-form-group label,
+    .form-group input,
+    .notifications-form-group input {
+        font-size: 0.8em;
+    }
+
+    .profile-image-container {
+        width: 45px;
+        height: 45px;
+    }
 }

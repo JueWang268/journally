@@ -22,7 +22,8 @@ export default function SettingsPage() {
     const [settings, setSettings] = useState(null);
     const [localSettings, setLocalSettings] = useState(settings);
     const [editingField, setEditingField] = useState(null);
-    
+    const [sidebarOpen, setSidebarOpen] = useState(false);
+
     useEffect(() => {
         if (userId) {
             const fetchData = async () => {
@@ -185,6 +186,9 @@ export default function SettingsPage() {
     return (
         <div className="app">
             <TopBar loggedIn = {Boolean(user)} onProfileClick={userSignOut}/>
+            <button className="sidebar-toggle" onClick={() => setSidebarOpen(!sidebarOpen)}>
+                ☰
+            </button>
             <div className="home-container">
                 <div className="content-box">
                     <div className="content-grid">
