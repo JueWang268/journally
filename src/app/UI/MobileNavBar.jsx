@@ -11,7 +11,6 @@ export default function MobileNavBar({ loggedIn, onProfileClick }) {
     <nav className="mobile-top-bar">
       <div className="mobile-logo">
         <Image src="/assets/Logo.svg" alt="icon" width={40} height={40} />
-        <span className="brand">Journally</span>
       </div>
 
       <ul className="mobile-nav-bar">

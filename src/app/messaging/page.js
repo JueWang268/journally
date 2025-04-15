@@ -72,18 +72,20 @@ export default function ChatPage() {
   const SidebarContent = () => (
     <div className="sidebar-content">
       <MobileNavBar loggedIn={Boolean(user)} onProfileClick={userSignOut} />
-      <div className="sidebar-section horizontal-list">
-        {profiles.map((profile) => (
-          <div className="profile-icon-container" key={profile.id}>
-            <Image
-              className="profile-icon"
-              src={profile.src}
-              width={40}
-              height={40}
-              alt={profile.alt}
-            />
-          </div>
-        ))}
+      <div class="scroll-wrapper">
+        <div className="horizontal-list">
+          {profiles.map((profile) => (
+            <div className="profile-icon-container" key={profile.id}>
+              <Image
+                className="profile-icon"
+                src={profile.src}
+                width={40}
+                height={40}
+                alt={profile.alt}
+              />
+            </div>
+          ))}
+        </div>
       </div>
       <div className="sidebar-section">
         <div className="channel-list">

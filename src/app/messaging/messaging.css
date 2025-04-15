@@ -1,5 +1,5 @@
 /******************************************
-  Base & Reset
+  Base
 ******************************************/
 *,
 *::before,
@@ -45,7 +45,7 @@ html {
 }
 
 /******************************************
-  Desktop Grid Layout
+  Desktop Grid
 ******************************************/
 .grid-container {
   display: grid;
@@ -62,7 +62,7 @@ html {
 }
 
 /******************************************
-  Desktop – Profile Icons Column
+  Desktop – Profile Icons
 ******************************************/
 .icon-column {
   display: flex;
@@ -75,6 +75,7 @@ html {
   border-radius: 15px;
   padding: 8px;
   margin-bottom: 10px;
+  scroll-snap-align: center;
 }
 
 .profile-icon {
@@ -106,19 +107,6 @@ html {
   object-fit: cover;
 }
 
-/*
-.friend-groups-title {
-  position: absolute;
-  bottom: 10px;
-  left: 15px;
-  color: white;
-  font-size: 1.5rem;
-  font-weight: bold;
-  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
-  user-select: none;
-}
-*/
-
 .search-bar {
   width: 100%;
   padding: 12px;
@@ -132,7 +120,7 @@ html {
 }
 
 .channel-list {
-  width: 100%;
+  width: auto;
   margin: 0px 10px;
   display: flex;
   flex-direction: column;
@@ -170,7 +158,7 @@ html {
 }
 
 /******************************************
-  Desktop – Chat Area
+  Desktop – Chat
 ******************************************/
 .chat-column {
   display: flex;
@@ -267,7 +255,7 @@ html {
 }
 
 /******************************************
-  Mobile Hamburger (Left Oriented)
+  Mobile Hamburger
 ******************************************/
 .mobile-hamburger {
   display: none;
@@ -287,10 +275,9 @@ html {
   position: fixed;
   top: 0;
   left: 0;
-  width: 80%;
-  max-width: 300px;
+  width: 50%;
   height: 100vh;
-  background: #4a90e2;
+  background: #5898e2;
   box-shadow: 2px 0px 12px rgba(0, 0, 0, 0.3);
   z-index: 1200;
   overflow-y: auto;
@@ -325,26 +312,13 @@ html {
 }
 
 /******************************************
-  Mobile Top Bar (Adapted from TopBar)
+  Mobile Top Bar
 ******************************************/
-.mobile-top-bar {
+.mobile-logo {
   display: flex;
-  flex-direction: column;
-  color: white;
-  padding: 0.75rem 1rem;
-  margin-bottom: 1rem;
-  border: none;
-}
-
-.mobile-top-bar .mobile-logo {
-  display: flex;
+  justify-content: center;
   align-items: center;
-  gap: 0.5rem;
-}
-
-.mobile-top-bar .brand {
-  font-size: 1.4rem;
-  font-weight: bold;
+  margin-bottom: 1rem;
 }
 
 .mobile-top-bar .mobile-nav-bar {
@@ -373,6 +347,7 @@ html {
   justify-content: center;
   align-items: center;
   margin-top: 0.75rem;
+  margin-bottom: 1.5rem;
 }
 
 .mobile-top-bar .mobile-auth {
@@ -385,18 +360,22 @@ html {
 }
 
 /******************************************
-  Helper: Horizontal List in Mobile Sidebar
+  Mobile Profile Icons
 ******************************************/
+.scroll-wrapper {
+  overflow-x: auto;
+  text-align: center;
+  padding: 0 0.5rem; /* optional padding */
+  -webkit-overflow-scrolling: touch;
+}
 .horizontal-list {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  gap: 8px;
-  margin-bottom: 1rem;
+  display: inline-flex;
+  gap: 6px;
+  scroll-snap-type: x mandatory;
 }
 
 /******************************************
-  Mobile Overrides (<=768px)
+  Mobile Specific
 ******************************************/
 @media screen and (max-width: 768px) {
   .desktop-topbar {
@@ -407,10 +386,13 @@ html {
     display: block;
   }
 
+  .channel-list {
+    align-items: center;
+  }
+
   .grid-container {
     padding: 1rem;
     padding-top: 70px;
-    /* space below the fixed hamburger */
     display: flex;
     flex-direction: column;
     gap: 1rem;
@@ -421,7 +403,6 @@ html {
     display: none;
   }
 
-  /* Chat column: extend fully with some bottom margin */
   .chat-column {
     width: 100%;
     margin: 0 auto 1rem;
