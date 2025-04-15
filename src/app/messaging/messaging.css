@@ -364,10 +364,18 @@ html {
 ******************************************/
 .scroll-wrapper {
   overflow-x: auto;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+
   text-align: center;
-  padding: 0 0.5rem; /* optional padding */
+  padding: 0 0.5rem;
   -webkit-overflow-scrolling: touch;
 }
+
+.scroll-wrapper::-webkit-scrollbar {
+  display: none;
+}
+
 .horizontal-list {
   display: inline-flex;
   gap: 6px;
