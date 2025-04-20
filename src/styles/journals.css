@@ -267,3 +267,38 @@ body {
     display: flex;
     flex-direction: column;
 }
+
+@media (max-width: 768px) {
+    .home-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+        padding: 4% 4%;
+    }
+
+    .app{
+        min-height: 100%;
+        overflow-y: auto;
+    }
+  
+    /* Keep the writing pad on top, lists below */
+    .right-side {
+      order: 1;
+    }
+
+    .left-side {
+      order: 2;
+    }
+  
+    /* Slimmer card padding */
+    .border-box {
+      padding: 12px;
+    }
+
+  
+    /* Compact list rows */
+    .entries {
+      grid-template-columns: 0.6fr 3fr;
+      gap: 0.5rem;
+    }
+}
+  
