@@ -56,8 +56,8 @@ export async function createGoal(
         ${userId},
         ${value},
         ${frequency},
-        ${start_date !== undefined && start_date !== null ? `${start_date}` : ``},
-        ${end_date !== undefined && end_date !== null ? `${end_date}` : ``},
+        ${start_date !== undefined ? `${start_date}` : null},
+        ${end_date !== undefined ? `${end_date}` : null},
         ${unit !== undefined && unit !== null ? `${unit}` : ``}
       )
       RETURNING *
@@ -68,7 +68,7 @@ export async function createGoal(
   } catch (error) {
     console.error('Error creating and inserting goal:', error);
     throw new Error(`Failed to insert goal with "
-      ${category}, ${name}, ${userId}, ${value}, ${frequency}".`);
+      ${category}, ${name}, ${userId}, ${value}, ${frequency} ending on ${end_date}".`);
   }
 }
 

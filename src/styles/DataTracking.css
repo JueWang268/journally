@@ -19,16 +19,23 @@
     overflow: scroll;
 }
 
-.card-cont{
+/* .card-cont{
     height: 15vh;
-}
+} */
 
-.week-cal{
-
+.goal-item{
+    padding: 0.5em;
+  border: 1px solid #ccc;         /* Light gray border */
+  border-radius: 0.5em;           /* Rounded corners */
+  transition: box-shadow 0.3s ease;
 }
+.goal-item:hover {
+    box-shadow: 5px 5px rgba(0, 0, 0, 0.2);
+  }
 
 .goal-list{
-    height: 20vh;
+    height: 23vh;
+    overflow-y: scroll;
 }
 
 .card-wrapper {
@@ -37,9 +44,16 @@
     overflow-x: auto; /* Enables horizontal scrolling */
     gap: 1rem;
     width: 100%; /* Ensure it doesn't shrink */
-    height: 250px; /* Adjust based on your needs */
     white-space: nowrap; /* Prevents internal wrapping */
     border: 1px solid green;
+}
+
+.card-content-inner-wrapper{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    border: 1px solid blue;
+    height: 100%;
 }
 
 .add-activity-button{

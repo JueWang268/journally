@@ -1,11 +1,17 @@
 import { useState, useEffect, useCallback } from 'react';
 import { readGoals, createGoal, updateGoal, deleteGoal } from '../api/goalsAPI.tsx';
+import dayjs from 'dayjs';
 import { ISODate } from "../utils/ISODate";
 
 export default function useGoals(userId) {
   const [goals, setGoals] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+
+  const safeDate = (dateStr) => {
+    return dateStr && dayjs(dateStr).isValid() ? dayjs(dateStr).format("YYYY-MM-DD") : null;
+  };
+  
 
   // Fetch goals for user
   useEffect(() => {
@@ -34,13 +40,19 @@ export default function useGoals(userId) {
     userId, name, category, freq, value,
     start_date=null, end_date=null, unit=null) => {
     try {
-      const newGoal = await createGoal(userId, name, category, 
-        value, freq, start_date, end_date, unit);
+      const newGoal = await createGoal(
+        userId, 
+        name, 
+        category, 
+        value, 
+        freq, 
+        safeDate(start_date), 
+        safeDate(end_date), 
+        unit);
       const {"user_id": excluded, ...goalState} = newGoal;
       setGoals(
         [...goals, goalState]
       );
-      // console.log(newGoal);
     }
     catch (err) {
       setError(err);

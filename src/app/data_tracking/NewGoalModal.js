@@ -1,13 +1,36 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import dayjs from 'dayjs';
 import "../../styles/NewGoalModal.css";
 
-const NewGoalModal = ({ userId, isOpen, onClose, onCreateGoal, categories }) => {
+// also deals with editing and removing goal, serves as a unified interface
+
+const NewGoalModal = ({ userId, isOpen, onClose, onCreateGoal, onEditGoal, categories, defaultName,
+  goalData, mode }) => {
   const [category, setCategory] = useState('');
-  const [name, setName] = useState('');
-  const [frequency, setFrequency] = useState(1);
-  const [value, setValue] = useState(1);
-  const [startDate, setStartDate] = useState('');
+  const [name, setName] = useState(defaultName);
+  const [gd, setGd] = useState(goalData); // goad data
+
+
+  const [frequency, setFrequency] = useState(
+    mode === "Edit"? gd?.frequency : 1
+  );
+  const [value, setValue] = useState(
+    mode === "Edit"? gd?.value : 1
+  );
+  const [startDate, setStartDate] = useState(
+    mode === "Edit" ? gd?.startDate :
+    dayjs().format('YYYY-MM-DD')
+  );
+  const [endDate, setEndDate] = useState(
+    dayjs().add(100, 'day').format('YYYY-MM-DD')
+  );
   const [unit, setUnit] = useState('units');
+  
+  useEffect(() => {
+    setName(defaultName);
+    setGd(gd);
+
+  }, [defaultName, gd]);
 
   if (!isOpen) return null;
 
@@ -16,19 +39,23 @@ const NewGoalModal = ({ userId, isOpen, onClose, onCreateGoal, categories }) => 
       alert("Name is required");
       return;
     }
-
-    const endDate = frequency === 1 ? startDate : null; // could auto-calculate for one-time goals
-
-    onCreateGoal(
-      userId,
-      name,
-      category,
-      frequency,
-      value,
-      startDate,
-      endDate,
-      unit
-    );
+    if (mode === "Edit"){
+      onEditGoal(
+        
+      );
+    }
+    else{
+      onCreateGoal(
+        userId,
+        name,
+        category,
+        frequency,
+        value,
+        startDate,
+        endDate,
+        unit
+      );
+    }
 
     onClose();
   };
@@ -36,7 +63,7 @@ const NewGoalModal = ({ userId, isOpen, onClose, onCreateGoal, categories }) => 
   return (
     <div className="modal-overlay">
       <div className="modal-content">
-        <h2>Create New Goal</h2>
+        <h2>{mode === "Create" ? "Create New": "Edit"} Goal</h2>
 
         <label>Category (optional)</label>
         <select value={category} onChange={(e) => setCategory(e.target.value)}>
@@ -56,13 +83,18 @@ const NewGoalModal = ({ userId, isOpen, onClose, onCreateGoal, categories }) => 
         <input type="number" value={value} onChange={(e) => setValue(e.target.value)} />
 
         <label>Start Date *</label>
-        <input type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} />
+        <input type="date" value={startDate || ""} onChange={(e) => setStartDate(e.target.value || null)} />
+        
+        <label>End Date </label>
+        <input
+          type="date"
+          value={endDate || ""} onChange = {(e) => setEndDate(e.target.value || null)} />
 
         <label>Unit (optional)</label>
         <input type="text" value={unit} onChange={(e) => setUnit(e.target.value)} />
 
         <div className="modal-buttons">
-          <button onClick={handleSubmit}>Create</button>
+          <button onClick={handleSubmit}>{mode === "Create" ? "Create": "Confirm"}</button>
           <button onClick={onClose}>Cancel</button>
         </div>
       </div>
