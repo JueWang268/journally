@@ -168,9 +168,9 @@ export default function Journals() {
                     className="quill-editor"
                 />
               </div>
-            </div>
-            <div className='prompt-container'>
-                <input type="text" placeholder="New Prompt..." className="prompt-input" />
+              <input 
+                type="text" placeholder="New Prompt..." className="prompt-input"
+              />  
             </div>
           </div>
         </div>
