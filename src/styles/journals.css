@@ -323,6 +323,19 @@ body {
 
     .left-side {
       order: 2;
+      height: 10vh;
+    }
+
+    .content-header p{
+        font-size: 1.2rem;
+    }
+
+    .number-box p{
+        font-size: 1.2rem;
+    }
+
+    .title-container p{
+        font-size: 0.7rem;
     }
   
     /* Slimmer card padding */
@@ -334,21 +347,27 @@ body {
     /* Compact list rows */
     .entries {
       grid-template-columns: 0.6fr 3fr;
-      gap: 0.5rem;
+      gap: 0rem;
     }
 
     .entries-grid{
         grid-template-columns: 1fr auto;  /* prompt column | button column */
-        grid-template-rows: auto auto;  /* editor row | prompt+button row */
-        row-gap: 0rem;
+        /* grid-template-rows: auto auto; */
+        gap: 0rem;
         height: 100%;
     }
 
     .writing-pad{
-        /* grid-row: 1; */
         grid-column: 1 / span 2;
+        padding: 1rem;
     }
     
+    .quill-editor .ql-toolbar {
+        width: 100vw;
+        transform: scale(0.8);
+        transform-origin: left;
+    }
+      
 
     .prompt-input{
         /* grid-column: 1; */
