@@ -40,6 +40,11 @@ export default function Page() {
     }
   }, [user, router]);
 
+  const handleNewEntryClick = () => {
+    router.push('/journals');
+  }
+
+
   const USER_ID = user?.uid;
   const { datapoints,
     loading_d,
@@ -328,7 +333,17 @@ export default function Page() {
 
               />
             </div>
-            <div className="new-entry-card">
+            <div
+              className="new-entry-card"
+              onClick = {handleNewEntryClick}
+              style={{cursor: 'pointer'}}
+            >
+              {/* <button
+                onClick = {handleNewEntryClick}
+                style={{cursor: 'pointer'}}
+              >
+                Journals
+              </button> */}
               <Card
                 title="New Entry"
                 icons={[
